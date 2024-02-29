@@ -38,6 +38,8 @@ subprojects {
 
 		annotationProcessor 'org.projectlombok:lombok'
 
+		testImplementation 'org.testcontainers:junit-jupiter:1.19.6'
+
 		testImplementation 'org.springframework.boot:spring-boot-starter-test'
 	}
 

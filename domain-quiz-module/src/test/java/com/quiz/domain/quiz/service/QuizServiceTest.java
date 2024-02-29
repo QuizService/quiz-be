@@ -1,5 +1,6 @@
 package com.quiz.domain.quiz.service;
 
+import com.quiz.MongoDbTestConfig;
 import com.quiz.TestConfiguration;
 import com.quiz.dto.quiz.QuizRequestDto;
 import org.assertj.core.api.Assertions;
@@ -9,8 +10,10 @@ import org.springframework.boot.test.autoconfigure.data.mongo.AutoConfigureDataM
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.context.ContextConfiguration;
+import org.testcontainers.junit.jupiter.Testcontainers;
 
-@ContextConfiguration(classes = TestConfiguration.class)
+@Testcontainers
+@ContextConfiguration(classes = {TestConfiguration.class, MongoDbTestConfig.class})
 @ActiveProfiles("test")
 @SpringBootTest
 public class QuizServiceTest {
@@ -18,6 +21,11 @@ public class QuizServiceTest {
     @Autowired
     private QuizService quizService;
     private Long quizId;
+
+    @Test
+    void test() {
+        System.out.println("test success");
+    }
 
     @Test
     void saveQuizTest() {
