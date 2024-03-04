@@ -20,6 +20,12 @@ public class QuestionResponse {
     @Field(value = "_id", targetType = FieldType.OBJECT_ID)
     private String id;
 
+    @Field(name = "participant_info_id")
+    private Long participantInfoId;
+
+    @Field(name = "quiz_id")
+    private Long quizId;
+
     @Field(value = "question_id")
     private Long questionId;
 
@@ -32,7 +38,9 @@ public class QuestionResponse {
     private LocalDateTime created;
 
     @Builder
-    public QuestionResponse(Long questionId, List<Integer> choices, String answer, Boolean isAnswers, LocalDateTime created) {
+    public QuestionResponse(Long participantInfoId, Long quizId, Long questionId, List<Integer> choices, String answer, Boolean isAnswers) {
+        this.participantInfoId = participantInfoId;
+        this.quizId = quizId;
         this.questionId = questionId;
         this.choices = choices;
         this.answer = answer;
