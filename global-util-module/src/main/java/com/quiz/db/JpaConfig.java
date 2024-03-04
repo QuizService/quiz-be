@@ -10,6 +10,8 @@ import org.springframework.boot.context.properties.ConfigurationProperties;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.Primary;
+import org.springframework.context.annotation.PropertySource;
+import org.springframework.core.env.Environment;
 import org.springframework.dao.annotation.PersistenceExceptionTranslationPostProcessor;
 import org.springframework.data.jpa.repository.config.EnableJpaAuditing;
 import org.springframework.data.jpa.repository.config.EnableJpaRepositories;
@@ -26,8 +28,8 @@ import java.util.HashMap;
 import java.util.Map;
 import java.util.Properties;
 
-@RequiredArgsConstructor
 @Configuration
+@RequiredArgsConstructor
 @EnableJpaRepositories(
         basePackages = "com.quiz.domain.*.repository",
         entityManagerFactoryRef = "mysqlEntityManagerFactory",
@@ -35,15 +37,16 @@ import java.util.Properties;
 @EnableTransactionManagement
 public class JpaConfig {
 
+    @Value("${spring.jpa.database-platform}")
+    private String dialect;
+    @Value("${spring.jpa.hibernate.ddl-auto}")
+    private String ddl_auto;
     @Value("${spring.datasource.driver-class-name}")
     private String driverClassName;
-
     @Value("${spring.datasource.username}")
     private String username;
-
     @Value("${spring.datasource.password}")
     private String password;
-
     @Value("${spring.datasource.url}")
     private String url;
 
@@ -54,11 +57,17 @@ public class JpaConfig {
     public LocalContainerEntityManagerFactoryBean mysqlEntityManagerFactory() {
         LocalContainerEntityManagerFactoryBean em = new LocalContainerEntityManagerFactoryBean();
         em.setDataSource(mysqlDatasource());
-        em.setPackagesToScan("com.quiz.domain.quiz.entity", "com.quiz.domain.users.entity");
+        em.setPackagesToScan("com.quiz.domain.*.entity");
 
         HibernateJpaVendorAdapter vendorAdapter = new HibernateJpaVendorAdapter();
         vendorAdapter.setGenerateDdl(true);
         em.setJpaVendorAdapter(vendorAdapter);
+
+        HashMap<String, Object> properties = new HashMap<>();
+        properties.put("hibernate.hbm2ddl.auto", ddl_auto);
+        properties.put("hibernate.show_sql","true");
+        properties.put("hibernate.format_sql","true");
+        em.setJpaPropertyMap(properties);
 
         return em;
     }

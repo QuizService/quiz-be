@@ -1,14 +1,21 @@
 package com.quiz.domain.questions.mongo;
 
 import com.quiz.domain.questions.entity.Questions;
+import com.quiz.dto.questions.QuestionsResponseDto;
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
 import org.springframework.data.mongodb.core.MongoTemplate;
 import org.springframework.data.mongodb.core.query.Criteria;
 import org.springframework.data.mongodb.core.query.Query;
 import org.springframework.data.mongodb.core.query.Update;
+import org.springframework.data.support.PageableExecutionUtils;
 import org.springframework.stereotype.Repository;
 
 import java.time.LocalDateTime;
+import java.util.List;
 
 @RequiredArgsConstructor
 @Repository
@@ -35,5 +42,21 @@ public class QuestionsMongoTemplate {
         update.set("updated", updated);
 
         mongoTemplate.updateMulti(query, update, Questions.class);
+    }
+
+    public Page<Questions> findPageByQuizId(Long quizId, int page, int size) {
+        Pageable pageable = PageRequest.of(page, size, Sort.Direction.ASC, "sequence");
+
+        Query query = new Query()
+                .with(pageable)
+                .skip((long) pageable.getPageSize() * pageable.getPageNumber())
+                .limit(pageable.getPageSize());
+        query.addCriteria(Criteria.where("quiz_id").is(quizId));
+
+        List<Questions> filteredQuestions = mongoTemplate.find(query, Questions.class, "questions");
+
+        return PageableExecutionUtils.getPage(filteredQuestions,
+                pageable,
+                () -> mongoTemplate.count(query.skip(-1).limit(-1), Questions.class));
     }
 }

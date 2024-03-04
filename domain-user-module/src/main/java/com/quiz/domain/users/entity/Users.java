@@ -3,13 +3,13 @@ package com.quiz.domain.users.entity;
 import com.quiz.domain.users.enums.AuthType;
 import com.quiz.domain.users.enums.Role;
 import com.quiz.global.baseentity.BaseEntity;
+import com.quiz.global.converter.AuthTypeConverter;
+import com.quiz.global.converter.RoleConverter;
 import jakarta.persistence.*;
 import lombok.AccessLevel;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
-
-import java.time.LocalDateTime;
 
 @Getter
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
@@ -18,16 +18,19 @@ import java.time.LocalDateTime;
 public class Users extends BaseEntity {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long usersId;
+    private Long id;
     private String email;
     private String name;
     private String picture;
-    @Enumerated(EnumType.STRING)
+
+    @Column(name = "auth_type")
+    @Convert(converter = AuthTypeConverter.class)
     private AuthType authType;
 
-    @Enumerated(EnumType.STRING)
+    @Convert(converter = RoleConverter.class)
     private Role role;
 
+    @Column(name = "refresh_token")
     private String refreshToken;
 
     @Builder
@@ -41,7 +44,7 @@ public class Users extends BaseEntity {
     }
 
     public String getRole() {
-        return this.role.getRole();
+        return this.role.getCode();
     }
 
     public void update(String name, String picture) {

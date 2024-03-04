@@ -12,14 +12,12 @@ public class ChoicesResponseDto {
     private Long choiceIdx;
     private Integer seq;
     private String title;
-    private boolean isAnswer;
 
     @Builder
-    public ChoicesResponseDto(String choiceId, Long choiceIdx, Integer seq, String title, boolean isAnswer) {
+    public ChoicesResponseDto(String choiceId, Long choiceIdx, Integer seq, String title) {
         this.choiceId = choiceId;
         this.choiceIdx = choiceIdx;
         this.seq = seq;
         this.title = title;
-        this.isAnswer = isAnswer;
     }
 }

@@ -1,4 +1,4 @@
-package com.quiz.security.handler;
+package com.quiz.api_module.com.quiz.global.security.handler;
 
 import jakarta.servlet.ServletException;
 import jakarta.servlet.http.HttpServletRequest;

@@ -7,11 +7,11 @@ public enum Role {
     ADMIN("ADMIN", "admin"),
     USER("USER", "user");
 
-    private final String role;
-    private final String title;
+    private final String code;
+    private final String value;
 
-    Role(String role, String title) {
-        this.role = role;
-        this.title = title;
+    Role(String code, String value) {
+        this.code = code;
+        this.value = value;
     }
 }

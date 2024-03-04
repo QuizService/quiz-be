@@ -6,10 +6,13 @@ import com.quiz.domain.questions.entity.QuestionType;
 import com.quiz.domain.questions.entity.Questions;
 import com.quiz.domain.questions.mongo.QuestionsMongoTemplate;
 import com.quiz.domain.questions.mongo.QuestionsRepository;
+import com.quiz.dto.choices.ChoicesResponseDto;
 import com.quiz.dto.questions.QuestionsRequestDto;
+import com.quiz.dto.questions.QuestionsResponseDto;
 import com.quiz.global.SequenceGenerator;
 import com.quiz.global.exception.questions.QuestionException;
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.Page;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -81,7 +84,25 @@ public class QuestionService {
         questionsRepository.updateAnswers(questionIdx,newAnswers);
     }
 
+    public Page<QuestionsResponseDto> findResponseByQuizId(Long quizId, int page, int size) {
+        Page<Questions> questions = questionsMongoTemplate.findPageByQuizId(quizId, page, size);
+        return questions.map(question -> QuestionsResponseDto.builder()
+                .questionId(question.getIdx())
+                .title(question.getTitle())
+                .score(question.getScore())
+                .questionType(question.getQuestionType().getValue())
+                .choicesResponseDtos(toDto(question.getChoices()))
+                .build());
+    }
 
+    private List<ChoicesResponseDto> toDto(List<Choices> choices) {
+        return choices.stream().map(choice -> ChoicesResponseDto.builder()
+                .choiceId(choice.getId())
+                .choiceIdx(choice.getIdx())
+                .seq(choice.getSequence())
+                .title(choice.getTitle())
+                .build()).toList();
+    }
 
     //for test
     public void deleteAll() {

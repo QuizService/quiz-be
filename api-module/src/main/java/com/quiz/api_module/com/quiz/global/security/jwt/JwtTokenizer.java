@@ -1,4 +1,4 @@
-package com.quiz.security.jwt;
+package com.quiz.api_module.com.quiz.global.security.jwt;
 
 import com.auth0.jwt.JWT;
 import com.auth0.jwt.algorithms.Algorithm;

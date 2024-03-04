@@ -1,4 +1,4 @@
-package com.quiz.exception.auth;
+package com.quiz.global.exception.auth;
 
 import com.quiz.exception.CustomRuntimeException;
 import com.quiz.exception.enums.ErrorType;

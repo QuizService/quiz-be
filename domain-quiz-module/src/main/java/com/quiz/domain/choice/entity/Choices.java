@@ -18,6 +18,10 @@ public class Choices {
     @Transient
     public static final String SEQUENCE_NAME = "choices_sequence";
 
+    @Id
+    @Field(value = "_id", targetType = FieldType.OBJECT_ID)
+    private String id;
+
     private Long idx;
 
     private Integer sequence;

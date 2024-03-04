@@ -1,8 +1,8 @@
-package com.quiz.security.handler;
+package com.quiz.api_module.com.quiz.global.security.handler;
 
 import com.quiz.domain.users.entity.Users;
 import com.quiz.domain.users.repository.UsersRepository;
-import com.quiz.security.jwt.JwtTokenizer;
+import com.quiz.api_module.com.quiz.global.security.jwt.JwtTokenizer;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;

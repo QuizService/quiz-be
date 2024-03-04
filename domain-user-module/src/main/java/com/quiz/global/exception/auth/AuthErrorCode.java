@@ -1,4 +1,4 @@
-package com.quiz.exception.enums.auth;
+package com.quiz.global.exception.auth;
 
 import com.quiz.exception.enums.ErrorType;
 import lombok.Getter;
