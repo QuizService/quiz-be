@@ -21,6 +21,8 @@ import static com.quiz.global.exception.quiz.enums.QuizErrorType.QUIZ_NOT_FOUND;
 public class QuizService {
     private final QuizRepository quizRepository;
 
+
+    @Transactional
     public Long saveQuiz(QuizRequestDto request, Long userId) {
         Quiz quiz = Quiz.builder()
                 .userId(userId)
@@ -30,7 +32,7 @@ public class QuizService {
                 .dueDate(request.getDueDate())
                 .build();
         Quiz quiz1 = quizRepository.save(quiz);
-        log.info("save quiz, quizId = {}", quiz1.getId());
+        log.info("save quiz, quiz = {}", quiz1);
         return quiz1.getId();
     }
 
@@ -54,6 +56,16 @@ public class QuizService {
 
         quiz.setMaxScore(maxScore);
         quizRepository.save(quiz);
+    }
+
+    public Quiz findById(Long quizId) {
+        return quizRepository.findById(quizId)
+                .orElseThrow(() -> new QuizException(QUIZ_NOT_FOUND));
+    }
+
+    // for test
+    public void deleteAll() {
+        quizRepository.deleteAll();
     }
 
 

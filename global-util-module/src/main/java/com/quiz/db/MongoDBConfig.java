@@ -1,9 +1,9 @@
 package com.quiz.db;
 
-import com.mongodb.ConnectionString;
-import com.mongodb.MongoClientSettings;
+import com.mongodb.*;
 import com.mongodb.client.MongoClient;
 import com.mongodb.client.MongoClients;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -14,8 +14,12 @@ import org.springframework.data.mongodb.core.MongoTemplate;
 import org.springframework.data.mongodb.repository.config.EnableMongoRepositories;
 import org.springframework.transaction.annotation.EnableTransactionManagement;
 
+import java.util.concurrent.TimeUnit;
+
+@Slf4j
 @Configuration
-@EnableMongoRepositories(basePackages = "com.quiz.domain.*.mongo")
+@EnableMongoRepositories(
+        basePackages = "com.quiz.domain.*.mongo")
 @EnableTransactionManagement
 public class MongoDBConfig extends AbstractMongoClientConfiguration {
     @Value("${spring.data.mongodb.url}")
@@ -31,10 +35,13 @@ public class MongoDBConfig extends AbstractMongoClientConfiguration {
 
     @Override
     public MongoClient mongoClient() {
+        String url = this.connectionString;
         ConnectionString connectionString = new ConnectionString(this.connectionString);
         MongoClientSettings mongoClientSettings = MongoClientSettings.builder()
+                .applyToConnectionPoolSettings(builder -> builder.maxConnectionIdleTime(10, TimeUnit.SECONDS))
                 .applyConnectionString(connectionString)
                 .build();
+
         return MongoClients.create(mongoClientSettings);
     }
 

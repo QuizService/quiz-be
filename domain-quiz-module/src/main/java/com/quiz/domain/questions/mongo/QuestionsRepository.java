@@ -31,12 +31,4 @@ public interface QuestionsRepository extends MongoRepository<Questions, String> 
     @Update("{'$set' : {'answers' :?1}}")
     void updateAnswers(Long questionIdx, Answers newAnswers);
 
-    @Query("{'idx' :?0}")
-    @Update("{'$set' : {'answers' :?1}}")
-    void updateQuestions(Long idx,
-                         Integer sequence,
-                         String title,
-                         Integer score,
-                         String questionType,
-                         LocalDateTime now);
 }

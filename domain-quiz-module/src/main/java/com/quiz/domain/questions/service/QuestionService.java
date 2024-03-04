@@ -34,6 +34,7 @@ public class QuestionService {
                 .title(questionDto.getTitle())
                 .sequence(questionDto.getSequence())
                 .score(questionDto.getScore())
+                .questionType(questionDto.getQuestionType())
                 .choices(choices)
                 .answers(answers)
                 .build();
@@ -78,5 +79,12 @@ public class QuestionService {
 
     public void updateAnswers(Long questionIdx,Answers newAnswers) {
         questionsRepository.updateAnswers(questionIdx,newAnswers);
+    }
+
+
+
+    //for test
+    public void deleteAll() {
+        questionsRepository.deleteAll();
     }
 }
