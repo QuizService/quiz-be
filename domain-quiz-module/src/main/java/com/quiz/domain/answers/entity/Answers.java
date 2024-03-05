@@ -28,9 +28,6 @@ public class Answers {
     private String id;
 
     @Field
-    private Long idx;
-
-    @Field
     private List<Integer> multipleChoiceAnswers;
 
     @Field
@@ -39,8 +36,7 @@ public class Answers {
     private LocalDateTime created;
 
     @Builder
-    public Answers(Long idx,String shortAnswer, List<Integer> multipleChoiceAnswers) {
-        this.idx = idx;
+    public Answers(String shortAnswer, List<Integer> multipleChoiceAnswers) {
         this.multipleChoiceAnswers = multipleChoiceAnswers == null ? new ArrayList<>() : multipleChoiceAnswers;
         this.shortAnswer = shortAnswer;
         this.created = LocalDateTime.now();
@@ -57,8 +53,4 @@ public class Answers {
                 && answers.getShortAnswer().equals(this.shortAnswer);
     }
 
-
-    public void setIdx(Long idx) {
-        this.idx = idx;
-    }
 }

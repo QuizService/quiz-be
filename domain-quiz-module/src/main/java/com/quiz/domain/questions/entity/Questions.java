@@ -19,14 +19,9 @@ import java.util.List;
 @Document(collection = "questions")
 public class Questions {
 
-    @Transient
-    public static final String SEQUENCE_NAME = "questions_sequence";
-
     @Id
     @Field(value = "_id", targetType = FieldType.OBJECT_ID)
     private String id;
-
-    private Long idx;
 
     @Field(name = "quiz_id")
     private Long quizId;
@@ -56,8 +51,7 @@ public class Questions {
     private LocalDateTime updated;
 
     @Builder
-    public Questions(Long idx, Long quizId, int sequence, String title, Integer score, String questionType, List<Choices> choices, Answers answers) {
-        this.idx = idx;
+    public Questions(Long quizId, int sequence, String title, Integer score, String questionType, List<Choices> choices, Answers answers) {
         this.quizId = quizId;
         this.sequence = sequence;
         this.title = title;

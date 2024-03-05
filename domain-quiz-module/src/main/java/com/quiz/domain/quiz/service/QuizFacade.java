@@ -1,9 +1,12 @@
 package com.quiz.domain.quiz.service;
 
 import com.quiz.domain.questions.service.QuestionFacade;
+import com.quiz.domain.quiz.entity.Quiz;
 import com.quiz.dto.questions.QuestionIntegratedDto;
 import com.quiz.dto.questions.QuestionsRequestDto;
 import com.quiz.dto.quiz.QuizRequestDto;
+import com.quiz.dto.quiz.QuizResponseDto;
+import com.quiz.utils.TimeConverter;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
@@ -39,5 +42,16 @@ public class QuizFacade {
     private void saveQuizMaxScore(List<QuestionsRequestDto> questionsRequestDtos, Long quizId) {
         Integer maxScore = questionFacade.calculateQuestionsTotalScore(questionsRequestDtos);
         quizService.saveQuizMaxScore(quizId, maxScore);
+    }
+
+    public QuizResponseDto findById(Long quizId) {
+        Quiz quiz = quizService.findById(quizId);
+        return QuizResponseDto.builder()
+                .quizId(quiz.getId())
+                .title(quiz.getTitle())
+                .maxScore(quiz.getMaxScore())
+                .startDate(TimeConverter.localDateTimeToString(quiz.getStartDate()))
+                .dueDate(TimeConverter.localDateTimeToString(quiz.getDueDate()))
+                .build();
     }
 }

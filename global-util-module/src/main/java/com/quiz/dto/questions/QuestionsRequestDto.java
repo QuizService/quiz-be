@@ -14,7 +14,7 @@ import java.util.List;
 @Validated
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 public class QuestionsRequestDto {
-    private Long questionId;
+    private String questionId;
     @NotBlank
     private String title;
     @NotBlank
@@ -26,7 +26,7 @@ public class QuestionsRequestDto {
     private String answer;
 
     @Builder
-    public QuestionsRequestDto(Long questionId, String title, Integer score, Integer sequence, String questionType, List<ChoicesRequestDto> choices, String answer) {
+    public QuestionsRequestDto(String questionId, String title, Integer score, Integer sequence, String questionType, List<ChoicesRequestDto> choices, String answer) {
         this.questionId = questionId;
         this.title = title;
         this.score = score;

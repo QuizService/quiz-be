@@ -1,5 +1,6 @@
 package com.quiz.domain.questions.mongo;
 
+import com.quiz.domain.questions.entity.QuestionType;
 import com.quiz.domain.questions.entity.Questions;
 import com.quiz.dto.questions.QuestionsResponseDto;
 import lombok.RequiredArgsConstructor;
@@ -23,7 +24,7 @@ public class QuestionsMongoTemplate {
 
     private final MongoTemplate mongoTemplate;
 
-    public void updateQuestion(Long idx,
+    public void updateQuestion(String id,
                                Integer sequence,
                                String title,
                                Integer score,
@@ -33,15 +34,15 @@ public class QuestionsMongoTemplate {
         Query query = new Query();
         Update update = new Update();
 
-        query.addCriteria(Criteria.where("idx").is(idx));
+        query.addCriteria(Criteria.where("id").is(id));
 
         update.set("sequence", sequence);
         update.set("title", title);
         update.set("score", score);
-        update.set("questionType", questionType);
+        update.set("questionType", QuestionType.findByInitial(questionType));
         update.set("updated", updated);
 
-        mongoTemplate.updateMulti(query, update, Questions.class);
+        mongoTemplate.updateFirst(query, update, Questions.class);
     }
 
     public Page<Questions> findPageByQuizId(Long quizId, int page, int size) {

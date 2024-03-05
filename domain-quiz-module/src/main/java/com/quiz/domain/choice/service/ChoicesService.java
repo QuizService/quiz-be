@@ -25,28 +25,14 @@ public class ChoicesService {
         if(questionType.equals(QuestionType.MULTIPLE_CHOICE)) {
             List<ChoicesRequestDto> choicesDtoList = questionDto.getChoices();
             choices = choicesDtoList.stream()
-                    .map(c -> {
-                        Long choiceIdx = sequenceGenerator.generateSequence(Choices.SEQUENCE_NAME);
-                        return Choices.builder()
-                                .idx(choiceIdx)
-                                .sequence(c.getSequence())
-                                .title(c.getTitle())
-                                .isAnswer(c.getIsAnswer())
-                                .build();
-                    })
+                    .map(c -> Choices.builder()
+                            .sequence(c.getSequence())
+                            .title(c.getTitle())
+                            .isAnswer(c.getIsAnswer())
+                            .build())
                     .toList();
         }
         return choices;
-    }
-
-    public List<Choices> setIdx(List<Choices> newChoices) {
-        for (Choices newChoice : newChoices) {
-            if(newChoice.getIdx() == null) {
-                Long idx = sequenceGenerator.generateSequence(Choices.SEQUENCE_NAME);
-                newChoice.setIdx(idx);
-            }
-        }
-        return newChoices;
     }
 
     public boolean isChoicesChanged(List<Choices> choices, List<Choices> newChoices) {
@@ -55,7 +41,7 @@ public class ChoicesService {
         }
 
         for (Choices newChoice : newChoices) {
-            if(newChoice.getIdx() == null) {
+            if(newChoice.getId() == null) {
                 return true;
             }
         }

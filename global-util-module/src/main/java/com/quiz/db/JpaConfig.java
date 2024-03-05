@@ -37,8 +37,6 @@ import java.util.Properties;
 @EnableTransactionManagement
 public class JpaConfig {
 
-    @Value("${spring.jpa.database-platform}")
-    private String dialect;
     @Value("${spring.jpa.hibernate.ddl-auto}")
     private String ddl_auto;
     @Value("${spring.datasource.driver-class-name}")

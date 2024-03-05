@@ -15,14 +15,9 @@ import java.time.LocalDateTime;
 @Getter
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 public class Choices {
-    @Transient
-    public static final String SEQUENCE_NAME = "choices_sequence";
-
     @Id
     @Field(value = "_id", targetType = FieldType.OBJECT_ID)
     private String id;
-
-    private Long idx;
 
     private Integer sequence;
 
@@ -33,8 +28,7 @@ public class Choices {
     private LocalDateTime created;
 
     @Builder
-    public Choices(Long idx, Integer sequence, String title, Boolean isAnswer) {
-        this.idx = idx;
+    public Choices(Integer sequence, String title, Boolean isAnswer) {
         this.sequence = sequence;
         this.title = title;
         this.isAnswer = isAnswer;
@@ -48,7 +42,4 @@ public class Choices {
                 && choices.getTitle().equals(this.title);
     }
 
-    public void setIdx(Long idx) {
-        this.idx = idx;
-    }
 }

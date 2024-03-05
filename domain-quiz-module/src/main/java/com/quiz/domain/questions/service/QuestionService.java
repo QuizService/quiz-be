@@ -29,10 +29,8 @@ public class QuestionService {
     private final QuestionsMongoTemplate questionsMongoTemplate;
     private final SequenceGenerator sequenceGenerator;
 
-    public Long save(List<Choices> choices, Answers answers, QuestionsRequestDto questionDto, Long quizId) {
-        Long questionIdx = sequenceGenerator.generateSequence(Questions.SEQUENCE_NAME);
+    public String save(List<Choices> choices, Answers answers, QuestionsRequestDto questionDto, Long quizId) {
         Questions question = Questions.builder()
-                .idx(questionIdx)
                 .quizId(quizId)
                 .title(questionDto.getTitle())
                 .sequence(questionDto.getSequence())
@@ -42,7 +40,7 @@ public class QuestionService {
                 .answers(answers)
                 .build();
         question = questionsRepository.save(question);
-        return question.getIdx();
+        return question.getId();
     }
 
 
@@ -62,12 +60,12 @@ public class QuestionService {
         questionsRepository.save(questions);
     }
 
-    public void update(QuestionsRequestDto questionsDto, Long idx) {
-        questionsMongoTemplate.updateQuestion(idx, questionsDto.getSequence(), questionsDto.getTitle(), questionsDto.getScore(), questionsDto.getQuestionType(), LocalDateTime.now());
+    public void update(QuestionsRequestDto questionsDto, String questionId) {
+        questionsMongoTemplate.updateQuestion(questionId, questionsDto.getSequence(), questionsDto.getTitle(), questionsDto.getScore(), questionsDto.getQuestionType(), LocalDateTime.now());
     }
 
-    public Questions findById(Long questionId) {
-        return questionsRepository.findByIdx(questionId)
+    public Questions findById(String questionId) {
+        return questionsRepository.findById(questionId)
                 .orElseThrow(() -> new QuestionException(QUESTION_NOT_FOUND));
     }
 
@@ -76,18 +74,17 @@ public class QuestionService {
     }
 
 
-    public void updateChoices(Long questionIdx, List<Choices> newChoices) {
-        questionsRepository.updateChoices(questionIdx, newChoices);
+    public void updateChoices(String questionId, List<Choices> newChoices) {
+        questionsRepository.updateChoices(questionId, newChoices);
     }
 
-    public void updateAnswers(Long questionIdx,Answers newAnswers) {
-        questionsRepository.updateAnswers(questionIdx,newAnswers);
+    public void updateAnswers(String questionId,Answers newAnswers) {
+        questionsRepository.updateAnswers(questionId,newAnswers);
     }
 
     public Page<QuestionsResponseDto> findResponseByQuizId(Long quizId, int page, int size) {
         Page<Questions> questions = questionsMongoTemplate.findPageByQuizId(quizId, page, size);
         return questions.map(question -> QuestionsResponseDto.builder()
-                .questionId(question.getIdx())
                 .title(question.getTitle())
                 .score(question.getScore())
                 .questionType(question.getQuestionType().getValue())
@@ -98,7 +95,6 @@ public class QuestionService {
     private List<ChoicesResponseDto> toDto(List<Choices> choices) {
         return choices.stream().map(choice -> ChoicesResponseDto.builder()
                 .choiceId(choice.getId())
-                .choiceIdx(choice.getIdx())
                 .seq(choice.getSequence())
                 .title(choice.getTitle())
                 .build()).toList();

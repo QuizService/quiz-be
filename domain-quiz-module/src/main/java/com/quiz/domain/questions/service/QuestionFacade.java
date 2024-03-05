@@ -7,7 +7,9 @@ import com.quiz.domain.choice.service.ChoicesService;
 import com.quiz.domain.questions.entity.QuestionType;
 import com.quiz.domain.questions.entity.Questions;
 import com.quiz.dto.questions.QuestionsRequestDto;
+import com.quiz.dto.questions.QuestionsResponseDto;
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.Page;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -44,7 +46,7 @@ public class QuestionFacade {
                 //update
                 updateChoices(questions, newChoices);
                 updateAnswer(questions, newAnswers);
-                questionService.update(questionsDto, questions.getIdx());
+                questionService.update(questionsDto, questions.getId());
             } else {
                 //save
                 saveQuestions(questionsDtos, quizId);
@@ -56,8 +58,7 @@ public class QuestionFacade {
         List<Choices> choices= questions.getChoices();
         boolean isChanged = choicesService.isChoicesChanged(choices, newChoices);
         if(isChanged) {
-            newChoices = choicesService.setIdx(newChoices);
-            questionService.updateChoices(questions.getIdx(), newChoices);
+            questionService.updateChoices(questions.getId(), newChoices);
         }
     }
 
@@ -65,11 +66,15 @@ public class QuestionFacade {
         Answers answers = questions.getAnswers();
         boolean isChanged = answersService.isAnswersChanged(answers, newAnswers);
         if(isChanged) {
-            newAnswers = answersService.setIdx(newAnswers);
-            questionService.updateAnswers(questions.getIdx(), newAnswers);
+            questionService.updateAnswers(questions.getId(), newAnswers);
         }
 
 
+    }
+
+    @Transactional(readOnly = true)
+    public Page<QuestionsResponseDto> findPageByQuizId(Long quizId, int page, int size) {
+        return questionService.findResponseByQuizId(quizId, page, size);
     }
 
     public Integer calculateQuestionsTotalScore(List<QuestionsRequestDto> questionsDtos) {

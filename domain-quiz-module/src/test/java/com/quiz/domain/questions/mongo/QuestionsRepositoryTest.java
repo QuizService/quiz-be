@@ -62,7 +62,7 @@ public class QuestionsRepositoryTest {
 
     @Test
     void findByQuizId() {
-        save();
+        String id = save();
         List<Questions> questions = questionsRepository.findAllByQuizId(quizId);
 
         assertThat(questions)
@@ -80,8 +80,8 @@ public class QuestionsRepositoryTest {
 
     @Test
     void findByIdxTest() {
-        save();
-        Questions question = questionsRepository.findByIdx(1L)
+        String id = save();
+        Questions question = questionsRepository.findById(id)
                 .orElseThrow(() -> new QuestionException(QuestionErrorType.QUESTION_NOT_FOUND));
         assertThat(question.getQuestionType())
                 .isEqualTo(QuestionType.MULTIPLE_CHOICE);
@@ -93,12 +93,12 @@ public class QuestionsRepositoryTest {
 
     @Test
     void updateChoicesAndAnswers() {
-        save();
+        String id = save();
         List<Choices> newChoices = TestEntities.getMultipleUpdateChoices();
-        Answers newAnswer = TestEntities.getUpdatedAnswers();
-        questionsRepository.updateChoices(1L, newChoices);
-        questionsRepository.updateAnswers(1L, newAnswer);
-        Questions questions = questionsRepository.findByIdx(1L)
+        Answers newAnswer = TestEntities.getNewMultipleAnswers();
+        questionsRepository.updateChoices(id, newChoices);
+        questionsRepository.updateAnswers(id, newAnswer);
+        Questions questions = questionsRepository.findById(id)
                 .orElseThrow(() -> new QuestionException(QuestionErrorType.QUESTION_NOT_FOUND));
         List<Choices> updatedChoices = questions.getChoices();
         assertThat(updatedChoices.size())
@@ -117,9 +117,9 @@ public class QuestionsRepositoryTest {
 
     }
 
-    void save() {
+    String save() {
         Questions questions = TestEntities.getQuestions();
-        questionsRepository.save(questions);
+        return questionsRepository.save(questions).getId();
     }
 
 }

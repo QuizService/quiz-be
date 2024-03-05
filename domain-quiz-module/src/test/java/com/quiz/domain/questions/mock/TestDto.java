@@ -20,6 +20,16 @@ public class TestDto {
                 .build();
     }
 
+    public static QuestionsRequestDto getUpdatedQuestionsReqDto() {
+        return QuestionsRequestDto.builder()
+                .title("updated question1")
+                .score(20)
+                .sequence(2)
+                .questionType("S")
+                .answer("updated answer")
+                .build();
+    }
+
     public static List<ChoicesRequestDto> getChoices() {
         List<ChoicesRequestDto> choicesRequestDtos = new ArrayList<>();
         for(int i = 1; i<=5; i++) {

@@ -33,25 +33,17 @@ public class AnswersService {
         }
 
         return Answers.builder()
-                .idx(sequenceGenerator.generateSequence(Answers.SEQUENCE_NAME))
                 .shortAnswer(answer)
                 .multipleChoiceAnswers(answerChoiceIdxs)
                 .build();
     }
 
     public boolean isAnswersChanged(Answers answers, Answers newAnswers) {
-        if(newAnswers.getIdx() == null) {
+        if(newAnswers.getId() == null) {
             return true;
         }
 
         return !answers.isEqualsToNew(newAnswers);
 
-    }
-
-    public Answers setIdx(Answers newAnswers) {
-        if(newAnswers.getIdx() == null) {
-            newAnswers.setIdx(sequenceGenerator.generateSequence(Answers.SEQUENCE_NAME));
-        }
-        return newAnswers;
     }
 }

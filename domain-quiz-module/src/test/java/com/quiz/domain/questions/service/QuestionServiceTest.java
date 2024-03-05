@@ -1,9 +1,13 @@
 package com.quiz.domain.questions.service;
 
 import com.quiz.TestConfiguration;
+import com.quiz.domain.answers.entity.Answers;
+import com.quiz.domain.questions.entity.QuestionType;
+import com.quiz.domain.questions.entity.Questions;
 import com.quiz.domain.questions.mock.TestDto;
 import com.quiz.domain.questions.mock.TestEntities;
 import com.quiz.dto.questions.QuestionsRequestDto;
+import lombok.extern.slf4j.Slf4j;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -20,8 +24,11 @@ import org.testcontainers.containers.MongoDBContainer;
 import org.testcontainers.junit.jupiter.Testcontainers;
 import org.testcontainers.utility.DockerImageName;
 
+import java.util.ArrayList;
+
 import static org.assertj.core.api.Assertions.assertThat;
 
+@Slf4j
 @Testcontainers
 @ContextConfiguration(classes = {TestConfiguration.class})
 @SpringBootTest
@@ -54,14 +61,58 @@ public class QuestionServiceTest {
 
     @Test
     void saveTest() {
-        Long questionIdx = save();
-        assertThat(questionIdx)
+        String questionId = save();
+        assertThat(questionId)
                 .isNotNull();
     }
 
+    @Test
+    void updateTest() {
+        String questionId = save();
+        log.info("questionId ={}", questionId);
+        QuestionsRequestDto newQuestionRequestDto = TestDto.getUpdatedQuestionsReqDto();
+        questionService.update(newQuestionRequestDto, questionId);
 
-    Long save() {
+        Questions questions = questionService.findById(questionId);
+
+        assertThat(questions.getQuestionType()).isEqualTo(QuestionType.SHORT_ANSWER);
+        assertThat(questions.getTitle()).isEqualTo(newQuestionRequestDto.getTitle());
+        assertThat(questions.getScore()).isEqualTo(newQuestionRequestDto.getScore());
+    }
+
+    @Test
+    void updateChoiceTest() {
+        String questionId = save();
+
+        QuestionsRequestDto newQuestionRequestDto = TestDto.getUpdatedQuestionsReqDto();
+        questionService.update(newQuestionRequestDto, questionId);
+        questionService.updateChoices(questionId, new ArrayList<>());
+
+        Questions questions = questionService.findById(questionId);
+
+        assertThat(questions.getQuestionType()).isEqualTo(QuestionType.SHORT_ANSWER);
+        assertThat(questions.getChoices()).isEmpty();
+    }
+
+    @Test
+    void updateAnswerTest() {
+        String questionId = save();
+
+        QuestionsRequestDto newQuestionRequestDto = TestDto.getUpdatedQuestionsReqDto();
+        Answers answers = TestEntities.getNewShortAnswers();
+        questionService.update(newQuestionRequestDto, questionId);
+        questionService.updateAnswers(questionId, answers);
+        Questions questions = questionService.findById(questionId);
+
+        assertThat(questions.getQuestionType()).isEqualTo(QuestionType.SHORT_ANSWER);
+        assertThat(questions.getAnswers().getShortAnswer()).isEqualTo(answers.getShortAnswer());
+    }
+
+
+    String save() {
         QuestionsRequestDto questionsRequestDto = TestDto.getQuestionsReqDto();
         return questionService.save(TestEntities.getChoices(), TestEntities.getAnswers(), questionsRequestDto, 1L);
     }
+
+
 }
