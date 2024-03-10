@@ -12,7 +12,6 @@ dependencies {
     implementation project(':global-util-module')
     implementation project(':independent-module')
     implementation project(':domain-quiz-module')
-    implementation project(':domain-answer-module')
     implementation project(':domain-user-module')
 
     testImplementation 'io.projectreactor:reactor-test'

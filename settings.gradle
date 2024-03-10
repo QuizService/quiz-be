@@ -3,6 +3,5 @@ include 'independent-module'
 include 'global-util-module'
 include 'domain-user-module'
 include 'domain-quiz-module'
-include 'domain-answer-module'
 include 'api-module'
 

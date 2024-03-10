@@ -5,18 +5,26 @@ import lombok.AccessLevel;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
+import org.springframework.data.mongodb.core.mapping.Document;
+import org.springframework.data.mongodb.core.mapping.Field;
+import org.springframework.data.mongodb.core.mapping.FieldType;
 
 import java.time.LocalDateTime;
 
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 @Getter
-@Entity
+@Document(collection = "participant_info")
 public class ParticipantInfo {
-    @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long id;
 
-    @Column(name = "quiz_id")
+
+    @Id
+    @Field(value = "_id", targetType = FieldType.OBJECT_ID)
+    private String id;
+
+    // 보조 키
+    private Long idx;
+
+    @Field(name = "quiz_id")
     private Long quizId;
 
     private Integer score;
@@ -26,7 +34,7 @@ public class ParticipantInfo {
     private LocalDateTime created;
 
     @Builder
-    public ParticipantInfo(Long idx, Long quizId) {
+    public ParticipantInfo(Long quizId) {
         this.quizId = quizId;
         this.created = LocalDateTime.now();
     }
