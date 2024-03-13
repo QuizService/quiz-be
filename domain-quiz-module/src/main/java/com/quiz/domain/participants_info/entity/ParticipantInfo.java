@@ -27,6 +27,9 @@ public class ParticipantInfo {
     @Field(name = "quiz_id")
     private Long quizId;
 
+    @Field(name = "use_id")
+    private Long userId;
+
     private Integer score;
 
     private Integer number;
@@ -34,8 +37,9 @@ public class ParticipantInfo {
     private LocalDateTime created;
 
     @Builder
-    public ParticipantInfo(Long quizId) {
+    public ParticipantInfo(Long quizId, Long userId) {
         this.quizId = quizId;
+        this.userId = userId;
         this.created = LocalDateTime.now();
     }
 

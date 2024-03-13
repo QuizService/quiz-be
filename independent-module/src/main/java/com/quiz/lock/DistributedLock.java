@@ -9,7 +9,6 @@ import java.util.concurrent.TimeUnit;
 @Target(ElementType.METHOD)
 @Retention(RetentionPolicy.RUNTIME)
 public @interface DistributedLock {
-    String key();
     TimeUnit timeunit() default TimeUnit.SECONDS;
 
     // 락을 기다리는 시간, 락 확득을 위해 waitTime 만큼 대기
