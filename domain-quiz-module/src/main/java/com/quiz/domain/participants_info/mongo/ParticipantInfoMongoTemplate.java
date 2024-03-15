@@ -8,6 +8,8 @@ import org.springframework.data.mongodb.core.query.Query;
 import org.springframework.data.mongodb.core.query.Update;
 import org.springframework.stereotype.Repository;
 
+import java.util.Optional;
+
 @Repository
 @RequiredArgsConstructor
 public class ParticipantInfoMongoTemplate {
@@ -27,6 +29,32 @@ public class ParticipantInfoMongoTemplate {
         ParticipantInfo savedParticipants = mongoTemplate.save(participantInfo);
         return savedParticipants.getId();
     }
+
+    public Optional<ParticipantInfo> findByQuizIdAndUserId(Long quizId, Long userId) {
+        Query query = new Query();
+        Criteria criteria = new Criteria();
+        criteria.and("quizId").is(quizId);
+        criteria.and("userId").is(userId);
+
+        query.addCriteria(criteria);
+
+        ParticipantInfo participantInfo = mongoTemplate.findOne(query, ParticipantInfo.class);
+        return Optional.of(participantInfo);
+    }
+
+    public void update(Long quizId, Long userId, int participantCount) {
+        Query query = new Query();
+        Criteria criteria = new Criteria();
+        criteria.and("quizId").is(quizId);
+        criteria.and("userId").is(userId);
+        query.addCriteria(criteria);
+
+        Update update = new Update();
+        update.set("number", participantCount);
+
+        mongoTemplate.updateFirst(query, update, ParticipantInfo.class);
+    }
+
 
 
 }

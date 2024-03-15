@@ -14,8 +14,8 @@ import java.util.List;
 
 @Getter
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
-@Document(collection = "question_response")
-public class QuestionResponse {
+@Document(collection = "responses")
+public class Responses {
     @Id
     @Field(value = "_id", targetType = FieldType.OBJECT_ID)
     private String id;
@@ -27,7 +27,7 @@ public class QuestionResponse {
     private Long quizId;
 
     @Field(value = "question_id")
-    private Long questionId;
+    private String questionId;
 
     private List<Integer> choices;
 
@@ -38,7 +38,7 @@ public class QuestionResponse {
     private LocalDateTime created;
 
     @Builder
-    public QuestionResponse(Long participantInfoId, Long quizId, Long questionId, List<Integer> choices, String answer, Boolean isAnswers) {
+    public Responses(Long participantInfoId, Long quizId, String questionId, List<Integer> choices, String answer, Boolean isAnswers) {
         this.participantInfoId = participantInfoId;
         this.quizId = quizId;
         this.questionId = questionId;

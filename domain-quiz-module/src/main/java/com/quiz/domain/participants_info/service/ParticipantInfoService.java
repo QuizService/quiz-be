@@ -8,6 +8,8 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.util.Optional;
+
 @Slf4j
 @RequiredArgsConstructor
 @Transactional
@@ -17,12 +19,21 @@ public class ParticipantInfoService {
 
     @DistributedLock()
     public String saveFcfs(Long quizId, Long userId, int capacity) {
-        int participated = participantInfoMongoTemplate.countParticipantsByQuizId(quizId);
-        if(participated + 1 > capacity) {
+        int participatedCnt = participantInfoMongoTemplate.countParticipantsByQuizId(quizId);
+        if(participatedCnt + 1 > capacity) {
             throw new RuntimeException("cannot participate");
         }
         return save(quizId, userId);
     }
+
+    public void updateFcFs(Long quizId, Long userId, int capacity) {
+        int participatedCnt = participantInfoMongoTemplate.countParticipantsByQuizId(quizId);
+        if(participatedCnt + 1 > capacity) {
+            throw new RuntimeException("cannot participate2");
+        }
+        participantInfoMongoTemplate.update(quizId, userId, capacity + 1);
+    }
+
 
     public String save(Long quizId, Long userId) {
         ParticipantInfo participantInfo = ParticipantInfo.builder()
@@ -30,5 +41,10 @@ public class ParticipantInfoService {
                 .userId(userId)
                 .build();
         return participantInfoMongoTemplate.save(participantInfo);
+    }
+
+    public ParticipantInfo findByQuizIdAndUserId(Long quizId, Long userId) {
+        return participantInfoMongoTemplate.findByQuizIdAndUserId(quizId, userId)
+                .orElseThrow(() -> new RuntimeException("participantInfo not found"));
     }
 }
