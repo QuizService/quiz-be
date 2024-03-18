@@ -1,4 +1,4 @@
-package com.quiz.dto.quiz;
+package com.quiz.domain.quiz.dto;
 
 import lombok.AccessLevel;
 import lombok.Builder;

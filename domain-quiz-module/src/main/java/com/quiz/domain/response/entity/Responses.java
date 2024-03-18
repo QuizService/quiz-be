@@ -21,13 +21,15 @@ public class Responses {
     private String id;
 
     @Field(name = "participant_info_id")
-    private Long participantInfoId;
+    private String participantInfoId;
 
     @Field(name = "quiz_id")
     private Long quizId;
 
     @Field(value = "question_id")
     private String questionId;
+
+    private Integer sequence;
 
     private List<Integer> choices;
 
@@ -38,10 +40,11 @@ public class Responses {
     private LocalDateTime created;
 
     @Builder
-    public Responses(Long participantInfoId, Long quizId, String questionId, List<Integer> choices, String answer, Boolean isAnswers) {
+    public Responses(String participantInfoId, Long quizId, String questionId, Integer sequence, List<Integer> choices, String answer, Boolean isAnswers) {
         this.participantInfoId = participantInfoId;
         this.quizId = quizId;
         this.questionId = questionId;
+        this.sequence = sequence;
         this.choices = choices;
         this.answer = answer;
         this.isAnswers = (!choices.isEmpty() || answer != null) && isAnswers; //choices 와 answers 둘다 null인 경우 오답처리

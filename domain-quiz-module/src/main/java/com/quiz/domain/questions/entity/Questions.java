@@ -2,10 +2,9 @@ package com.quiz.domain.questions.entity;
 
 import com.quiz.domain.answers.entity.Answers;
 import com.quiz.domain.choice.entity.Choices;
-import com.quiz.dto.questions.QuestionsRequestDto;
+import com.quiz.domain.questions.dto.QuestionsRequestDto;
 import lombok.*;
 import org.springframework.data.annotation.Id;
-import org.springframework.data.annotation.Transient;
 import org.springframework.data.mongodb.core.mapping.Document;
 import org.springframework.data.mongodb.core.mapping.Field;
 import org.springframework.data.mongodb.core.mapping.FieldType;

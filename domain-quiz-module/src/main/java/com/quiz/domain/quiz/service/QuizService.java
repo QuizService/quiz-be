@@ -3,7 +3,7 @@ package com.quiz.domain.quiz.service;
 
 import com.quiz.domain.quiz.entity.Quiz;
 import com.quiz.domain.quiz.repository.QuizRepository;
-import com.quiz.dto.quiz.QuizRequestDto;
+import com.quiz.domain.quiz.dto.QuizRequestDto;
 import com.quiz.global.exception.quiz.QuizException;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;

@@ -2,8 +2,8 @@ package com.quiz.domain.answers.service;
 
 import com.quiz.domain.answers.entity.Answers;
 import com.quiz.domain.questions.entity.QuestionType;
-import com.quiz.dto.choices.ChoicesRequestDto;
-import com.quiz.dto.questions.QuestionsRequestDto;
+import com.quiz.domain.choice.dto.ChoicesRequestDto;
+import com.quiz.domain.questions.dto.QuestionsRequestDto;
 import com.quiz.global.SequenceGenerator;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;

@@ -7,7 +7,6 @@ import com.quiz.domain.choice.entity.Choices;
 import com.quiz.domain.questions.mock.TestEntities;
 import com.quiz.domain.questions.entity.QuestionType;
 import com.quiz.domain.questions.entity.Questions;
-import com.quiz.dto.questions.QuestionsAnswerDto;
 import com.quiz.global.exception.questions.QuestionException;
 import com.quiz.global.exception.questions.enums.QuestionErrorType;
 import lombok.extern.slf4j.Slf4j;
@@ -15,22 +14,16 @@ import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.test.autoconfigure.data.mongo.DataMongoTest;
 import org.springframework.boot.test.context.SpringBootTest;
-import org.springframework.boot.testcontainers.service.connection.ServiceConnection;
 import org.springframework.data.mongodb.core.MongoTemplate;
 import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.DynamicPropertyRegistry;
 import org.springframework.test.context.DynamicPropertySource;
-import org.testcontainers.containers.GenericContainer;
 import org.testcontainers.containers.MongoDBContainer;
-import org.testcontainers.junit.jupiter.Container;
 import org.testcontainers.junit.jupiter.Testcontainers;
-import org.testcontainers.utility.DockerImageName;
 
 import java.util.List;
 
-import static com.quiz.domain.questions.mock.TestEntities.QUIZ_ID;
 import static org.assertj.core.api.Assertions.assertThat;
 
 @Slf4j

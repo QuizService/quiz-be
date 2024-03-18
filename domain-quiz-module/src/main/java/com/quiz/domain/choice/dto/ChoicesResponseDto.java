@@ -1,4 +1,4 @@
-package com.quiz.dto.choices;
+package com.quiz.domain.choice.dto;
 
 import lombok.AccessLevel;
 import lombok.Builder;

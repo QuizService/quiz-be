@@ -1,7 +1,7 @@
-package com.quiz.dto.questions;
+package com.quiz.domain.questions.dto;
 
 
-import com.quiz.dto.choices.ChoicesResponseDto;
+import com.quiz.domain.choice.dto.ChoicesResponseDto;
 import lombok.AccessLevel;
 import lombok.Builder;
 import lombok.Getter;

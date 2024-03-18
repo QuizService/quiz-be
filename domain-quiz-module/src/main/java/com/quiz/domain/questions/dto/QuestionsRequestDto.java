@@ -1,6 +1,6 @@
-package com.quiz.dto.questions;
+package com.quiz.domain.questions.dto;
 
-import com.quiz.dto.choices.ChoicesRequestDto;
+import com.quiz.domain.choice.dto.ChoicesRequestDto;
 import jakarta.validation.constraints.NotBlank;
 import lombok.AccessLevel;
 import lombok.Builder;

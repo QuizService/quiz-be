@@ -6,9 +6,10 @@ import com.quiz.domain.questions.entity.QuestionType;
 import com.quiz.domain.questions.entity.Questions;
 import com.quiz.domain.questions.mongo.QuestionsMongoTemplate;
 import com.quiz.domain.questions.mongo.QuestionsRepository;
-import com.quiz.dto.choices.ChoicesResponseDto;
-import com.quiz.dto.questions.QuestionsRequestDto;
-import com.quiz.dto.questions.QuestionsResponseDto;
+import com.quiz.domain.choice.dto.ChoicesResponseDto;
+import com.quiz.domain.questions.dto.QuestionsAnswerDto;
+import com.quiz.domain.questions.dto.QuestionsRequestDto;
+import com.quiz.domain.questions.dto.QuestionsResponseDto;
 import com.quiz.global.SequenceGenerator;
 import com.quiz.global.exception.questions.QuestionException;
 import lombok.RequiredArgsConstructor;
@@ -98,6 +99,21 @@ public class QuestionService {
                 .seq(choice.getSequence())
                 .title(choice.getTitle())
                 .build()).toList();
+    }
+
+    //get Answers from questions
+    public List<QuestionsAnswerDto> findAnswersByQuestionsInQuiz(Long quizId) {
+        List<Questions> questions = questionsMongoTemplate.findAllByQuizIdOrderBySequence(quizId);
+        return questions.stream()
+            .map(q -> QuestionsAnswerDto.builder()
+                    .id(q.getId())
+                    .sequence(q.getSequence())
+                    .questionType(q.getQuestionType())
+                    .score(q.getScore())
+                    .choices(q.getAnswers().getMultipleChoiceAnswers())
+                    .answer(q.getAnswers().getShortAnswer())
+                    .build())
+                .toList();
     }
 
     //for test

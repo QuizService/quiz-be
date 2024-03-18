@@ -1,10 +1,10 @@
 package com.quiz.global.event;
 
 
+import com.quiz.domain.response.service.ResponsesFacade;
 import com.quiz.domain.response.service.ResponsesService;
-import com.quiz.dto.responses.ResponsesRequestDto;
+import com.quiz.domain.response.dto.ResponsesRequestDto;
 import lombok.RequiredArgsConstructor;
-import org.springframework.context.event.EventListener;
 import org.springframework.scheduling.annotation.Async;
 import org.springframework.stereotype.Component;
 import org.springframework.transaction.event.TransactionPhase;
@@ -12,14 +12,11 @@ import org.springframework.transaction.event.TransactionalEventListener;
 
 import java.util.List;
 import java.util.Map;
-import java.util.concurrent.CompletableFuture;
-import java.util.concurrent.Executors;
-import java.util.concurrent.Future;
 
 @RequiredArgsConstructor
 @Component
 public class CustomEventListener {
-    public ResponsesService responsesService;
+    public ResponsesFacade responsesFacade;
 
 
     @Async
@@ -27,7 +24,8 @@ public class CustomEventListener {
     public void saveResponses(Map<String, Object> params) {
         List<ResponsesRequestDto> responses = (List<ResponsesRequestDto>) params.get("responses");
         String participantInfoId = (String) params.get("participantInfoId");
+        Long quizId = (Long) params.get("quizId");
 
-        responsesService.saveResponses(participantInfoId, responses);
+        responsesFacade.calculateScoreAndSaveResponse(quizId, responses, participantInfoId);
     }
 }

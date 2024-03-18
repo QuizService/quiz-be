@@ -2,11 +2,8 @@ package com.quiz.domain.quiz.service;
 
 import com.quiz.TestConfiguration;
 import com.quiz.domain.quiz.entity.Quiz;
-import com.quiz.dto.quiz.QuizRequestDto;
-import org.assertj.core.api.Assertions;
-import org.junit.After;
+import com.quiz.domain.quiz.dto.QuizRequestDto;
 import org.junit.jupiter.api.AfterEach;
-import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;

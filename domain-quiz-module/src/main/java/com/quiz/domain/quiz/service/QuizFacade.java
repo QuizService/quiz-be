@@ -2,10 +2,10 @@ package com.quiz.domain.quiz.service;
 
 import com.quiz.domain.questions.service.QuestionFacade;
 import com.quiz.domain.quiz.entity.Quiz;
-import com.quiz.dto.questions.QuestionIntegratedDto;
-import com.quiz.dto.questions.QuestionsRequestDto;
-import com.quiz.dto.quiz.QuizRequestDto;
-import com.quiz.dto.quiz.QuizResponseDto;
+import com.quiz.domain.questions.dto.QuestionIntegratedDto;
+import com.quiz.domain.questions.dto.QuestionsRequestDto;
+import com.quiz.domain.quiz.dto.QuizRequestDto;
+import com.quiz.domain.quiz.dto.QuizResponseDto;
 import com.quiz.utils.TimeConverter;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;

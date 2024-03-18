@@ -2,8 +2,6 @@ package com.quiz.domain.questions.mongo;
 
 import com.quiz.domain.questions.entity.QuestionType;
 import com.quiz.domain.questions.entity.Questions;
-import com.quiz.dto.questions.QuestionsAnswerDto;
-import com.quiz.dto.questions.QuestionsResponseDto;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
@@ -15,7 +13,6 @@ import org.springframework.data.mongodb.core.query.Query;
 import org.springframework.data.mongodb.core.query.Update;
 import org.springframework.data.support.PageableExecutionUtils;
 import org.springframework.stereotype.Component;
-import org.springframework.stereotype.Repository;
 
 import java.time.LocalDateTime;
 import java.util.List;
@@ -61,5 +58,13 @@ public class QuestionsMongoTemplate {
         return PageableExecutionUtils.getPage(filteredQuestions,
                 pageable,
                 () -> mongoTemplate.count(query.skip(-1).limit(-1), Questions.class));
+    }
+
+    public List<Questions> findAllByQuizIdOrderBySequence(Long quizId) {
+        Query query = new Query();
+        query.addCriteria(Criteria.where("quiz_id").is(quizId));
+        query.with(Sort.by(Sort.Direction.ASC, "sequence"));
+
+        return mongoTemplate.find(query, Questions.class, "questions");
     }
 }

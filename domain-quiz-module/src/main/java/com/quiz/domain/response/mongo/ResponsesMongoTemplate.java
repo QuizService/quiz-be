@@ -12,8 +12,8 @@ import java.util.List;
 public class ResponsesMongoTemplate {
     private final MongoTemplate mongoTemplate;
 
-    public void saveAll(List<Responses> questionRespons) {
-        mongoTemplate.insert(questionRespons, Responses.class);
+    public void saveAll(List<Responses> questionResponse) {
+        mongoTemplate.insert(questionResponse, Responses.class);
     }
 
     public void updateAll(List<Responses> questionRespons) {

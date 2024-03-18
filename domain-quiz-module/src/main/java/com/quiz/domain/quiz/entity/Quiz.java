@@ -1,6 +1,6 @@
 package com.quiz.domain.quiz.entity;
 
-import com.quiz.dto.quiz.QuizRequestDto;
+import com.quiz.domain.quiz.dto.QuizRequestDto;
 import com.quiz.global.baseentity.BaseEntity;
 import com.quiz.global.exception.quiz.QuizException;
 import com.quiz.utils.TimeConverter;
