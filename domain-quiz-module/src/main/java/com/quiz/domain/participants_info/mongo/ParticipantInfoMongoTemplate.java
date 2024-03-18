@@ -2,12 +2,14 @@ package com.quiz.domain.participants_info.mongo;
 
 import com.quiz.domain.participants_info.entity.ParticipantInfo;
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.Sort;
 import org.springframework.data.mongodb.core.MongoTemplate;
 import org.springframework.data.mongodb.core.query.Criteria;
 import org.springframework.data.mongodb.core.query.Query;
 import org.springframework.data.mongodb.core.query.Update;
 import org.springframework.stereotype.Repository;
 
+import java.util.List;
 import java.util.Optional;
 
 @Repository
@@ -56,5 +58,21 @@ public class ParticipantInfoMongoTemplate {
     }
 
 
+    public void updateScore(String participantId, Integer score) {
+        Query query = new Query();
+        query.addCriteria(Criteria.where("_id").is(participantId));
 
+        Update update = new Update();
+        update.set("total_score", score);
+
+        mongoTemplate.updateFirst(query, update, ParticipantInfo.class);
+    }
+
+    public List<ParticipantInfo> findAllByQuizIdOrderByNumber(Long quizId) {
+        Query query = new Query();
+        query.addCriteria(Criteria.where("quiz_id").is(quizId));
+        query.with(Sort.by(Sort.Direction.ASC, "number"));
+
+        return mongoTemplate.find(query, ParticipantInfo.class, "participant_info");
+    }
 }

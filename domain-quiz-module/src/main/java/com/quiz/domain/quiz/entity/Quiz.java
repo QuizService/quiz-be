@@ -1,7 +1,7 @@
 package com.quiz.domain.quiz.entity;
 
 import com.quiz.domain.quiz.dto.QuizRequestDto;
-import com.quiz.global.baseentity.BaseEntity;
+import com.quiz.global.baseentity.QuizBaseEntity;
 import com.quiz.global.exception.quiz.QuizException;
 import com.quiz.utils.TimeConverter;
 import jakarta.persistence.*;
@@ -17,7 +17,7 @@ import static com.quiz.global.exception.quiz.enums.QuizErrorType.MAXSCORE_CANNOT
 @Getter
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 @Entity
-public class Quiz extends BaseEntity {
+public class Quiz extends QuizBaseEntity {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)

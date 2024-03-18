@@ -1,5 +1,6 @@
 package com.quiz.domain.participants_info.service;
 
+import com.quiz.domain.participants_info.dto.ParticipantsRankResponseDto;
 import com.quiz.domain.participants_info.entity.ParticipantInfo;
 import com.quiz.domain.participants_info.mongo.ParticipantInfoMongoTemplate;
 import com.quiz.lock.DistributedLock;
@@ -8,7 +9,7 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import java.util.Optional;
+import java.util.List;
 
 @Slf4j
 @RequiredArgsConstructor
@@ -46,5 +47,13 @@ public class ParticipantInfoService {
     public ParticipantInfo findByQuizIdAndUserId(Long quizId, Long userId) {
         return participantInfoMongoTemplate.findByQuizIdAndUserId(quizId, userId)
                 .orElseThrow(() -> new RuntimeException("participantInfo not found"));
+    }
+
+    public void updateTotalScore(String participantId, Integer score) {
+        participantInfoMongoTemplate.updateScore(participantId, score);
+    }
+
+    public List<ParticipantInfo> findRanksByQuizId(Long quizId) {
+        return participantInfoMongoTemplate.findAllByQuizIdOrderByNumber(quizId);
     }
 }

@@ -2,7 +2,6 @@ package com.quiz.domain.response.service;
 
 import com.quiz.domain.response.entity.Responses;
 import com.quiz.domain.response.mongo.ResponsesMongoTemplate;
-import com.quiz.domain.response.dto.ResponsesRequestDto;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;

@@ -2,7 +2,6 @@ package com.quiz.domain.users.enums;
 
 import com.quiz.enums.CodeValue;
 import com.quiz.global.exception.auth.AuthException;
-import lombok.Getter;
 
 import java.util.Arrays;
 
@@ -24,7 +23,7 @@ public enum AuthType implements CodeValue {
         return Arrays.stream(AuthType.values())
                 .filter(p -> p.value.equals(provider))
                 .findFirst()
-                .orElseThrow(() -> new AuthException(INVALID_AUTH_TYPE));
+                .orElseThrow(() -> new AuthException(AuthErrorCode.INVALID_AUTH_TYPE));
     }
 
     @Override

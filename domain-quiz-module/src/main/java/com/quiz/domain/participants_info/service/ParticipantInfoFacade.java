@@ -1,13 +1,14 @@
 package com.quiz.domain.participants_info.service;
 
 import com.quiz.domain.participants_info.entity.ParticipantInfo;
-import com.quiz.domain.participants_info.mongo.ParticipantInfoMongoTemplate;
 import com.quiz.domain.quiz.entity.Quiz;
 import com.quiz.domain.quiz.service.QuizService;
-import com.quiz.lock.DistributedLock;
+import com.quiz.domain.participants_info.dto.ParticipantsRankResponseDto;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+
+import java.util.List;
 
 @Transactional
 @RequiredArgsConstructor
@@ -25,6 +26,13 @@ public class ParticipantInfoFacade {
             return;
         }
         participantInfoService.save(quizId, userId);
+    }
+
+    public void showResults(Long quizId) {
+        List<ParticipantInfo> result = participantInfoService.findRanksByQuizId(quizId);
+
+
+
     }
 
 }

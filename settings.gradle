@@ -1,7 +1,6 @@
 rootProject.name = 'quiz'
 include 'independent-module'
 include 'global-util-module'
-include 'domain-user-module'
 include 'domain-quiz-module'
 include 'api-module'
 

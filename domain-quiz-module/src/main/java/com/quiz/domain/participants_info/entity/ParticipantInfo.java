@@ -30,7 +30,8 @@ public class ParticipantInfo {
     @Field(name = "use_id")
     private Long userId;
 
-    private Integer score;
+    @Field(name = "total_score")
+    private Integer totalScore;
 
     private Integer number;
 
@@ -43,9 +44,6 @@ public class ParticipantInfo {
         this.created = LocalDateTime.now();
     }
 
-    public void setScore(Integer score) {
-        this.score = score;
-    }
 
     public void setNumber(Integer number) {
         this.number = number;
