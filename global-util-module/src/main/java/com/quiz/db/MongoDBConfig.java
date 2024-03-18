@@ -10,6 +10,7 @@ import org.springframework.context.annotation.Configuration;
 import org.springframework.data.mongodb.MongoDatabaseFactory;
 import org.springframework.data.mongodb.MongoTransactionManager;
 import org.springframework.data.mongodb.config.AbstractMongoClientConfiguration;
+import org.springframework.data.mongodb.core.MongoOperations;
 import org.springframework.data.mongodb.core.MongoTemplate;
 import org.springframework.data.mongodb.repository.config.EnableMongoRepositories;
 import org.springframework.transaction.annotation.EnableTransactionManagement;
@@ -19,7 +20,7 @@ import java.util.concurrent.TimeUnit;
 @Slf4j
 @Configuration
 @EnableMongoRepositories(
-        basePackages = "com.quiz.domain.*.mongo")
+        basePackages = {"com.quiz.domain.*.mongo"})
 @EnableTransactionManagement
 public class MongoDBConfig extends AbstractMongoClientConfiguration {
     @Value("${spring.data.mongodb.url}")
@@ -52,7 +53,7 @@ public class MongoDBConfig extends AbstractMongoClientConfiguration {
 
 
     @Bean
-    public MongoTemplate mongoTemplate() {
+    public MongoOperations mongoTemplate() {
         return new MongoTemplate(mongoClient(), databaseName);
     }
 }

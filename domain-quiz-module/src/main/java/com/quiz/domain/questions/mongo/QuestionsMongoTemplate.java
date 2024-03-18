@@ -2,6 +2,7 @@ package com.quiz.domain.questions.mongo;
 
 import com.quiz.domain.questions.entity.QuestionType;
 import com.quiz.domain.questions.entity.Questions;
+import com.quiz.dto.questions.QuestionsAnswerDto;
 import com.quiz.dto.questions.QuestionsResponseDto;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
@@ -13,13 +14,14 @@ import org.springframework.data.mongodb.core.query.Criteria;
 import org.springframework.data.mongodb.core.query.Query;
 import org.springframework.data.mongodb.core.query.Update;
 import org.springframework.data.support.PageableExecutionUtils;
+import org.springframework.stereotype.Component;
 import org.springframework.stereotype.Repository;
 
 import java.time.LocalDateTime;
 import java.util.List;
 
 @RequiredArgsConstructor
-@Repository
+@Component
 public class QuestionsMongoTemplate {
 
     private final MongoTemplate mongoTemplate;

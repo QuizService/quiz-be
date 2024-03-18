@@ -21,7 +21,6 @@ import java.util.concurrent.CompletableFuture;
 @RequiredArgsConstructor
 @Service
 public class ResponsesFacade {
-    private final ResponsesMongoTemplate responsesMongoTemplate;
     private final ParticipantInfoService participantInfoService;
     private final QuizService quizService;
     private final ApplicationEventPublisher applicationEventPublisher;
@@ -38,7 +37,17 @@ public class ResponsesFacade {
         Map<String, Object> params = new HashMap<>();
         params.put("participantInfoId", participantInfoId);
         params.put("responses", responses);
-        //event 활성화
+        //event 로 저장과정 분리
         applicationEventPublisher.publishEvent(params);
+    }
+
+    /*
+    * 채점 방법
+    * 1. 답변 저장 후 바로 실행
+    * 2. 답변을 모았다가 한번에 실행
+    * 3. 정답을 다른 캐시 저장소에 저장하여 비교
+    * */
+    public void calculateScore(Long quizId, Long userId) {
+
     }
 }
