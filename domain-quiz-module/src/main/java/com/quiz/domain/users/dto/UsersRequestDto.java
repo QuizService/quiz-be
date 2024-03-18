@@ -1,4 +1,4 @@
-package com.quiz.dto.users;
+package com.quiz.domain.users.dto;
 
 import lombok.AccessLevel;
 import lombok.Getter;

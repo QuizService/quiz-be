@@ -10,7 +10,6 @@ dependencies {
     implementation project(':global-util-module')
     implementation project(':independent-module')
     implementation project(':domain-quiz-module')
-    implementation project(':domain-user-module')
 
     testImplementation 'org.springframework.security:spring-security-test'
 }
