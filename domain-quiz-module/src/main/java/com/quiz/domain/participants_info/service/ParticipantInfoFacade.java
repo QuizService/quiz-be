@@ -34,7 +34,7 @@ public class ParticipantInfoFacade {
     }
 
     public List<ParticipantsRankResponseDto> showResults(Long quizId) {
-        List<ParticipantInfo> result = participantInfoService.findRanksByQuizId(quizId);
+        List<ParticipantInfo> result = participantInfoService.findParticipantInfoByQuizId(quizId);
 
         List<Long> userIds = result.stream()
                 .map(ParticipantInfo::getUserId)
@@ -51,7 +51,7 @@ public class ParticipantInfoFacade {
                         .userId(p.getUserId())
                         .username(userDtoMap.get(p.getId()).getName())
                         .number(p.getNumber())
-                        .score(p.getTotalScore())
+                        .totalScore(p.getTotalScore())
                         .build())
                 .toList();
     }

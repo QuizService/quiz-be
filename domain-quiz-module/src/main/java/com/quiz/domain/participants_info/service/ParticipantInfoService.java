@@ -53,7 +53,11 @@ public class ParticipantInfoService {
         participantInfoMongoTemplate.updateScore(participantId, score);
     }
 
-    public List<ParticipantInfo> findRanksByQuizId(Long quizId) {
+    public List<ParticipantInfo> findParticipantInfoByQuizId(Long quizId) {
         return participantInfoMongoTemplate.findAllByQuizIdOrderByNumber(quizId);
+    }
+
+    public List<ParticipantsRankResponseDto> findRanksByQuizId(Long quizId) {
+        return participantInfoMongoTemplate.findParticipantsRankResponsesByQuizIdOrderByNumber(quizId);
     }
 }

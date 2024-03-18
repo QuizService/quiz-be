@@ -44,8 +44,14 @@ public class ParticipantInfo {
         this.created = LocalDateTime.now();
     }
 
-
-    public void setNumber(Integer number) {
+    @Builder(builderMethodName = "testBuilder", buildMethodName = "testBuild")
+    public ParticipantInfo(String id, Long idx, Long quizId, Long userId, Integer totalScore, Integer number, LocalDateTime created) {
+        this.id = id;
+        this.idx = idx;
+        this.quizId = quizId;
+        this.userId = userId;
+        this.totalScore = totalScore;
         this.number = number;
+        this.created = LocalDateTime.now();
     }
 }

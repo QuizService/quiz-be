@@ -1,4 +1,4 @@
-package com.quiz.domain.questions.mock;
+package com.quiz.global.mock;
 
 import com.quiz.domain.choice.dto.ChoicesRequestDto;
 import com.quiz.domain.questions.dto.QuestionsRequestDto;

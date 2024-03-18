@@ -1,7 +1,8 @@
-package com.quiz.domain.questions.mock;
+package com.quiz.global.mock;
 
 import com.quiz.domain.answers.entity.Answers;
 import com.quiz.domain.choice.entity.Choices;
+import com.quiz.domain.participants_info.entity.ParticipantInfo;
 import com.quiz.domain.questions.entity.Questions;
 
 import java.util.ArrayList;
@@ -42,6 +43,22 @@ public class TestEntities {
                 .choices(getChoices())
                 .answers(getAnswers())
                 .build();
+    }
+
+    public static List<ParticipantInfo> getParticipantInfos() {
+        List<ParticipantInfo> participantInfos = new ArrayList<>();
+        for(int i = 0; i< 5; i++) {
+            ParticipantInfo participantInfo = ParticipantInfo.testBuilder()
+                    .id(String.valueOf(i))
+                    .idx((long)i)
+                    .quizId(1L)
+                    .userId((long)i)
+                    .totalScore(i * 10)
+                    .number(i)
+                    .testBuild();
+            participantInfos.add(participantInfo);
+        }
+        return participantInfos;
     }
 
     // update entities

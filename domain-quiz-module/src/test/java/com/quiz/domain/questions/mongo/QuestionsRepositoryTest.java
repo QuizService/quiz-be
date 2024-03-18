@@ -4,7 +4,7 @@ package com.quiz.domain.questions.mongo;
 import com.quiz.TestConfiguration;
 import com.quiz.domain.answers.entity.Answers;
 import com.quiz.domain.choice.entity.Choices;
-import com.quiz.domain.questions.mock.TestEntities;
+import com.quiz.global.mock.TestEntities;
 import com.quiz.domain.questions.entity.QuestionType;
 import com.quiz.domain.questions.entity.Questions;
 import com.quiz.global.exception.questions.QuestionException;

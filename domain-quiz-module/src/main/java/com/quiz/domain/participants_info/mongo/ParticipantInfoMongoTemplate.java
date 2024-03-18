@@ -1,5 +1,6 @@
 package com.quiz.domain.participants_info.mongo;
 
+import com.quiz.domain.participants_info.dto.ParticipantsRankResponseDto;
 import com.quiz.domain.participants_info.entity.ParticipantInfo;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Sort;
@@ -74,5 +75,14 @@ public class ParticipantInfoMongoTemplate {
         query.with(Sort.by(Sort.Direction.ASC, "number"));
 
         return mongoTemplate.find(query, ParticipantInfo.class, "participant_info");
+    }
+
+    public List<ParticipantsRankResponseDto> findParticipantsRankResponsesByQuizIdOrderByNumber(Long quizId) {
+        Query query = new Query();
+        query.fields().include("id").include("userId").include("number").include("totalScore");
+        query.addCriteria(Criteria.where("quiz_id").is(quizId));
+        query.with(Sort.by(Sort.Direction.ASC, "number"));
+
+        return mongoTemplate.find(query, ParticipantsRankResponseDto.class, "participant_info");
     }
 }
