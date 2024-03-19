@@ -23,7 +23,7 @@ import java.util.concurrent.TimeUnit;
         basePackages = {"com.quiz.domain.*.mongo"})
 @EnableTransactionManagement
 public class MongoDBConfig extends AbstractMongoClientConfiguration {
-    @Value("${spring.data.mongodb.url}")
+    @Value("${spring.data.mongodb.uri}")
     private String connectionString;
 
     @Value("${spring.data.mongodb.database}")
@@ -34,13 +34,15 @@ public class MongoDBConfig extends AbstractMongoClientConfiguration {
         return new MongoTransactionManager(mongoDatabaseFactory);
     }
 
+    //connections = ((core_count * 2) + effective_spindle_count)
     @Override
     public MongoClient mongoClient() {
-        String url = this.connectionString;
         ConnectionString connectionString = new ConnectionString(this.connectionString);
         MongoClientSettings mongoClientSettings = MongoClientSettings.builder()
-                .applyToConnectionPoolSettings(builder -> builder.maxConnectionIdleTime(10, TimeUnit.SECONDS))
+                .applyToConnectionPoolSettings(builder -> builder.maxConnectionIdleTime(1, TimeUnit.MINUTES))
                 .applyConnectionString(connectionString)
+                .applyToSocketSettings(socket -> socket.connectTimeout(30, TimeUnit.SECONDS)
+                        .readTimeout(30, TimeUnit.SECONDS))
                 .build();
 
         return MongoClients.create(mongoClientSettings);

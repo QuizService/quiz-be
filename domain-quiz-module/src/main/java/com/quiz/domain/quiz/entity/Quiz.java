@@ -6,6 +6,10 @@ import com.quiz.global.exception.quiz.QuizException;
 import com.quiz.utils.TimeConverter;
 import jakarta.persistence.*;
 import lombok.*;
+import org.springframework.data.annotation.Id;
+import org.springframework.data.mongodb.core.mapping.Document;
+import org.springframework.data.mongodb.core.mapping.Field;
+import org.springframework.data.mongodb.core.mapping.FieldType;
 
 import java.time.LocalDateTime;
 import java.util.UUID;
@@ -16,39 +20,52 @@ import static com.quiz.global.exception.quiz.enums.QuizErrorType.MAXSCORE_CANNOT
 @ToString
 @Getter
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
-@Entity
-public class Quiz extends QuizBaseEntity {
+@Document
+public class Quiz {
+    @Transient
+    public static final String SEQUENCE_NAME = "quiz_sequence";
 
     @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long id;
+    @Field(value = "_id", targetType = FieldType.OBJECT_ID)
+    private String id;
+
+    private Long idx;
 
     private Long userId;
 
-    @Column(nullable = false)
+
     private String title;
 
-    @Column(name = "max_score")
+    @Field(name = "max_score")
     private Integer maxScore;
 
     private Integer capacity;
 
     private String endpoint;
 
-    @Column(name = "start_date")
+    @Field(name = "start_date")
     private LocalDateTime startDate;
 
-    @Column(name = "due_date")
+    @Field(name = "due_date")
     private LocalDateTime dueDate;
 
+    @Field
+    private LocalDateTime created;
+
+    @Field
+    private LocalDateTime updated;
+
     @Builder
-    public Quiz(String title, Integer capacity, Long userId, String startDate, String dueDate) {
+    public Quiz(Long idx, String title, Integer capacity, Long userId, String startDate, String dueDate) {
+        this.idx = idx;
         this.title = title;
         this.capacity = capacity;
         this.userId = userId;
         this.startDate = startDate == null ? LocalDateTime.now() : TimeConverter.stringToLocalDateTime(startDate);
         this.dueDate = dueDate == null ? null : TimeConverter.stringToLocalDateTime(dueDate);
         generateRandomEndPoint();
+        this.created = LocalDateTime.now();
+        this.updated = LocalDateTime.now();
     }
 
     public void update(QuizRequestDto request) {
@@ -68,6 +85,7 @@ public class Quiz extends QuizBaseEntity {
         if(dueDate != null) {
             this.dueDate = TimeConverter.stringToLocalDateTime(request.getDueDate());
         }
+        this.updated = LocalDateTime.now();
     }
 
     public void setMaxScore(Integer maxScore) {

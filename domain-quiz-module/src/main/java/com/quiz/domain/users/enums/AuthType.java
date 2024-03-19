@@ -1,11 +1,10 @@
 package com.quiz.domain.users.enums;
 
 import com.quiz.enums.CodeValue;
+import com.quiz.global.exception.auth.AuthErrorCode;
 import com.quiz.global.exception.auth.AuthException;
 
 import java.util.Arrays;
-
-import static com.quiz.global.exception.auth.AuthErrorCode.INVALID_AUTH_TYPE;
 
 public enum AuthType implements CodeValue {
     GOOGLE("GOOGLE","google"),

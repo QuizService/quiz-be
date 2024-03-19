@@ -1,4 +1,4 @@
-package com.quiz.api_module.com.quiz.global.security.oauth;
+package com.quiz.global.security.oauth;
 
 import com.quiz.domain.users.entity.Users;
 import com.quiz.domain.users.repository.UsersRepository;

@@ -31,7 +31,7 @@ import java.util.Properties;
 @Configuration
 @RequiredArgsConstructor
 @EnableJpaRepositories(
-        basePackages = "com.quiz.domain.*.repository",
+        basePackages = "com.quiz.domain.users.repository",
         entityManagerFactoryRef = "mysqlEntityManagerFactory",
         transactionManagerRef = "mysqlTransactionManager")
 @EnableTransactionManagement

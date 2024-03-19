@@ -33,7 +33,7 @@ public class ParticipantInfoFacade {
         participantInfoService.save(quizId, userId);
     }
 
-    public List<ParticipantsRankResponseDto> showResults(Long quizId) {
+    public List<ParticipantsRankResponseDto> showRanks(Long quizId) {
         List<ParticipantInfo> result = participantInfoService.findParticipantInfoByQuizId(quizId);
 
         List<Long> userIds = result.stream()

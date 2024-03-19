@@ -1,8 +1,8 @@
-package com.quiz.api_module.com.quiz.global.security.filter;
+package com.quiz.global.security.filter;
 
 import com.quiz.domain.users.entity.Users;
 import com.quiz.domain.users.repository.UsersRepository;
-import com.quiz.api_module.com.quiz.global.security.jwt.JwtTokenizer;
+import com.quiz.global.security.jwt.JwtTokenizer;
 import jakarta.servlet.FilterChain;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.http.HttpServletRequest;

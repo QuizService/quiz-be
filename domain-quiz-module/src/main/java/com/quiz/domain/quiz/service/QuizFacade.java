@@ -47,7 +47,7 @@ public class QuizFacade {
     public QuizResponseDto findById(Long quizId) {
         Quiz quiz = quizService.findById(quizId);
         return QuizResponseDto.builder()
-                .quizId(quiz.getId())
+                .quizId(quiz.getIdx())
                 .title(quiz.getTitle())
                 .maxScore(quiz.getMaxScore())
                 .startDate(TimeConverter.localDateTimeToString(quiz.getStartDate()))

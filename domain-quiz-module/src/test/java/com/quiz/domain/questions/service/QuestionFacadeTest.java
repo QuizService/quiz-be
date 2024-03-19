@@ -28,7 +28,7 @@ public class QuestionFacadeTest {
 
     @DynamicPropertySource
     static void setProperties(DynamicPropertyRegistry registry) {
-        registry.add("spring.data.mongodb.url", () -> mongoDBContainer.getReplicaSetUrl("quiz"));
+        registry.add("spring.data.mongodb.uri", () -> mongoDBContainer.getReplicaSetUrl("quiz"));
         registry.add("spring.data.mongodb.host", mongoDBContainer::getHost);
         registry.add("spring.data.mongodb.port", mongoDBContainer::getFirstMappedPort);
         registry.add("spring.data.mongodb.username", () -> "admin");

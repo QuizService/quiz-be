@@ -1,9 +1,9 @@
-package com.quiz.api_module.com.quiz.global.security.config;
+package com.quiz.global.security.config;
 
-import com.quiz.api_module.com.quiz.global.security.filter.JwtAuthorizationProcessingFilter;
-import com.quiz.api_module.com.quiz.global.security.handler.OAuth2AuthenticationFailureHandler;
-import com.quiz.api_module.com.quiz.global.security.handler.OAuth2AuthenticationSuccessHandler;
-import com.quiz.api_module.com.quiz.global.security.oauth.CustomOAuth2UserService;
+import com.quiz.global.security.filter.JwtAuthorizationProcessingFilter;
+import com.quiz.global.security.handler.OAuth2AuthenticationFailureHandler;
+import com.quiz.global.security.handler.OAuth2AuthenticationSuccessHandler;
+import com.quiz.global.security.oauth.CustomOAuth2UserService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
