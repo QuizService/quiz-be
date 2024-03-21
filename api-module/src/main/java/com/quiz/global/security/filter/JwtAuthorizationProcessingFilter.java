@@ -28,7 +28,7 @@ import java.util.Optional;
 @Component
 @RequiredArgsConstructor
 public class JwtAuthorizationProcessingFilter extends OncePerRequestFilter {
-    private static final List<String> AUTHORIZATION_NOT_REQUIRED = List.of("/login","/","/favicon.","/h2/**", "/favicon.ico","/hello","/index.html");
+    private static final List<String> AUTHORIZATION_NOT_REQUIRED = List.of("/login","/","/favicon.ico","/h2/**", "/favicon.ico","/index.html");
     private final JwtTokenizer jwtTokenizer;
     private final UsersRepository usersRepository;
 
@@ -49,24 +49,26 @@ public class JwtAuthorizationProcessingFilter extends OncePerRequestFilter {
             boolean isAccessTokenValid = jwtTokenizer.isTokenValid(accessToken.get());
             if(isAccessTokenValid) {
                 log.info("accessToken valid");
+                filterChain.doFilter(request, response);
                 return;
             }
-        }
-        //없다면 refreshToken 존재 확인
-        Optional<String> refreshToken = jwtTokenizer.extractRefreshToken(request);
-        //refresh token 존재시 accessToken reissue 후 return;
-        if(refreshToken.isPresent()) {
-            boolean isRefreshTokenValid = jwtTokenizer.isTokenValid(refreshToken.get());
-            //refreshToken 유효하지 않으면 그냥 리턴 -> dofilter 로직으로
-            if(!isRefreshTokenValid) {
-                log.info("refresh token not valid");
-                filterChain.doFilter(request, response);
+        } else {
+            Optional<String> refreshToken = jwtTokenizer.extractRefreshToken(request);
+            //refresh token 존재시 accessToken reissue 후 return;
+            if(refreshToken.isPresent()) {
+                boolean isRefreshTokenValid = jwtTokenizer.isTokenValid(refreshToken.get());
+                //refreshToken 유효하지 않으면 그냥 리턴 -> dofilter 로직으로
+                if(!isRefreshTokenValid) {
+                    log.info("refresh token not valid");
+                    filterChain.doFilter(request, response);
+                }
+                checkRefreshTokenAndReIssueAccessToken(refreshToken.get(), response);
+
+                return;
             }
-            checkRefreshTokenAndReIssueAccessToken(refreshToken.get(), response);
-            return;
+            log.info("refresh token not exist");
+            filterChain.doFilter(request, response);
         }
-        log.info("refresh token not exist");
-        filterChain.doFilter(request, response);
     }
 
     public void checkRefreshTokenAndReIssueAccessToken(String refreshToken, HttpServletResponse response) {
@@ -116,6 +118,7 @@ public class JwtAuthorizationProcessingFilter extends OncePerRequestFilter {
     @Override
     protected boolean shouldNotFilter(HttpServletRequest request) throws ServletException {
         log.info("should not filter : request url = {}", request.getRequestURI());
-        return AUTHORIZATION_NOT_REQUIRED.contains(request.getRequestURI());
+        boolean result = AUTHORIZATION_NOT_REQUIRED.contains(request.getRequestURI());
+        return result;
     }
 }

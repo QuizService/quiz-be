@@ -20,6 +20,7 @@ import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.oauth2.core.user.DefaultOAuth2User;
 import org.springframework.security.oauth2.core.user.OAuth2User;
 import org.springframework.security.web.authentication.SavedRequestAwareAuthenticationSuccessHandler;
+import org.springframework.security.web.authentication.SimpleUrlAuthenticationSuccessHandler;
 import org.springframework.stereotype.Component;
 
 import java.io.IOException;
@@ -30,7 +31,7 @@ import java.util.Map;
 @Slf4j
 @Component
 @RequiredArgsConstructor
-public class OAuth2AuthenticationSuccessHandler extends SavedRequestAwareAuthenticationSuccessHandler {
+public class OAuth2AuthenticationSuccessHandler extends SimpleUrlAuthenticationSuccessHandler {
     @Value("${jwt.access.header}")
     private String accessHeader;
 
@@ -64,8 +65,6 @@ public class OAuth2AuthenticationSuccessHandler extends SavedRequestAwareAuthent
             response.setHeader(refreshHeader, "Bearer " + refreshToken);
 
             response.setStatus(HttpStatus.OK.value());
-
-            getRedirectStrategy().sendRedirect(request, response, "/");
         } catch (Exception e) {
             log.error("error : ",e);
             throw e;

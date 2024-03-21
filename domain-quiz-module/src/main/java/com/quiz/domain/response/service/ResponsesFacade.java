@@ -30,6 +30,7 @@ public class ResponsesFacade {
     private final QuizService quizService;
     private final ApplicationEventPublisher applicationEventPublisher;
 
+
     public void saveResponse(Long quizId, Long userId, List<ResponsesRequestDto> responses) {
         Integer quizCapacity = quizService.findById(quizId)
                 .getCapacity();
@@ -53,7 +54,7 @@ public class ResponsesFacade {
      * 2. 답변을 모았다가 한번에 실행
      * 3. 정답을 다른 캐시 저장소에 저장하여 비교
      * */
-    public void calculateScoreAndSaveResponse(Long quizId, List<ResponsesRequestDto> responses, String participantInfoId) {
+    public int calculateScoreAndSaveResponse(Long quizId, List<ResponsesRequestDto> responses, String participantInfoId) {
         List<QuestionsAnswerDto> answers = questionService.findAnswersByQuestionsInQuiz(quizId);
         Map<String, QuestionsAnswerDto> answerDtoMap = answers.stream()
                 .collect(
@@ -81,6 +82,8 @@ public class ResponsesFacade {
                 .mapToInt(r -> answerDtoMap.get(r.getQuestionId()).getScore())
                 .sum();
         participantInfoService.updateTotalScore(participantInfoId, totalScore);
+        log.info("totalScore = {}", totalScore);
+        return totalScore;
 
     }
 
@@ -103,5 +106,6 @@ public class ResponsesFacade {
             return questionsAnswerDto.getAnswer().equals(res);
         }
     }
+
 
 }

@@ -6,6 +6,7 @@ import com.quiz.domain.quiz.service.QuizService;
 import com.quiz.domain.participants_info.dto.ParticipantsRankResponseDto;
 import com.quiz.domain.users.dto.UserNameDto;
 import com.quiz.domain.users.service.UsersService;
+import com.quiz.lock.DistributedLock;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;

@@ -23,7 +23,7 @@ import org.springframework.web.cors.UrlBasedCorsConfigurationSource;
 import java.util.List;
 
 @RequiredArgsConstructor
-@EnableWebSecurity
+@EnableWebSecurity(debug = true)
 @Configuration
 public class SecurityConfig {
     private final CustomOAuth2UserService oAuth2UserService;
@@ -44,13 +44,13 @@ public class SecurityConfig {
                         .requestMatchers("/css/**","/images/**","/js/**","/favicon.ico").permitAll()
                         .requestMatchers("/","/login","/api/v1/**","/index.html").permitAll()
                         .requestMatchers("/swagger-ui/**", "/v3/**", "/swagger-ui.html").permitAll()
-                        .anyRequest().hasRole("USER"))
-                .addFilterBefore(jwtAuthorizationProcessingFilter, UsernamePasswordAuthenticationFilter.class);
+                        .anyRequest().hasRole("USER"));
         http
                 .oauth2Login(oauth2 ->
                         oauth2.successHandler(oAuth2AuthenticationSuccessHandler)
                                 .failureHandler(oAuth2AuthenticationFailureHandler)
                                 .userInfoEndpoint(userInfo -> userInfo.userService(oAuth2UserService)))
+                .addFilterBefore(jwtAuthorizationProcessingFilter, UsernamePasswordAuthenticationFilter.class)
                 //jwt token 인증
 
                 .logout(logout -> logout
@@ -68,6 +68,7 @@ public class SecurityConfig {
         configuration.setAllowedOrigins(List.of("http://localhost:8080", "http://localhost:3000"));
         configuration.setAllowedMethods(List.of("POST", "PUT", "PATCH", "GET", "DELETE", "OPTIONS"));
         configuration.addAllowedHeader("*"); // 모든 헤더 허용
+        configuration.setExposedHeaders(List.of("Authorization", "Refresh"));
 
         UrlBasedCorsConfigurationSource source = new UrlBasedCorsConfigurationSource();
         source.registerCorsConfiguration("/**", configuration);

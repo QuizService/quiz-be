@@ -10,6 +10,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
+import java.util.NoSuchElementException;
 
 @Slf4j
 @RequiredArgsConstructor
@@ -18,7 +19,7 @@ import java.util.List;
 public class ParticipantInfoService {
     private final ParticipantInfoMongoTemplate participantInfoMongoTemplate;
 
-    @DistributedLock()
+    @DistributedLock(key = "'saveFcfs : quizId - ' + #quizId")
     public String saveFcfs(Long quizId, Long userId, int capacity) {
         int participatedCnt = participantInfoMongoTemplate.countParticipantsByQuizId(quizId);
         if(participatedCnt + 1 > capacity) {
@@ -27,12 +28,13 @@ public class ParticipantInfoService {
         return save(quizId, userId);
     }
 
+    @DistributedLock(key = "'updateFcFs : quizId - ' + #quizId")
     public void updateFcFs(Long quizId, Long userId, int capacity) {
         int participatedCnt = participantInfoMongoTemplate.countParticipantsByQuizId(quizId);
         if(participatedCnt + 1 > capacity) {
             throw new RuntimeException("cannot participate2");
         }
-        participantInfoMongoTemplate.update(quizId, userId, capacity + 1);
+        participantInfoMongoTemplate.update(quizId, userId, participatedCnt + 1);
     }
 
 
@@ -59,5 +61,14 @@ public class ParticipantInfoService {
 
     public List<ParticipantsRankResponseDto> findRanksByQuizId(Long quizId) {
         return participantInfoMongoTemplate.findParticipantsRankResponsesByQuizIdOrderByNumber(quizId);
+    }
+
+    public List<ParticipantInfo> getParticipantInfos() {
+        return participantInfoMongoTemplate.findAll();
+    }
+
+    // for Test
+    public void deleteAll() {
+        participantInfoMongoTemplate.deleteAll();
     }
 }

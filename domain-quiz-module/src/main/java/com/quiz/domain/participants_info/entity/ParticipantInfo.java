@@ -1,16 +1,14 @@
 package com.quiz.domain.participants_info.entity;
 
 import jakarta.persistence.*;
-import lombok.AccessLevel;
-import lombok.Builder;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
+import lombok.*;
 import org.springframework.data.mongodb.core.mapping.Document;
 import org.springframework.data.mongodb.core.mapping.Field;
 import org.springframework.data.mongodb.core.mapping.FieldType;
 
 import java.time.LocalDateTime;
 
+@ToString
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 @Getter
 @Document(collection = "participant_info")
@@ -27,7 +25,7 @@ public class ParticipantInfo {
     @Field(name = "quiz_id")
     private Long quizId;
 
-    @Field(name = "use_id")
+    @Field(name = "user_id")
     private Long userId;
 
     @Field(name = "total_score")

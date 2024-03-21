@@ -2,11 +2,25 @@ package com.quiz.global.mock;
 
 import com.quiz.domain.choice.dto.ChoicesRequestDto;
 import com.quiz.domain.questions.dto.QuestionsRequestDto;
+import com.quiz.domain.quiz.dto.QuizRequestDto;
+import com.quiz.domain.response.dto.ResponsesRequestDto;
+import lombok.RequiredArgsConstructor;
 
+import java.time.Clock;
 import java.util.ArrayList;
 import java.util.List;
 
+
 public class TestDto {
+
+    public static QuizRequestDto getQuizRequestDto() {
+        return QuizRequestDto.builder()
+                .title("test")
+                .capacity(10)
+                .startDate("2026-02-02 12:00:00")
+                .dueDate("2026-02-05 12:00:00")
+                .build();
+    }
 
     public static QuestionsRequestDto getQuestionsReqDto() {
         return QuestionsRequestDto.builder()
@@ -39,5 +53,13 @@ public class TestDto {
             choicesRequestDtos.add(choicesRequestDto);
         }
         return choicesRequestDtos;
+    }
+
+    public static ResponsesRequestDto getResponseRequestDto(String questionId) {
+        return ResponsesRequestDto.builder()
+                .questionId(questionId)
+                .sequence(1)
+                .choices(List.of(4))
+                .build();
     }
 }

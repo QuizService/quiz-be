@@ -15,18 +15,19 @@ import java.lang.reflect.Method;
 @RequiredArgsConstructor
 @Slf4j
 public class DistributedLockAop {
-    private static final String REDISSON_LOCK_KEY = "LOCK:Respondent";
+    private static final String REDISSON_LOCK_KEY = "LOCK:";
 
     private final RedissonClient redissonClient;
     private final AopTransaction aopTransaction;
 
     @Around("@annotation(com.quiz.lock.DistributedLock)")
     public Object lock(final ProceedingJoinPoint joinPoint) throws Throwable {
-        MethodSignature methodSignature = (MethodSignature) joinPoint.getSignature();
-        Method method = methodSignature.getMethod();
+        MethodSignature signature = (MethodSignature) joinPoint.getSignature();
+        Method method = signature.getMethod();
         DistributedLock distributedLock = method.getAnnotation(DistributedLock.class);
 
-        RLock rLock = redissonClient.getLock(REDISSON_LOCK_KEY);
+        String key = REDISSON_LOCK_KEY + CustomKeyParser.getKeyNameSuffix(signature.getParameterNames(), joinPoint.getArgs(), distributedLock.key());
+        RLock rLock = redissonClient.getLock(key);
         try {
             boolean available = rLock.tryLock(distributedLock.waitTime(), distributedLock.leaseTime(), distributedLock.timeunit());
             if(!available) return false;

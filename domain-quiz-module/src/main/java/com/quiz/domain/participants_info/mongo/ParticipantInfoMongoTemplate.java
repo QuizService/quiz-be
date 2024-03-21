@@ -29,20 +29,20 @@ public class ParticipantInfoMongoTemplate {
     }
 
     public String save(ParticipantInfo participantInfo) {
-        ParticipantInfo savedParticipants = mongoTemplate.save(participantInfo);
+        ParticipantInfo savedParticipants = mongoTemplate.insert(participantInfo);
         return savedParticipants.getId();
     }
 
     public Optional<ParticipantInfo> findByQuizIdAndUserId(Long quizId, Long userId) {
         Query query = new Query();
         Criteria criteria = new Criteria();
-        criteria.and("quizId").is(quizId);
-        criteria.and("userId").is(userId);
+        criteria.and("quiz_id").is(quizId);
+        criteria.and("user_id").is(userId);
 
         query.addCriteria(criteria);
 
         ParticipantInfo participantInfo = mongoTemplate.findOne(query, ParticipantInfo.class);
-        return Optional.of(participantInfo);
+        return Optional.ofNullable(participantInfo);
     }
 
     public void update(Long quizId, Long userId, int participantCount) {
@@ -84,5 +84,18 @@ public class ParticipantInfoMongoTemplate {
         query.with(Sort.by(Sort.Direction.ASC, "number"));
 
         return mongoTemplate.find(query, ParticipantsRankResponseDto.class, "participant_info");
+    }
+
+    public List<ParticipantInfo> findAll() {
+        Query query = new Query();
+
+        List<ParticipantInfo> participantInfos =  mongoTemplate.findAll(ParticipantInfo.class);
+
+        return participantInfos;
+    }
+
+    public void deleteAll() {
+        mongoTemplate.dropCollection("participant_info");
+        mongoTemplate.createCollection("participant_info");
     }
 }
