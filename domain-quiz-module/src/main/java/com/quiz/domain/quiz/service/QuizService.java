@@ -56,7 +56,7 @@ public class QuizService {
         return quiz.getEndpoint();
     }
 
-    protected void saveQuizMaxScore(Long quizId, Integer maxScore) {
+    public void saveQuizMaxScore(Long quizId, Integer maxScore) {
         Quiz quiz = quizRepository.findByIdx(quizId)
                 .orElseThrow(() -> new QuizException(QUIZ_NOT_FOUND));
 

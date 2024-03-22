@@ -93,6 +93,16 @@ public class QuestionService {
                 .build());
     }
 
+    public Page<QuestionsResponseDto> findResponseByEndpoint(Long quizId, int page, int size) {
+        Page<Questions> questions = questionsMongoTemplate.findPageByQuizId(quizId, page, size);
+        return questions.map(question -> QuestionsResponseDto.builder()
+                .title(question.getTitle())
+                .score(question.getScore())
+                .questionType(question.getQuestionType().getValue())
+                .choicesResponseDtos(toDto(question.getChoices()))
+                .build());
+    }
+
     private List<ChoicesResponseDto> toDto(List<Choices> choices) {
         return choices.stream().map(choice -> ChoicesResponseDto.builder()
                 .choiceId(choice.getId())

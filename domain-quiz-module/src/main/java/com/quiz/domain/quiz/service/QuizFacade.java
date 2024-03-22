@@ -19,7 +19,6 @@ import java.util.List;
 @RequiredArgsConstructor
 @Service
 public class QuizFacade {
-    private final QuestionFacade questionFacade;
     private final QuizService quizService;
 
     public Long saveQuiz(QuizRequestDto quizDto, Long userId) {
@@ -31,19 +30,9 @@ public class QuizFacade {
         return quizService.update(quizDto, quizId);
     }
 
-    public String saveQuestionsAndReturnQuizEndpoint(QuestionIntegratedDto questionIntegratedDto, Long quizId, Long userId) {
-
-        quizService.checkQuizIsUsers(userId, quizId);
-        questionFacade.saveQuestions(questionIntegratedDto.getQuestionRequestDtos(), quizId);
-
-        //save quizMaxScore
-        saveQuizMaxScore(questionIntegratedDto.getQuestionRequestDtos(), quizId);
-        return quizService.findEndPointById(quizId);
-    }
-
-    private void saveQuizMaxScore(List<QuestionsRequestDto> questionsRequestDtos, Long quizId) {
-        Integer maxScore = questionFacade.calculateQuestionsTotalScore(questionsRequestDtos);
-        quizService.saveQuizMaxScore(quizId, maxScore);
+    public String findEndpointByQuizId(Long quizId) {
+        String endpoint = quizService.findEndPointById(quizId);
+        return "http://localhost:8080/form/" + endpoint;
     }
 
     public QuizResponseDto findByEndPoint(String endpoint) {

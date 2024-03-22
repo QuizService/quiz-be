@@ -1,4 +1,4 @@
-package com.quiz.api;
+package com.quiz.api.users;
 
 import lombok.RequiredArgsConstructor;
 import org.springframework.web.bind.annotation.RequestMapping;

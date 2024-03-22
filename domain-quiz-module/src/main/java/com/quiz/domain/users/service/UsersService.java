@@ -39,4 +39,5 @@ public class UsersService {
                 .orElseThrow(() -> new AuthException(USER_NOT_FOUND));
     }
 
+
 }

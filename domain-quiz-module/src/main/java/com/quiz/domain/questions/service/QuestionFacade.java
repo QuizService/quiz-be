@@ -4,10 +4,12 @@ import com.quiz.domain.answers.entity.Answers;
 import com.quiz.domain.answers.service.AnswersService;
 import com.quiz.domain.choice.entity.Choices;
 import com.quiz.domain.choice.service.ChoicesService;
-import com.quiz.domain.questions.entity.QuestionType;
-import com.quiz.domain.questions.entity.Questions;
 import com.quiz.domain.questions.dto.QuestionsRequestDto;
 import com.quiz.domain.questions.dto.QuestionsResponseDto;
+import com.quiz.domain.questions.entity.QuestionType;
+import com.quiz.domain.questions.entity.Questions;
+import com.quiz.domain.quiz.entity.Quiz;
+import com.quiz.domain.quiz.service.QuizService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.stereotype.Service;
@@ -19,23 +21,28 @@ import java.util.List;
 @RequiredArgsConstructor
 @Service
 public class QuestionFacade {
+    private final QuizService quizService;
     private final QuestionService questionService;
     private final ChoicesService choicesService;
     private final AnswersService answersService;
 
-    public void saveQuestions(List<QuestionsRequestDto> questionsDtos, Long quizId) {
+    public void saveQuestions(List<QuestionsRequestDto> questionsDtos, Long quizId, Long userId) {
+        quizService.checkQuizIsUsers(userId, quizId);
+
         for (QuestionsRequestDto questionDto : questionsDtos) {
             QuestionType questionType = QuestionType.findByInitial(questionDto.getQuestionType());
             List<Choices> choices = choicesService.getChoicesFromDtos(questionDto, questionType);
             Answers answers = answersService.getAnswersFromDto(questionDto, questionType);
 
             questionService.save(choices, answers, questionDto, quizId);
+            saveMaxScore(questionsDtos, quizId);
         }
     }
 
-    public void updateQuestions(List<QuestionsRequestDto> questionsDtos, Long quizId) {
+    public void updateQuestions(List<QuestionsRequestDto> questionsDtos, Long quizId, Long userId) {
+        quizService.checkQuizIsUsers(userId, quizId);
         for (QuestionsRequestDto questionsDto : questionsDtos) {
-            if(questionsDto.getQuestionId() != null) {
+            if (questionsDto.getQuestionId() != null) {
                 Questions questions = questionService.findById(questionsDto.getQuestionId());
                 QuestionType newQuestionType = QuestionType.findByInitial(questionsDto.getQuestionType());
 
@@ -49,15 +56,22 @@ public class QuestionFacade {
                 questionService.update(questionsDto, questions.getId());
             } else {
                 //save
-                saveQuestions(questionsDtos, quizId);
+                saveQuestions(questionsDtos, quizId, userId);
             }
         }
+        saveMaxScore(questionsDtos, quizId);
     }
 
+    public void saveMaxScore(List<QuestionsRequestDto> questionsRequestDtos, Long quizId) {
+        Integer maxScore = calculateQuestionsTotalScore(questionsRequestDtos);
+        quizService.saveQuizMaxScore(quizId, maxScore);
+    }
+
+
     public void updateChoices(Questions questions, List<Choices> newChoices) {
-        List<Choices> choices= questions.getChoices();
+        List<Choices> choices = questions.getChoices();
         boolean isChanged = choicesService.isChoicesChanged(choices, newChoices);
-        if(isChanged) {
+        if (isChanged) {
             questionService.updateChoices(questions.getId(), newChoices);
         }
     }
@@ -65,7 +79,7 @@ public class QuestionFacade {
     public void updateAnswer(Questions questions, Answers newAnswers) {
         Answers answers = questions.getAnswers();
         boolean isChanged = answersService.isAnswersChanged(answers, newAnswers);
-        if(isChanged) {
+        if (isChanged) {
             questionService.updateAnswers(questions.getId(), newAnswers);
         }
 
@@ -73,7 +87,14 @@ public class QuestionFacade {
     }
 
     @Transactional(readOnly = true)
-    public Page<QuestionsResponseDto> findPageByQuizId(Long quizId, int page, int size) {
+    public Page<QuestionsResponseDto> findPageByEndpoint(String endpoint, int page, int size) {
+        Quiz quiz = quizService.findByEndpoint(endpoint);
+        return questionService.findResponseByQuizId(quiz.getIdx(), page, size);
+    }
+
+    @Transactional(readOnly = true)
+    public Page<QuestionsResponseDto> findPageByQuizId(Long quizId, Long userId, int page, int size) {
+        quizService.checkQuizIsUsers(userId, quizId);
         return questionService.findResponseByQuizId(quizId, page, size);
     }
 

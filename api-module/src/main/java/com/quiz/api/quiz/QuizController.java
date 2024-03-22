@@ -1,11 +1,11 @@
 package com.quiz.api.quiz;
 
-import com.quiz.domain.questions.dto.QuestionIntegratedDto;
 import com.quiz.domain.quiz.dto.QuizRequestDto;
 import com.quiz.domain.quiz.dto.QuizResponseDto;
 import com.quiz.domain.quiz.service.QuizFacade;
 import com.quiz.domain.users.entity.Users;
 import com.quiz.domain.users.service.UsersService;
+import com.quiz.dto.ResponseDto;
 import com.quiz.global.security.userdetails.UserAccount;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -23,42 +23,45 @@ public class QuizController {
     private final UsersService usersService;
 
     @PostMapping
-    public ResponseEntity<?> saveQuiz(@RequestBody QuizRequestDto quizRequest,
-                                      @AuthenticationPrincipal UserAccount user) {
+    public ResponseEntity<ResponseDto<?>> saveQuiz(@RequestBody QuizRequestDto quizRequest,
+                                                   @AuthenticationPrincipal UserAccount user) {
         Users users = findUsers(user);
         Long quizId = quizFacade.saveQuiz(quizRequest, users.getId());
 
-        return ResponseEntity.ok(quizId);
+        return ResponseEntity.ok(ResponseDto.success(quizId));
     }
 
-    @PatchMapping("/{quizId}")
-    public ResponseEntity<?> updateQuiz(@PathVariable("quizId") Long quizId,
+    @PatchMapping("/{quiz-id}")
+    public ResponseEntity<ResponseDto<?>> updateQuiz(@PathVariable("quiz-id") Long quizId,
                                         @RequestBody QuizRequestDto quizRequest,
                                         @AuthenticationPrincipal UserAccount user) {
         Users users = findUsers(user);
         quizId = quizFacade.updateQuiz(quizRequest, quizId, users.getId());
 
-        return ResponseEntity.ok(quizId);
+        return ResponseEntity.ok(ResponseDto.success(quizId));
     }
 
-    @PatchMapping("/question/{quizId}")
-    public ResponseEntity<?> saveQuestionAndReturnEndpoint(@PathVariable("quizId") Long quizId,
-                                                           @RequestBody QuestionIntegratedDto questionIntegratedDto,
-                                                           @AuthenticationPrincipal UserAccount user) {
-        Users users = findUsers(user);
-        String endPoint = quizFacade.saveQuestionsAndReturnQuizEndpoint(questionIntegratedDto, quizId, users.getId());
 
-        return ResponseEntity.ok(endPoint);
-    }
-
-    @GetMapping("/{quizId}")
-    public ResponseEntity<?> findQuizById(@PathVariable("quizId") Long quizId) {
+    @GetMapping("/{quiz-id}")
+    public ResponseEntity<ResponseDto<?>> findQuizById(@PathVariable("quiz-id") Long quizId) {
         QuizResponseDto response = quizFacade.findById(quizId);
 
-        return ResponseEntity.ok(response);
+        return ResponseEntity.ok(ResponseDto.success(response));
     }
 
+    @GetMapping("/endpoint/{quiz-id}")
+    public ResponseEntity<ResponseDto<?>> findEndpointByQuizId(@PathVariable("quiz-id") Long quizId) {
+        String endpoint = quizFacade.findEndpointByQuizId(quizId);
 
+        return ResponseEntity.ok(ResponseDto.success(endpoint));
+    }
+
+    @GetMapping("/form/{endpoint}")
+    public ResponseEntity<ResponseDto<?>> findQuizByEndpoint(@PathVariable("endpoint") String endpoint) {
+        QuizResponseDto response = quizFacade.findByEndPoint(endpoint);
+
+        return ResponseEntity.ok(ResponseDto.success(response));
+    }
 
     private Users findUsers(UserDetails user) {
         String email = user.getUsername();
