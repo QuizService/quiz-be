@@ -26,12 +26,14 @@ public class QuizFacade {
         return quizService.saveQuiz(quizDto, userId);
     }
 
-    public Long updateQuiz(QuizRequestDto quizDto, Long quizId) {
+    public Long updateQuiz(QuizRequestDto quizDto, Long quizId, Long userId) {
+        quizService.checkQuizIsUsers(userId, quizId);
         return quizService.update(quizDto, quizId);
     }
 
-    public String saveQuestionsAndReturnQuizEndpoint(QuestionIntegratedDto questionIntegratedDto, Long quizId) {
+    public String saveQuestionsAndReturnQuizEndpoint(QuestionIntegratedDto questionIntegratedDto, Long quizId, Long userId) {
 
+        quizService.checkQuizIsUsers(userId, quizId);
         questionFacade.saveQuestions(questionIntegratedDto.getQuestionRequestDtos(), quizId);
 
         //save quizMaxScore
@@ -44,8 +46,17 @@ public class QuizFacade {
         quizService.saveQuizMaxScore(quizId, maxScore);
     }
 
+    public QuizResponseDto findByEndPoint(String endpoint) {
+        Quiz quiz = quizService.findByEndpoint(endpoint);
+        return toDto(quiz);
+    }
+
     public QuizResponseDto findById(Long quizId) {
         Quiz quiz = quizService.findById(quizId);
+        return toDto(quiz);
+    }
+
+    private QuizResponseDto toDto(Quiz quiz) {
         return QuizResponseDto.builder()
                 .quizId(quiz.getIdx())
                 .title(quiz.getTitle())
@@ -54,4 +65,5 @@ public class QuizFacade {
                 .dueDate(TimeConverter.localDateTimeToString(quiz.getDueDate()))
                 .build();
     }
+
 }

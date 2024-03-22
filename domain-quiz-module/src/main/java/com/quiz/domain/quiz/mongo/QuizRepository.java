@@ -8,4 +8,6 @@ import java.util.Optional;
 public interface QuizRepository extends MongoRepository<Quiz, String> {
 
     Optional<Quiz> findByIdx(Long idx);
+
+    Optional<Quiz> findByEndpoint(String endpoint);
 }

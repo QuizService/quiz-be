@@ -2,6 +2,7 @@ package com.quiz.global.security.handler;
 
 import com.quiz.domain.users.entity.Users;
 import com.quiz.domain.users.repository.UsersRepository;
+import com.quiz.global.exception.auth.AuthException;
 import com.quiz.global.security.jwt.JwtTokenizer;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.http.HttpServletRequest;
@@ -22,16 +23,21 @@ import org.springframework.security.oauth2.core.user.OAuth2User;
 import org.springframework.security.web.authentication.SavedRequestAwareAuthenticationSuccessHandler;
 import org.springframework.security.web.authentication.SimpleUrlAuthenticationSuccessHandler;
 import org.springframework.stereotype.Component;
+import org.springframework.web.util.UriComponentsBuilder;
 
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 
+import static com.quiz.global.exception.auth.AuthErrorCode.USER_NOT_FOUND;
+
 @Slf4j
 @Component
 @RequiredArgsConstructor
 public class OAuth2AuthenticationSuccessHandler extends SimpleUrlAuthenticationSuccessHandler {
+    private static final String URI = "http://localhost:8080/auth/success";
+
     @Value("${jwt.access.header}")
     private String accessHeader;
 
@@ -50,21 +56,18 @@ public class OAuth2AuthenticationSuccessHandler extends SimpleUrlAuthenticationS
             Map<String, Object> attributes = oAuth2User.getAttributes();
             String email = (String) attributes.get("email");
             //create jwt token
-            String accessToken = jwtTokenizer.createAccessToken(email);
-            String refreshToken = jwtTokenizer.createRefreshToken();
+            String accessToken = "Bearer " + jwtTokenizer.createAccessToken(email);
+            String refreshToken = "Bearer " + jwtTokenizer.createRefreshToken();
 
-            usersRepository.findByEmail(email)
-                            .ifPresent(user -> {
-                                user.setRefreshToken(refreshToken);
-                                user = usersRepository.saveAndFlush(user);
-                                //securityContext에 저장
-                                saveAuthentication(user);
-                            });
+            Users users = usersRepository.findByEmail(email)
+                            .orElseThrow(() -> new AuthException(USER_NOT_FOUND));
+            users.setRefreshToken(refreshToken);
+            usersRepository.saveAndFlush(users);
+            saveAuthentication(users);
 
-            response.setHeader(accessHeader, "Bearer " + accessToken);
-            response.setHeader(refreshHeader, "Bearer " + refreshToken);
+            response.addHeader(accessHeader, accessToken);
+            response.addHeader(refreshHeader, refreshToken);
 
-            response.setStatus(HttpStatus.OK.value());
         } catch (Exception e) {
             log.error("error : ",e);
             throw e;

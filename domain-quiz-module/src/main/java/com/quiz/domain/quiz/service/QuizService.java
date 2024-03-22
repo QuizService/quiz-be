@@ -15,6 +15,7 @@ import org.springframework.transaction.annotation.Transactional;
 import java.util.NoSuchElementException;
 
 import static com.quiz.global.exception.quiz.enums.QuizErrorType.QUIZ_NOT_FOUND;
+import static com.quiz.global.exception.quiz.enums.QuizErrorType.QUIZ_OWNER_NOT_MATCH;
 
 @Slf4j
 @Transactional
@@ -42,6 +43,7 @@ public class QuizService {
     public Long update(QuizRequestDto request, Long quizId) {
         Quiz quiz = quizRepository.findByIdx(quizId)
                 .orElseThrow(() -> new QuizException(QUIZ_NOT_FOUND));
+
         quiz.update(request);
         quizMongoTemplate.update(quiz);
         return quiz.getIdx();
@@ -65,6 +67,19 @@ public class QuizService {
     public Quiz findById(Long quizId) {
         return quizRepository.findByIdx(quizId)
                 .orElseThrow(() -> new QuizException(QUIZ_NOT_FOUND));
+    }
+
+    public Quiz findByEndpoint(String endpoint) {
+        return quizRepository.findByEndpoint(endpoint)
+                .orElseThrow(() -> new QuizException(QUIZ_NOT_FOUND));
+
+    }
+
+    public void checkQuizIsUsers(Long userId, Long quizId) {
+        Quiz quiz = findById(quizId);
+        if(!quiz.getUserId().equals(userId)) {
+            throw new QuizException(QUIZ_OWNER_NOT_MATCH);
+        }
     }
 
     // for test

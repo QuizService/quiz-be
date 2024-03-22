@@ -7,9 +7,18 @@ import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.GrantedAuthority;
+import org.springframework.security.core.authority.SimpleGrantedAuthority;
+import org.springframework.security.core.context.SecurityContextHolder;
+import org.springframework.security.core.userdetails.User;
+import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.stereotype.Component;
 
+import java.util.ArrayList;
 import java.util.Date;
+import java.util.List;
 import java.util.Optional;
 
 @Slf4j
@@ -89,6 +98,14 @@ public class JwtTokenizer {
             throw new IllegalArgumentException(e);
         }
 
+    }
+
+    public String getEmail(String accessToken) {
+        return JWT.require(Algorithm.HMAC512(secretKey))
+                .build()
+                .verify(accessToken)
+                .getClaim(EMAIL_CLAIM)
+                .asString();
     }
 
     public Optional<String> extractAccessToken(HttpServletRequest request) {

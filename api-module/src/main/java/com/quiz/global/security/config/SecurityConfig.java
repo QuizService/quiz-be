@@ -16,6 +16,7 @@ import org.springframework.security.config.http.SessionCreationPolicy;
 import org.springframework.security.web.SecurityFilterChain;
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
 import org.springframework.security.web.authentication.logout.SecurityContextLogoutHandler;
+import org.springframework.security.web.util.matcher.AntPathRequestMatcher;
 import org.springframework.web.cors.CorsConfiguration;
 import org.springframework.web.cors.CorsConfigurationSource;
 import org.springframework.web.cors.UrlBasedCorsConfigurationSource;
@@ -23,7 +24,6 @@ import org.springframework.web.cors.UrlBasedCorsConfigurationSource;
 import java.util.List;
 
 @RequiredArgsConstructor
-@EnableWebSecurity(debug = true)
 @Configuration
 public class SecurityConfig {
     private final CustomOAuth2UserService oAuth2UserService;
@@ -40,11 +40,11 @@ public class SecurityConfig {
                 .csrf(CsrfConfigurer::disable)
                 .sessionManagement(session -> session.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
                 .authorizeHttpRequests(auth -> auth
-                        .requestMatchers("/h2/**").permitAll()
-                        .requestMatchers("/css/**","/images/**","/js/**","/favicon.ico").permitAll()
-                        .requestMatchers("/","/login","/api/v1/**","/index.html").permitAll()
-                        .requestMatchers("/swagger-ui/**", "/v3/**", "/swagger-ui.html").permitAll()
-                        .anyRequest().hasRole("USER"));
+                        .requestMatchers(new AntPathRequestMatcher("/h2/**")).permitAll()
+                        .requestMatchers(new AntPathRequestMatcher("/css/**"),new AntPathRequestMatcher("/images/**"),new AntPathRequestMatcher("/js/**"),new AntPathRequestMatcher("/favicon.ico")).permitAll()
+                        .requestMatchers(new AntPathRequestMatcher("/"), new AntPathRequestMatcher("/login"), new AntPathRequestMatcher("/error"), new AntPathRequestMatcher("/index.html"), new AntPathRequestMatcher("/auth/**")).permitAll()
+                        .requestMatchers(new AntPathRequestMatcher("/swagger-ui/**"), new AntPathRequestMatcher("/v3/**"), new AntPathRequestMatcher("/swagger-ui.html")).permitAll()
+                        .anyRequest().authenticated());
         http
                 .oauth2Login(oauth2 ->
                         oauth2.successHandler(oAuth2AuthenticationSuccessHandler)
