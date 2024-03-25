@@ -23,11 +23,14 @@ public class ParticipantInfoController {
     private final ParticipantInfoFacade participantInfoFacade;
     private final UsersService usersService;
 
-    // 대기열...?
+
 
     @PostMapping("/{quiz-id}")
     public ResponseEntity<ResponseDto<?>> saveParticipant(@PathVariable("quiz-id") Long quizId,
                                                           @AuthenticationPrincipal UserAccount user) {
+        // 대기열 로직 추가
+        // queue 에 인간 추가
+
         Users users = usersService.findByEmail(user.getUsername());
         participantInfoFacade.saveParticipants(quizId, users.getId());
 

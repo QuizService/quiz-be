@@ -73,6 +73,7 @@ public class QuizController {
 
     @GetMapping("/form/{endpoint}")
     public ResponseEntity<ResponseDto<?>> findQuizByEndpoint(@PathVariable("endpoint") String endpoint) {
+
         QuizResponseDto response = quizFacade.findByEndPoint(endpoint);
 
         return ResponseEntity.ok(ResponseDto.success(response));
