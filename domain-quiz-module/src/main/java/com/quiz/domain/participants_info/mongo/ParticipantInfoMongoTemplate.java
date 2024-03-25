@@ -9,6 +9,7 @@ import org.springframework.data.mongodb.core.query.Criteria;
 import org.springframework.data.mongodb.core.query.Query;
 import org.springframework.data.mongodb.core.query.Update;
 import org.springframework.stereotype.Repository;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
 import java.util.Optional;
@@ -28,9 +29,10 @@ public class ParticipantInfoMongoTemplate {
         return (int) cnt;
     }
 
-    public String save(ParticipantInfo participantInfo) {
-        ParticipantInfo savedParticipants = mongoTemplate.insert(participantInfo);
-        return savedParticipants.getId();
+    @Transactional
+    public ParticipantInfo save(ParticipantInfo participantInfo) {
+        participantInfo = mongoTemplate.save(participantInfo,"participant_info");
+        return participantInfo;
     }
 
     public Optional<ParticipantInfo> findByQuizIdAndUserId(Long quizId, Long userId) {

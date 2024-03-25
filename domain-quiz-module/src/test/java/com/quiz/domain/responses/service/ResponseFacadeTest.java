@@ -1,10 +1,10 @@
 package com.quiz.domain.responses.service;
 
 import com.quiz.TestConfiguration;
-import com.quiz.domain.participants_info.entity.ParticipantInfo;
 import com.quiz.domain.participants_info.service.ParticipantInfoService;
 import com.quiz.domain.questions.service.QuestionService;
 import com.quiz.domain.quiz.service.QuizService;
+import com.quiz.domain.response.dto.ResponsesRequestDto;
 import com.quiz.domain.response.service.ResponsesFacade;
 import com.quiz.global.mock.TestDto;
 import com.quiz.global.mock.TestEntities;
@@ -14,9 +14,6 @@ import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
-import org.springframework.context.ApplicationEvent;
-import org.springframework.context.annotation.ComponentScan;
-import org.springframework.stereotype.Component;
 import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.DynamicPropertyRegistry;
 import org.springframework.test.context.DynamicPropertySource;
@@ -27,7 +24,6 @@ import org.testcontainers.junit.jupiter.Container;
 import org.testcontainers.junit.jupiter.Testcontainers;
 import org.testcontainers.utility.DockerImageName;
 
-import java.util.HashMap;
 import java.util.List;
 
 import static org.assertj.core.api.Assertions.assertThat;
@@ -51,8 +47,6 @@ public class ResponseFacadeTest {
         registry.add("spring.data.mongodb.password", () -> "password");
         registry.add("spring.data.mongodb.database", () -> "quiz");
     }
-    @Autowired
-    ApplicationEvents applicationEvent;
 
     @Autowired
     QuizService quizService;
@@ -77,7 +71,9 @@ public class ResponseFacadeTest {
     void setUp() {
         quizId = quizService.saveQuiz(TestDto.getQuizRequestDto(), userId);
         questionId = questionService.save(TestEntities.getChoices(), TestEntities.getAnswers(), TestDto.getQuestionsReqDto(), quizId);
-        participantInfoId = participantInfoService.save(quizId, participantId);
+        participantInfoService.save(quizId, participantId);
+        participantInfoId = participantInfoService.findByQuizIdAndUserId(quizId, userId)
+                .getId();
     }
 
     @AfterEach
@@ -89,7 +85,9 @@ public class ResponseFacadeTest {
 
     @Test
     void saveResponseTest() {
-        responsesFacade.saveResponse(quizId, participantId, List.of(TestDto.getResponseRequestDto(questionId)));
+        List<ResponsesRequestDto> requestDtos = List.of(TestDto.getResponseRequestDto(questionId));
+
+        responsesFacade.calculateScoreAndSaveResponse(quizId, requestDtos, participantInfoId);
     }
 
 }

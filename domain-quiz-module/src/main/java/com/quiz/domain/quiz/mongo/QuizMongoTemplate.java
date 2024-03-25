@@ -1,12 +1,21 @@
 package com.quiz.domain.quiz.mongo;
 
+import com.quiz.domain.quiz.dto.QuizResponseDto;
 import com.quiz.domain.quiz.entity.Quiz;
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.data.mongodb.core.MongoTemplate;
+import org.springframework.data.mongodb.core.aggregation.Aggregation;
+import org.springframework.data.mongodb.core.aggregation.AggregationOperation;
+import org.springframework.data.mongodb.core.aggregation.AggregationResults;
 import org.springframework.data.mongodb.core.query.Criteria;
 import org.springframework.data.mongodb.core.query.Query;
 import org.springframework.data.mongodb.core.query.Update;
+import org.springframework.data.support.PageableExecutionUtils;
 import org.springframework.stereotype.Repository;
+
+import java.util.List;
 
 @RequiredArgsConstructor
 @Repository
@@ -41,6 +50,29 @@ public class QuizMongoTemplate {
         update.set("max_score", quiz.getMaxScore());
 
         mongoTemplate.updateFirst(query, update, Quiz.class);
+    }
+
+    public Page<Quiz> findQuizByUserId(Long userId, Pageable pageable) {
+        Criteria criteria = Criteria.where("user_id").is(userId);
+
+        AggregationOperation match = Aggregation.match(criteria);
+        AggregationOperation sort = Aggregation.sort(pageable.getSort());
+        AggregationOperation skip = Aggregation.skip(pageable.getOffset());
+        AggregationOperation limit = Aggregation.limit(pageable.getPageSize());
+
+        Aggregation aggregation = Aggregation.newAggregation(match, sort, skip, limit);
+
+        AggregationResults<Quiz> result = mongoTemplate.aggregate(aggregation, Quiz.class, Quiz.class);
+        List<Quiz> quizzes = result.getMappedResults();
+
+        Query query = Query.query(Criteria.where("user_id")
+                .is(userId));
+
+        return PageableExecutionUtils.getPage(quizzes, pageable,
+                () -> mongoTemplate
+                        .count(Query.query(Criteria.where("user_id")
+                .is(userId)), Quiz.class));
+
     }
 
 }

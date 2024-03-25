@@ -30,8 +30,10 @@ public class DistributedLockAop {
         RLock rLock = redissonClient.getLock(key);
         try {
             boolean available = rLock.tryLock(distributedLock.waitTime(), distributedLock.leaseTime(), distributedLock.timeunit());
-            if(!available) return false;
-
+            if(!available) {
+                log.error("lock timeout");
+                return false;
+            }
             return aopTransaction.proceed(joinPoint);
         } catch (InterruptedException e) {
             throw new RuntimeException(e);

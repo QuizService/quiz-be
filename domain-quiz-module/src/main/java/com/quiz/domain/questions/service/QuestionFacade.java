@@ -27,7 +27,7 @@ public class QuestionFacade {
     private final AnswersService answersService;
 
     public void saveQuestions(List<QuestionsRequestDto> questionsDtos, Long quizId, Long userId) {
-        quizService.checkQuizIsUsers(userId, quizId);
+        quizService.checkQuizOwnerIsUser(userId, quizId);
 
         for (QuestionsRequestDto questionDto : questionsDtos) {
             QuestionType questionType = QuestionType.findByInitial(questionDto.getQuestionType());
@@ -40,7 +40,7 @@ public class QuestionFacade {
     }
 
     public void updateQuestions(List<QuestionsRequestDto> questionsDtos, Long quizId, Long userId) {
-        quizService.checkQuizIsUsers(userId, quizId);
+        quizService.checkQuizOwnerIsUser(userId, quizId);
         for (QuestionsRequestDto questionsDto : questionsDtos) {
             if (questionsDto.getQuestionId() != null) {
                 Questions questions = questionService.findById(questionsDto.getQuestionId());
@@ -94,7 +94,7 @@ public class QuestionFacade {
 
     @Transactional(readOnly = true)
     public Page<QuestionsResponseDto> findPageByQuizId(Long quizId, Long userId, int page, int size) {
-        quizService.checkQuizIsUsers(userId, quizId);
+        quizService.checkQuizOwnerIsUser(userId, quizId);
         return questionService.findResponseByQuizId(quizId, page, size);
     }
 

@@ -11,13 +11,15 @@ public class QuizResponseDto {
     private Integer maxScore;
     private String startDate;
     private String dueDate;
+    private String created;
 
     @Builder
-    public QuizResponseDto(Long quizId, String title, Integer maxScore, String startDate, String dueDate) {
+    public QuizResponseDto(Long quizId, String title, Integer maxScore, String startDate, String dueDate, String created) {
         this.quizId = quizId;
         this.title = title;
         this.maxScore = maxScore;
         this.startDate = startDate;
         this.dueDate = dueDate;
+        this.created = created;
     }
 }

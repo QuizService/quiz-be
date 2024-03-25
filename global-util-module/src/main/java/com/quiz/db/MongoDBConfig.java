@@ -29,6 +29,12 @@ public class MongoDBConfig extends AbstractMongoClientConfiguration {
     @Value("${spring.data.mongodb.database}")
     private String databaseName;
 
+    @Value("${spring.data.mongodb.username}")
+    private String username;
+
+    @Value("${spring.data.mongodb.password}")
+    private String password;
+
     @Bean
     public MongoTransactionManager transactionManager(MongoDatabaseFactory mongoDatabaseFactory) {
         return new MongoTransactionManager(mongoDatabaseFactory);
@@ -38,11 +44,11 @@ public class MongoDBConfig extends AbstractMongoClientConfiguration {
     @Override
     public MongoClient mongoClient() {
         ConnectionString connectionString = new ConnectionString(this.connectionString);
+
         MongoClientSettings mongoClientSettings = MongoClientSettings.builder()
-                .applyToConnectionPoolSettings(builder -> builder.maxConnectionIdleTime(1, TimeUnit.MINUTES))
+                .applyToConnectionPoolSettings(builder -> builder
+                        .maxConnectionIdleTime(10, TimeUnit.MINUTES))
                 .applyConnectionString(connectionString)
-                .applyToSocketSettings(socket -> socket.connectTimeout(30, TimeUnit.SECONDS)
-                        .readTimeout(30, TimeUnit.SECONDS))
                 .build();
 
         return MongoClients.create(mongoClientSettings);

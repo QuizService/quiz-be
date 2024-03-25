@@ -2,13 +2,19 @@ package com.quiz.domain.quiz.service;
 
 
 import com.quiz.domain.quiz.dto.QuizRequestDto;
+import com.quiz.domain.quiz.dto.QuizResponseDto;
 import com.quiz.domain.quiz.entity.Quiz;
 import com.quiz.domain.quiz.mongo.QuizMongoTemplate;
 import com.quiz.domain.quiz.mongo.QuizRepository;
 import com.quiz.global.SequenceGenerator;
 import com.quiz.global.exception.quiz.QuizException;
+import com.quiz.utils.TimeConverter;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -75,7 +81,12 @@ public class QuizService {
 
     }
 
-    public void checkQuizIsUsers(Long userId, Long quizId) {
+    public boolean isUserIsQuizOwner(Long userId, Long quizId) {
+        Quiz quiz = findById(quizId);
+        return quiz.getUserId().equals(userId);
+    }
+
+    public void checkQuizOwnerIsUser(Long userId, Long quizId) {
         Quiz quiz = findById(quizId);
         if(!quiz.getUserId().equals(userId)) {
             throw new QuizException(QUIZ_OWNER_NOT_MATCH);
@@ -88,4 +99,17 @@ public class QuizService {
     }
 
 
+    public Page<QuizResponseDto> findAllByUserId(Long userId, int page, int size) {
+        Pageable pageable = PageRequest.of(page, size, Sort.Direction.DESC, "created");
+        Page<Quiz> quizzes = quizMongoTemplate.findQuizByUserId(userId, pageable);
+
+        return quizzes.map(quiz -> QuizResponseDto.builder()
+                .quizId(quiz.getIdx())
+                .title(quiz.getTitle())
+                .maxScore(quiz.getMaxScore())
+                .startDate(TimeConverter.localDateTimeToString(quiz.getStartDate()))
+                .dueDate(TimeConverter.localDateTimeToString(quiz.getDueDate()))
+                .created(TimeConverter.localDateTimeToString(quiz.getCreated()))
+                .build());
+    }
 }

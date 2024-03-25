@@ -28,25 +28,6 @@ public class ResponsesFacade {
     private final QuestionService questionService;
     private final ResponsesService responsesService;
     private final QuizService quizService;
-    private final ApplicationEventPublisher applicationEventPublisher;
-
-
-    public void saveResponse(Long quizId, Long userId, List<ResponsesRequestDto> responses) {
-        Integer quizCapacity = quizService.findById(quizId)
-                .getCapacity();
-        if (quizCapacity > 0) {
-            participantInfoService.updateFcFs(quizId, userId, quizCapacity);
-        }
-        String participantInfoId = participantInfoService.findByQuizIdAndUserId(quizId, userId)
-                .getId();
-
-        Map<String, Object> params = new HashMap<>();
-        params.put("participantInfoId", participantInfoId);
-        params.put("responses", responses);
-        params.put("quizId", quizId);
-        //event 로 저장과정 분리
-        applicationEventPublisher.publishEvent(params);
-    }
 
     /*
      * 채점 방법

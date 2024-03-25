@@ -1,14 +1,12 @@
 package com.quiz.domain.quiz.service;
 
-import com.quiz.domain.questions.service.QuestionFacade;
 import com.quiz.domain.quiz.entity.Quiz;
-import com.quiz.domain.questions.dto.QuestionIntegratedDto;
-import com.quiz.domain.questions.dto.QuestionsRequestDto;
 import com.quiz.domain.quiz.dto.QuizRequestDto;
 import com.quiz.domain.quiz.dto.QuizResponseDto;
 import com.quiz.utils.TimeConverter;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.data.domain.Page;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -26,7 +24,7 @@ public class QuizFacade {
     }
 
     public Long updateQuiz(QuizRequestDto quizDto, Long quizId, Long userId) {
-        quizService.checkQuizIsUsers(userId, quizId);
+        quizService.checkQuizOwnerIsUser(userId, quizId);
         return quizService.update(quizDto, quizId);
     }
 
@@ -38,6 +36,10 @@ public class QuizFacade {
     public QuizResponseDto findByEndPoint(String endpoint) {
         Quiz quiz = quizService.findByEndpoint(endpoint);
         return toDto(quiz);
+    }
+
+    public Page<QuizResponseDto> findAllByUserId(Long userId, int page, int size) {
+        return quizService.findAllByUserId(userId, page, size);
     }
 
     public QuizResponseDto findById(Long quizId) {
