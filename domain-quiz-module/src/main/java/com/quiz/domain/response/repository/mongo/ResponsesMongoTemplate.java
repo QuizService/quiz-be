@@ -1,4 +1,4 @@
-package com.quiz.domain.response.mongo;
+package com.quiz.domain.response.repository.mongo;
 
 import com.quiz.domain.response.entity.Responses;
 import lombok.RequiredArgsConstructor;

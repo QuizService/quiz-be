@@ -2,8 +2,8 @@ package com.quiz.domain.participants_info.service;
 
 import com.quiz.domain.participants_info.dto.ParticipantsRankResponseDto;
 import com.quiz.domain.participants_info.entity.ParticipantInfo;
-import com.quiz.domain.participants_info.mongo.ParticipantInfoMongoTemplate;
-import com.quiz.domain.participants_info.mongo.ParticipantInfoRepository;
+import com.quiz.domain.participants_info.repository.mongo.ParticipantInfoMongoTemplate;
+import com.quiz.domain.participants_info.repository.mongo.ParticipantInfoRepository;
 import com.quiz.lock.DistributedLock;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -11,8 +11,6 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
-import java.util.NoSuchElementException;
-import java.util.Optional;
 
 @Slf4j
 @RequiredArgsConstructor

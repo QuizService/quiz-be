@@ -1,4 +1,4 @@
-package com.quiz.domain.participants_info.mongo;
+package com.quiz.domain.participants_info.repository.mongo;
 
 import com.quiz.domain.participants_info.dto.ParticipantsRankResponseDto;
 import com.quiz.domain.participants_info.entity.ParticipantInfo;

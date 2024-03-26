@@ -1,7 +1,7 @@
-package com.quiz.domain.participant_info.mongo;
+package com.quiz.domain.participant_info.repository.mongo;
 
 import com.quiz.TestConfiguration;
-import com.quiz.domain.participants_info.mongo.ParticipantInfoMongoTemplate;
+import com.quiz.domain.participants_info.repository.mongo.ParticipantInfoMongoTemplate;
 import lombok.extern.slf4j.Slf4j;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;

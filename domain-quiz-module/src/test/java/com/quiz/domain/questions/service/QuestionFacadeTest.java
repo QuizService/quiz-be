@@ -1,7 +1,7 @@
 package com.quiz.domain.questions.service;
 
 import com.quiz.TestConfiguration;
-import com.quiz.domain.questions.mongo.QuestionsRepository;
+import com.quiz.domain.questions.repository.mongo.QuestionsRepository;
 import lombok.extern.slf4j.Slf4j;
 import org.junit.jupiter.api.AfterEach;
 import org.springframework.beans.factory.annotation.Autowired;

@@ -1,4 +1,4 @@
-package com.quiz.domain.questions.mongo;
+package com.quiz.domain.questions.repository.mongo;
 
 import com.quiz.domain.questions.entity.QuestionType;
 import com.quiz.domain.questions.entity.Questions;

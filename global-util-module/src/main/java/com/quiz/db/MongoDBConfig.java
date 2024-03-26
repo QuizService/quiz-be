@@ -20,7 +20,7 @@ import java.util.concurrent.TimeUnit;
 @Slf4j
 @Configuration
 @EnableMongoRepositories(
-        basePackages = {"com.quiz.domain.*.mongo"})
+        basePackages = {"com.quiz.domain.*.repository.mongo"})
 @EnableTransactionManagement
 public class MongoDBConfig extends AbstractMongoClientConfiguration {
     @Value("${spring.data.mongodb.uri}")

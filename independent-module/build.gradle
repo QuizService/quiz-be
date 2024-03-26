@@ -2,9 +2,13 @@ bootJar.enabled=false
 jar.enabled=true
 
 dependencies {
-    api 'org.springframework.boot:spring-boot-starter-aop'
-
-    implementation 'org.springframework.boot:spring-boot-starter-data-redis'
+    implementation 'org.springframework.boot:spring-boot-starter-aop'
+    /*
+    implement vs api
+    api : 의존 라이브러리 수정 시 해당 모듈을 의존하고 있는 모듈들 또한 재빌드
+    implementation : 의존 라이브러리 수정 시 본 모듈만 재빌드
+    * */
+    api 'org.springframework.boot:spring-boot-starter-data-redis'
     implementation 'org.redisson:redisson:3.27.1'
 
     implementation 'org.springframework.kafka:spring-kafka'

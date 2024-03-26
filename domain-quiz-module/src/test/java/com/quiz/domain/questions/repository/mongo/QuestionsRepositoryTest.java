@@ -1,9 +1,11 @@
-package com.quiz.domain.questions.mongo;
+package com.quiz.domain.questions.repository.mongo;
 
 
 import com.quiz.TestConfiguration;
 import com.quiz.domain.answers.entity.Answers;
 import com.quiz.domain.choice.entity.Choices;
+import com.quiz.domain.questions.repository.mongo.QuestionsMongoTemplate;
+import com.quiz.domain.questions.repository.mongo.QuestionsRepository;
 import com.quiz.global.mock.TestEntities;
 import com.quiz.domain.questions.entity.QuestionType;
 import com.quiz.domain.questions.entity.Questions;
