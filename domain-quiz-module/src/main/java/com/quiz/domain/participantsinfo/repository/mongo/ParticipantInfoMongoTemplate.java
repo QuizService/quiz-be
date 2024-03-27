@@ -1,22 +1,24 @@
-package com.quiz.domain.participants_info.repository.mongo;
+package com.quiz.domain.participantsinfo.repository.mongo;
 
-import com.quiz.domain.participants_info.dto.ParticipantsRankResponseDto;
-import com.quiz.domain.participants_info.entity.ParticipantInfo;
+import com.quiz.domain.participantsinfo.dto.ParticipantsRankResponseDto;
+import com.quiz.domain.participantsinfo.entity.ParticipantInfo;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Sort;
 import org.springframework.data.mongodb.core.MongoTemplate;
 import org.springframework.data.mongodb.core.query.Criteria;
 import org.springframework.data.mongodb.core.query.Query;
 import org.springframework.data.mongodb.core.query.Update;
+import org.springframework.stereotype.Component;
 import org.springframework.stereotype.Repository;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
 import java.util.Optional;
 
-@Repository
+@Component
 @RequiredArgsConstructor
 public class ParticipantInfoMongoTemplate {
+
     private final MongoTemplate mongoTemplate;
 
     public int countParticipantsByQuizId(Long quizId) {

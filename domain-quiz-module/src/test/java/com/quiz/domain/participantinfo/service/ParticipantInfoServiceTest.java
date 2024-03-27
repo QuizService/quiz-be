@@ -1,7 +1,7 @@
-package com.quiz.domain.participant_info.service;
+package com.quiz.domain.participantinfo.service;
 
-import com.quiz.domain.participants_info.entity.ParticipantInfo;
-import com.quiz.domain.participants_info.service.ParticipantInfoService;
+import com.quiz.domain.participantsinfo.entity.ParticipantInfo;
+import com.quiz.domain.participantsinfo.service.ParticipantInfoService;
 import lombok.extern.slf4j.Slf4j;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.Test;

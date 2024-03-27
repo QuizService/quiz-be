@@ -2,7 +2,7 @@ package com.quiz.global.mock;
 
 import com.quiz.domain.answers.entity.Answers;
 import com.quiz.domain.choice.entity.Choices;
-import com.quiz.domain.participants_info.entity.ParticipantInfo;
+import com.quiz.domain.participantsinfo.entity.ParticipantInfo;
 import com.quiz.domain.questions.entity.Questions;
 
 import java.util.ArrayList;

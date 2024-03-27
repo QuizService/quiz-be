@@ -1,10 +1,8 @@
 package com.quiz.global.event;
 
 
-import com.quiz.domain.participants_info.service.ParticipantInfoFacade;
-import com.quiz.domain.participants_info.service.ParticipantInfoService;
+import com.quiz.domain.participantsinfo.service.ParticipantInfoFacade;
 import com.quiz.domain.response.service.ResponsesFacade;
-import com.quiz.domain.response.service.ResponsesService;
 import com.quiz.domain.response.dto.ResponsesRequestDto;
 import com.quiz.global.queue.ParticipantQueueInfoDto;
 import lombok.RequiredArgsConstructor;

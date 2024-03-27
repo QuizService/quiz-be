@@ -1,6 +1,6 @@
 package com.quiz.domain.response.service;
 
-import com.quiz.domain.participants_info.service.ParticipantInfoService;
+import com.quiz.domain.participantsinfo.service.ParticipantInfoService;
 import com.quiz.domain.questions.dto.QuestionsAnswerDto;
 import com.quiz.domain.questions.entity.QuestionType;
 import com.quiz.domain.questions.service.QuestionService;
@@ -9,14 +9,10 @@ import com.quiz.domain.response.dto.ResponsesRequestDto;
 import com.quiz.domain.response.entity.Responses;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.context.ApplicationEventPublisher;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import java.util.Comparator;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 import java.util.stream.Collectors;
 
 @Slf4j
@@ -74,6 +70,7 @@ public class ResponsesFacade {
         if (questionsAnswerDto.getQuestionType().equals(QuestionType.MULTIPLE_CHOICE)) {
             if (responses.getChoices().isEmpty()) return false;
             List<Integer> choices = responses.getChoices();
+            choices = new ArrayList<>(choices);
             choices.sort(Comparator.naturalOrder());
 
             List<Integer> answerChoices = questionsAnswerDto.getChoices();

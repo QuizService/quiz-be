@@ -1,14 +1,13 @@
-package com.quiz.domain.participants_info.service;
+package com.quiz.domain.participantsinfo.service;
 
-import com.quiz.domain.participants_info.dto.ParticipantsRankResponseDto;
-import com.quiz.domain.participants_info.entity.ParticipantInfo;
-import com.quiz.domain.participants_info.repository.mongo.ParticipantInfoMongoTemplate;
-import com.quiz.domain.participants_info.repository.mongo.ParticipantInfoRepository;
-import com.quiz.domain.participants_info.repository.redis.ParticipantInfoQueueRepository;
+import com.quiz.domain.participantsinfo.dto.ParticipantsRankResponseDto;
+import com.quiz.domain.participantsinfo.entity.ParticipantInfo;
+import com.quiz.domain.participantsinfo.repository.mongo.ParticipantInfoMongoTemplate;
+import com.quiz.domain.participantsinfo.repository.mongo.ParticipantInfoRepository;
+import com.quiz.domain.participantsinfo.repository.redis.ParticipantInfoQueueRepository;
 import com.quiz.lock.DistributedLock;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 

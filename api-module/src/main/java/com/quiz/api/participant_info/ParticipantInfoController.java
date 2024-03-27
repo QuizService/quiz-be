@@ -1,8 +1,8 @@
 package com.quiz.api.participant_info;
 
-import com.quiz.domain.participants_info.dto.ParticipantsRankResponseDto;
-import com.quiz.domain.participants_info.service.ParticipantInfoFacade;
-import com.quiz.domain.participants_info.service.ParticipantInfoQueueService;
+import com.quiz.domain.participantsinfo.dto.ParticipantsRankResponseDto;
+import com.quiz.domain.participantsinfo.service.ParticipantInfoFacade;
+import com.quiz.domain.participantsinfo.service.ParticipantInfoQueueService;
 import com.quiz.domain.response.dto.ResponsesRequestsDto;
 import com.quiz.domain.users.entity.Users;
 import com.quiz.domain.users.service.UsersService;

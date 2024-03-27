@@ -2,7 +2,6 @@ package com.quiz.domain.responses.service;
 
 import com.quiz.TestConfiguration;
 import com.quiz.domain.response.service.ResponsesFacade;
-import com.quiz.global.event.CustomEventListener;
 import lombok.extern.slf4j.Slf4j;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.Mock;
@@ -14,8 +13,6 @@ import org.testcontainers.containers.MongoDBContainer;
 import org.testcontainers.junit.jupiter.Container;
 import org.testcontainers.junit.jupiter.Testcontainers;
 import org.testcontainers.utility.DockerImageName;
-
-import static org.mockito.Mockito.verify;
 
 @Slf4j
 @Testcontainers

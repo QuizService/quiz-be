@@ -1,7 +1,7 @@
 package com.quiz.domain.responses.service;
 
 import com.quiz.TestConfiguration;
-import com.quiz.domain.participants_info.service.ParticipantInfoService;
+import com.quiz.domain.participantsinfo.service.ParticipantInfoService;
 import com.quiz.domain.questions.service.QuestionService;
 import com.quiz.domain.quiz.service.QuizService;
 import com.quiz.domain.response.dto.ResponsesRequestDto;
@@ -17,7 +17,6 @@ import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.DynamicPropertyRegistry;
 import org.springframework.test.context.DynamicPropertySource;
-import org.springframework.test.context.event.ApplicationEvents;
 import org.springframework.test.context.event.RecordApplicationEvents;
 import org.testcontainers.containers.MongoDBContainer;
 import org.testcontainers.junit.jupiter.Container;
@@ -72,7 +71,7 @@ public class ResponseFacadeTest {
         quizId = quizService.saveQuiz(TestDto.getQuizRequestDto(), userId);
         questionId = questionService.save(TestEntities.getChoices(), TestEntities.getAnswers(), TestDto.getQuestionsReqDto(), quizId);
         participantInfoService.save(quizId, participantId);
-        participantInfoId = participantInfoService.findByQuizIdAndUserId(quizId, userId)
+        participantInfoId = participantInfoService.findByQuizIdAndUserId(quizId, participantId)
                 .getId();
     }
 
@@ -86,7 +85,7 @@ public class ResponseFacadeTest {
     @Test
     void saveResponseTest() {
         List<ResponsesRequestDto> requestDtos = List.of(TestDto.getResponseRequestDto(questionId));
-
+        log.info(participantInfoId);
         responsesFacade.calculateScoreAndSaveResponse(quizId, requestDtos, participantInfoId);
     }
 

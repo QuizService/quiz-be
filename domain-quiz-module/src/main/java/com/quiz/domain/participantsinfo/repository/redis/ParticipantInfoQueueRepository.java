@@ -1,6 +1,6 @@
-package com.quiz.domain.participants_info.repository.redis;
+package com.quiz.domain.participantsinfo.repository.redis;
 
-import com.quiz.domain.participants_info.dto.ParticipantQueueDto;
+import com.quiz.domain.participantsinfo.dto.ParticipantQueueDto;
 import com.quiz.redis.RedisUtils;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;

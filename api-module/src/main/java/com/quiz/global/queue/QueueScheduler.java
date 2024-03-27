@@ -1,7 +1,7 @@
 package com.quiz.global.queue;
 
-import com.quiz.domain.participants_info.dto.ParticipantQueueDto;
-import com.quiz.domain.participants_info.repository.redis.ParticipantInfoQueueRepository;
+import com.quiz.domain.participantsinfo.dto.ParticipantQueueDto;
+import com.quiz.domain.participantsinfo.repository.redis.ParticipantInfoQueueRepository;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.context.ApplicationEventPublisher;
@@ -11,7 +11,6 @@ import org.springframework.stereotype.Component;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
-import java.util.Set;
 
 @Slf4j
 @Transactional

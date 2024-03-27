@@ -1,13 +1,12 @@
-package com.quiz.domain.participants_info.service;
+package com.quiz.domain.participantsinfo.service;
 
-import com.quiz.domain.participants_info.entity.ParticipantInfo;
+import com.quiz.domain.participantsinfo.entity.ParticipantInfo;
 import com.quiz.domain.quiz.entity.Quiz;
 import com.quiz.domain.quiz.service.QuizService;
-import com.quiz.domain.participants_info.dto.ParticipantsRankResponseDto;
+import com.quiz.domain.participantsinfo.dto.ParticipantsRankResponseDto;
 import com.quiz.domain.response.dto.ResponsesRequestDto;
 import com.quiz.domain.users.dto.UserNameDto;
 import com.quiz.domain.users.service.UsersService;
-import com.quiz.lock.DistributedLock;
 import lombok.RequiredArgsConstructor;
 import org.springframework.context.ApplicationEventPublisher;
 import org.springframework.stereotype.Service;

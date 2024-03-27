@@ -1,4 +1,4 @@
-package com.quiz.domain.participants_info.entity;
+package com.quiz.domain.participantsinfo.entity;
 
 import jakarta.persistence.*;
 import lombok.*;

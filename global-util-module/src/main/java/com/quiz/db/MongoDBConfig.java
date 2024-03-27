@@ -20,6 +20,7 @@ import java.util.concurrent.TimeUnit;
 @Slf4j
 @Configuration
 @EnableMongoRepositories(
+        //com.quiz.domain.participantsinfo.repository.mongo.ParticipantInfoMongoTemplate
         basePackages = {"com.quiz.domain.*.repository.mongo"})
 @EnableTransactionManagement
 public class MongoDBConfig extends AbstractMongoClientConfiguration {
@@ -61,7 +62,7 @@ public class MongoDBConfig extends AbstractMongoClientConfiguration {
 
 
     @Bean
-    public MongoOperations mongoTemplate() {
+    public MongoTemplate mongoTemplate() {
         return new MongoTemplate(mongoClient(), databaseName);
     }
 }

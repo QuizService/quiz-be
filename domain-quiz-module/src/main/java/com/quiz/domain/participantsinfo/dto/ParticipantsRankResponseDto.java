@@ -1,4 +1,4 @@
-package com.quiz.domain.participants_info.dto;
+package com.quiz.domain.participantsinfo.dto;
 
 import lombok.Builder;
 import lombok.Getter;

@@ -1,8 +1,7 @@
-package com.quiz.domain.participants_info.service;
+package com.quiz.domain.participantsinfo.service;
 
-import com.quiz.domain.participants_info.repository.redis.ParticipantInfoQueueRepository;
+import com.quiz.domain.participantsinfo.repository.redis.ParticipantInfoQueueRepository;
 import lombok.RequiredArgsConstructor;
-import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
