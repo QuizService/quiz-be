@@ -13,7 +13,7 @@ import org.springframework.transaction.annotation.Transactional;
 import java.util.List;
 
 @Slf4j
-@Transactional
+//@Transactional
 @Component
 @RequiredArgsConstructor
 public class QueueScheduler {
@@ -21,7 +21,7 @@ public class QueueScheduler {
     private final ApplicationEventPublisher eventPublisher;
 
     @Async
-    @Scheduled(fixedDelay = 1L)
+    @Scheduled(fixedDelay = 2000)
     public void queue() {
         List<ParticipantQueueDto> participantQueueDtoSet = participantInfoQueueRepository.getUserFromQueue();
 
