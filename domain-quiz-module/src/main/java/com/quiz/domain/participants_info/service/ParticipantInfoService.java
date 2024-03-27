@@ -4,9 +4,11 @@ import com.quiz.domain.participants_info.dto.ParticipantsRankResponseDto;
 import com.quiz.domain.participants_info.entity.ParticipantInfo;
 import com.quiz.domain.participants_info.repository.mongo.ParticipantInfoMongoTemplate;
 import com.quiz.domain.participants_info.repository.mongo.ParticipantInfoRepository;
+import com.quiz.domain.participants_info.repository.redis.ParticipantInfoQueueRepository;
 import com.quiz.lock.DistributedLock;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -19,6 +21,7 @@ import java.util.List;
 public class ParticipantInfoService {
     private final ParticipantInfoMongoTemplate participantInfoMongoTemplate;
     private final ParticipantInfoRepository participantInfoRepository;
+    private final ParticipantInfoQueueRepository participantInfoQueueRepository;
 
     @DistributedLock(key = "'saveFcfs : quizId - ' + #quizId")
     public String saveFcfs(Long quizId, Long userId, int capacity) {
@@ -36,6 +39,8 @@ public class ParticipantInfoService {
             throw new RuntimeException("cannot participate2");
         }
         participantInfoMongoTemplate.update(quizId, userId, participatedCnt + 1);
+        // 수용 가능 인원 - 참여 인원 - 1 저장
+        participantInfoQueueRepository.setParticipantNumber(quizId, capacity - participatedCnt - 1);
     }
 
     public int countParticipantInfoCntByQuizId(Long quizId) {

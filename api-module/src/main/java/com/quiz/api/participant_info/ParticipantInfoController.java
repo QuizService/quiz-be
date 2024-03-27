@@ -2,6 +2,7 @@ package com.quiz.api.participant_info;
 
 import com.quiz.domain.participants_info.dto.ParticipantsRankResponseDto;
 import com.quiz.domain.participants_info.service.ParticipantInfoFacade;
+import com.quiz.domain.participants_info.service.ParticipantInfoQueueService;
 import com.quiz.domain.response.dto.ResponsesRequestsDto;
 import com.quiz.domain.users.entity.Users;
 import com.quiz.domain.users.service.UsersService;
@@ -21,6 +22,7 @@ import java.util.List;
 @RestController
 public class ParticipantInfoController {
     private final ParticipantInfoFacade participantInfoFacade;
+    private final ParticipantInfoQueueService participantInfoQueueService;
     private final UsersService usersService;
 
 
@@ -30,9 +32,8 @@ public class ParticipantInfoController {
                                                           @AuthenticationPrincipal UserAccount user) {
         // 대기열 로직 추가
         // queue 에 인간 추가
-
         Users users = usersService.findByEmail(user.getUsername());
-        participantInfoFacade.saveParticipants(quizId, users.getId());
+        participantInfoQueueService.addQueue(quizId, users.getId());
 
         return ResponseEntity.ok(ResponseDto.success());
     }

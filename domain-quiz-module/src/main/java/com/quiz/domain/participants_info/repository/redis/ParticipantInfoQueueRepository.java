@@ -14,6 +14,7 @@ public class ParticipantInfoQueueRepository {
     private final RedisUtils redisUtils;
 
     private static final String WAITING_QUEUE_KEY_PREFIX = "WAITING_QUIZ_ID";
+    private static final String PARTICIPANT_NUMBER_KEY_PREFIX = "PARTICIPANT_IN_QUIZ_ID";
     private static final Long START_IDX = 0L;
     private static final Long END_IDX = 10L;
 
@@ -41,8 +42,18 @@ public class ParticipantInfoQueueRepository {
                 .toList();
     }
 
-    public void delete(String key) {
-        redisUtils.deleteRange(key, START_IDX, END_IDX);
+    public void delete() {
+        redisUtils.deleteRange(WAITING_QUEUE_KEY_PREFIX, START_IDX, END_IDX);
+    }
+
+    public void setParticipantNumber(Long quizId, int leftCapacity) {
+        String key = PARTICIPANT_NUMBER_KEY_PREFIX + quizId;
+        redisUtils.setValue(key, (long) leftCapacity);
+    }
+
+    public Long getParticipantNumber(Long quizId) {
+        String key = PARTICIPANT_NUMBER_KEY_PREFIX + quizId;
+        return (Long) redisUtils.getValue(key);
     }
 
     private static ParticipantQueueDto toValue(Long userId, Long quizId) {
@@ -51,5 +62,7 @@ public class ParticipantInfoQueueRepository {
                 .userId(userId)
                 .build();
     }
+
+
 
 }

@@ -23,10 +23,6 @@ public class RedisUtils {
         zSetOperations.removeRange(key, start, end);
     }
 
-    public Object getValue(String key) {
-        return redisTemplate.opsForValue().get(key);
-    }
-
     public ZSetOperations<String, Object> opsForZSet() {
         return redisTemplate.opsForZSet();
     }
@@ -51,4 +47,13 @@ public class RedisUtils {
     public Long getZRank(String key, Object value) {
         return opsForZSet().rank(key, value);
     }
+
+    public void setValue(String key, Long value) {
+        redisTemplate.opsForValue().set(key, value);
+    }
+
+    public Object getValue(String key) {
+        return redisTemplate.opsForValue().get(key);
+    }
+
 }
