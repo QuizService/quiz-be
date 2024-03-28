@@ -13,10 +13,15 @@ import java.util.List;
 
 @Getter
 public class UserAccount extends User {
-    private final Users users;
+    private Users users;
 
-    public UserAccount(Users users) {
+    public UserAccount(final Users users) {
         super(users.getEmail(), "", List.of(new SimpleGrantedAuthority(users.getRole())));
         this.users = users;
+    }
+
+
+    public UserAccount(String email, String role) {
+        super(email, "",List.of(new SimpleGrantedAuthority(role)));
     }
 }

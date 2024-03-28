@@ -44,6 +44,7 @@ public class SecurityConfig {
                         .requestMatchers(new AntPathRequestMatcher("/css/**"),new AntPathRequestMatcher("/images/**"),new AntPathRequestMatcher("/js/**"),new AntPathRequestMatcher("/favicon.ico")).permitAll()
                         .requestMatchers(new AntPathRequestMatcher("/"), new AntPathRequestMatcher("/login"), new AntPathRequestMatcher("/error"), new AntPathRequestMatcher("/index.html"), new AntPathRequestMatcher("/auth/**")).permitAll()
                         .requestMatchers(new AntPathRequestMatcher("/swagger-ui/**"), new AntPathRequestMatcher("/v3/**"), new AntPathRequestMatcher("/swagger-ui.html")).permitAll()
+                        .requestMatchers(new AntPathRequestMatcher("/from/**"), new AntPathRequestMatcher("/to/**"), new AntPathRequestMatcher("/web-socket-connection/**")).permitAll()
                         .anyRequest().authenticated());
         http
                 .oauth2Login(oauth2 ->

@@ -1,4 +1,4 @@
-package com.quiz.api;
+package com.quiz.api.test;
 
 import com.quiz.global.security.userdetails.UserAccount;
 import lombok.extern.slf4j.Slf4j;

@@ -11,6 +11,7 @@ import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.apache.commons.lang3.StringUtils;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.GrantedAuthority;
@@ -32,7 +33,7 @@ import static com.quiz.global.exception.auth.AuthErrorCode.USER_NOT_FOUND;
 @Component
 @RequiredArgsConstructor
 public class JwtAuthorizationProcessingFilter extends OncePerRequestFilter {
-    private static final List<String> AUTHORIZATION_NOT_REQUIRED = List.of("/login", "/", "/favicon.ico", "/h2/**", "/favicon.ico", "/index.html");
+    private static final List<String> AUTHORIZATION_NOT_REQUIRED = List.of("/login", "/", "/favicon.ico", "/h2/**", "/favicon.ico", "/index.html","/from/test/info","/to/**");
     private final JwtTokenizer jwtTokenizer;
     private final UsersRepository usersRepository;
 
@@ -124,8 +125,6 @@ public class JwtAuthorizationProcessingFilter extends OncePerRequestFilter {
 
     @Override
     protected boolean shouldNotFilter(HttpServletRequest request) throws ServletException {
-        boolean result = AUTHORIZATION_NOT_REQUIRED.contains(request.getRequestURI());
-        log.info("should not filter {} ? : {}", request.getRequestURI(), result);
-        return result;
+        return StringUtils.startsWithAny(request.getRequestURI(), "/login", "/", "/favicon.ico", "/h2", "/favicon.ico", "/index.html","/from/test/info","/to","/web-socket-connection");
     }
 }

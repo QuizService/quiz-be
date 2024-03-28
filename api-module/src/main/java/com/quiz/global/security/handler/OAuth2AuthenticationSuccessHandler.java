@@ -4,6 +4,7 @@ import com.quiz.domain.users.entity.Users;
 import com.quiz.domain.users.repository.UsersRepository;
 import com.quiz.global.exception.auth.AuthException;
 import com.quiz.global.security.jwt.JwtTokenizer;
+import com.quiz.global.security.userdetails.UserAccount;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
@@ -77,11 +78,7 @@ public class OAuth2AuthenticationSuccessHandler extends SimpleUrlAuthenticationS
     }
 
     public void saveAuthentication(Users users) {
-        UserDetails userDetails = User.builder()
-                .username(users.getName())
-                .password("")
-                .roles(users.getRole())
-                .build();
+        UserDetails userDetails = new UserAccount(users);
 
         List<GrantedAuthority> roles = new ArrayList<>();
         roles.add(new SimpleGrantedAuthority(users.getRole()));
