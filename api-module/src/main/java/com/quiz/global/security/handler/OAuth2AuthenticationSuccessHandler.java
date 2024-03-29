@@ -37,7 +37,6 @@ import static com.quiz.global.exception.auth.AuthErrorCode.USER_NOT_FOUND;
 @Component
 @RequiredArgsConstructor
 public class OAuth2AuthenticationSuccessHandler extends SimpleUrlAuthenticationSuccessHandler {
-    private static final String URI = "http://localhost:8080/auth/success";
 
     @Value("${jwt.access.header}")
     private String accessHeader;

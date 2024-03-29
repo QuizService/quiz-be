@@ -54,6 +54,7 @@ public class QuizFacade {
                 .maxScore(quiz.getMaxScore())
                 .startDate(TimeConverter.localDateTimeToString(quiz.getStartDate()))
                 .dueDate(TimeConverter.localDateTimeToString(quiz.getDueDate()))
+                .created(TimeConverter.localDateTimeToString(quiz.getCreated()))
                 .build();
     }
 

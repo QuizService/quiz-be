@@ -8,15 +8,11 @@ import lombok.NoArgsConstructor;
 @Getter
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 public class ChoicesResponseDto {
-    private String choiceId;
-    private Long choiceIdx;
     private Integer seq;
     private String title;
 
     @Builder
-    public ChoicesResponseDto(String choiceId, Long choiceIdx, Integer seq, String title) {
-        this.choiceId = choiceId;
-        this.choiceIdx = choiceIdx;
+    public ChoicesResponseDto(Integer seq, String title) {
         this.seq = seq;
         this.title = title;
     }

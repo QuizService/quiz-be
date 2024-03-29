@@ -26,6 +26,7 @@ public class ChoicesService {
             List<ChoicesRequestDto> choicesDtoList = questionDto.getChoices();
             choices = choicesDtoList.stream()
                     .map(c -> Choices.builder()
+                            .idx(sequenceGenerator.generateSequence(Choices.SEQUENCE_NAME))
                             .sequence(c.getSequence())
                             .title(c.getTitle())
                             .isAnswer(c.getIsAnswer())
@@ -40,18 +41,16 @@ public class ChoicesService {
             return true;
         }
 
-        for (Choices newChoice : newChoices) {
-            if(newChoice.getId() == null) {
-                return true;
-            }
+        if(!choices.isEmpty()) {
+            choices.sort(Comparator.comparingInt(Choices::getSequence));
         }
-
-        choices.sort(Comparator.comparingInt(Choices::getSequence));
-        newChoices.sort(Comparator.comparingInt(Choices::getSequence));
-
+        List<Choices> newChoices1 = new ArrayList<>(newChoices);
+        if(!newChoices.isEmpty()) {
+            newChoices1.sort(Comparator.comparingInt(Choices::getSequence));
+        }
         for(int i = 0; i<choices.size(); i++) {
             Choices choice = choices.get(i);
-            Choices newChoice = newChoices.get(i);
+            Choices newChoice = newChoices1.get(i);
 
             if(!choice.isEqualsFromNew(newChoice)) {
                 return true;

@@ -31,6 +31,7 @@ public class QuizMongoTemplate {
         query.addCriteria(Criteria.where("id").is(id));
 
         update.set("title", quiz.getTitle());
+        update.set("capacity", quiz.getCapacity());
         update.set("max_score", quiz.getMaxScore());
         update.set("start_date", quiz.getStartDate());
         update.set("due_date", quiz.getDueDate());
@@ -64,9 +65,6 @@ public class QuizMongoTemplate {
 
         AggregationResults<Quiz> result = mongoTemplate.aggregate(aggregation, Quiz.class, Quiz.class);
         List<Quiz> quizzes = result.getMappedResults();
-
-        Query query = Query.query(Criteria.where("user_id")
-                .is(userId));
 
         return PageableExecutionUtils.getPage(quizzes, pageable,
                 () -> mongoTemplate

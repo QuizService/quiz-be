@@ -12,14 +12,14 @@ import java.util.List;
 @Getter
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 public class QuestionsResponseDto {
-    private Long questionId;
+    private String questionId;
     private String title;
     private Integer score;
     private String questionType;
     private List<ChoicesResponseDto> choicesResponseDtos;
 
     @Builder
-    public QuestionsResponseDto(Long questionId, String title, Integer score, String questionType, List<ChoicesResponseDto> choicesResponseDtos) {
+    public QuestionsResponseDto(String questionId, String title, Integer score, String questionType, List<ChoicesResponseDto> choicesResponseDtos) {
         this.questionId = questionId;
         this.title = title;
         this.score = score;

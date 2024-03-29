@@ -16,16 +16,12 @@ import java.util.List;
 
 @Getter
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
-@Document
 public class Answers {
 
     @Transient
     public static final String SEQUENCE_NAME = "answers_sequence";
 
-
-    @Id
-    @Field(value = "_id", targetType = FieldType.OBJECT_ID)
-    private String id;
+    private Long idx;
 
     @Field
     private List<Integer> multipleChoiceAnswers;
@@ -36,7 +32,8 @@ public class Answers {
     private LocalDateTime created;
 
     @Builder
-    public Answers(String shortAnswer, List<Integer> multipleChoiceAnswers) {
+    public Answers(Long idx, String shortAnswer, List<Integer> multipleChoiceAnswers) {
+        this.idx = idx;
         this.multipleChoiceAnswers = multipleChoiceAnswers == null ? new ArrayList<>() : multipleChoiceAnswers;
         this.shortAnswer = shortAnswer;
         this.created = LocalDateTime.now();

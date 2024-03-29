@@ -7,6 +7,7 @@ import org.springframework.stereotype.Service;
 
 import java.util.List;
 import java.util.Set;
+import java.util.stream.Collectors;
 
 @Service
 @RequiredArgsConstructor
@@ -40,6 +41,14 @@ public class ParticipantInfoQueueRepository {
         return usersSet.stream()
                 .map(i -> (ParticipantQueueDto) i)
                 .toList();
+    }
+
+    public Set<ParticipantQueueDto> getUsers() {
+        Long end = redisUtils.opsForZSet().size(WAITING_QUEUE_KEY_PREFIX);
+        Set<Object> usersSet =redisUtils.zRange(WAITING_QUEUE_KEY_PREFIX, START_IDX, end);
+        return usersSet.stream()
+                .map(i -> (ParticipantQueueDto) i)
+                .collect(Collectors.toSet());
     }
 
     public void delete() {

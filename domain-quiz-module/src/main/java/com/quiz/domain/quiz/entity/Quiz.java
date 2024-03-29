@@ -30,7 +30,7 @@ public class Quiz {
     private String id;
 
     private Long idx;
-
+    @Field(name = "user_id")
     private Long userId;
 
 

@@ -33,7 +33,7 @@ import static com.quiz.global.exception.auth.AuthErrorCode.USER_NOT_FOUND;
 @Component
 @RequiredArgsConstructor
 public class JwtAuthorizationProcessingFilter extends OncePerRequestFilter {
-    private static final List<String> AUTHORIZATION_NOT_REQUIRED = List.of("/login", "/", "/favicon.ico", "/h2/**", "/favicon.ico", "/index.html","/from/test/info","/to/**");
+    private static final List<String> AUTHORIZATION_NOT_REQUIRED = List.of("/login", "/", "/favicon.ico", "/h2/**", "/favicon.ico", "/index.html");
     private final JwtTokenizer jwtTokenizer;
     private final UsersRepository usersRepository;
 
@@ -125,6 +125,10 @@ public class JwtAuthorizationProcessingFilter extends OncePerRequestFilter {
 
     @Override
     protected boolean shouldNotFilter(HttpServletRequest request) throws ServletException {
-        return StringUtils.startsWithAny(request.getRequestURI(), "/login", "/", "/favicon.ico", "/h2", "/favicon.ico", "/index.html","/from/test/info","/to","/web-socket-connection");
+        log.info("should not filter = {}", request.getRequestURI());
+        boolean result =  StringUtils.startsWithAny(request.getRequestURI(), "/login", "/favicon.ico", "/h2", "/favicon.ico", "/index.html", "/web-socket-connection");
+        log.info("should not filter = {}", result);
+
+        return result;
     }
 }

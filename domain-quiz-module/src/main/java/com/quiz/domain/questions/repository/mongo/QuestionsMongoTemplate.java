@@ -33,7 +33,7 @@ public class QuestionsMongoTemplate {
         Query query = new Query();
         Update update = new Update();
 
-        query.addCriteria(Criteria.where("id").is(id));
+        query.addCriteria(Criteria.where("_id").is(id));
 
         update.set("sequence", sequence);
         update.set("title", title);

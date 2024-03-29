@@ -86,6 +86,7 @@ public class QuestionService {
     public Page<QuestionsResponseDto> findResponseByQuizId(Long quizId, int page, int size) {
         Page<Questions> questions = questionsMongoTemplate.findPageByQuizId(quizId, page, size);
         return questions.map(question -> QuestionsResponseDto.builder()
+                .questionId(question.getId())
                 .title(question.getTitle())
                 .score(question.getScore())
                 .questionType(question.getQuestionType().getValue())
@@ -96,6 +97,7 @@ public class QuestionService {
     public Page<QuestionsResponseDto> findResponseByEndpoint(Long quizId, int page, int size) {
         Page<Questions> questions = questionsMongoTemplate.findPageByQuizId(quizId, page, size);
         return questions.map(question -> QuestionsResponseDto.builder()
+                .questionId(question.getId())
                 .title(question.getTitle())
                 .score(question.getScore())
                 .questionType(question.getQuestionType().getValue())
@@ -105,7 +107,6 @@ public class QuestionService {
 
     private List<ChoicesResponseDto> toDto(List<Choices> choices) {
         return choices.stream().map(choice -> ChoicesResponseDto.builder()
-                .choiceId(choice.getId())
                 .seq(choice.getSequence())
                 .title(choice.getTitle())
                 .build()).toList();

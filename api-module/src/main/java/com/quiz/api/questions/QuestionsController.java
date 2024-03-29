@@ -52,7 +52,7 @@ public class QuestionsController {
                                                                @RequestParam("size") int size,
                                                                @AuthenticationPrincipal UserAccount user) {
         Users users = usersService.findByEmail(user.getUsername());
-        Page<QuestionsResponseDto> questions = questionFacade.findPageByQuizId(quizId, users.getId(), page, size);
+        Page<QuestionsResponseDto> questions = questionFacade.findPageByQuizId(quizId, users.getId(), page-1, size);
         List<QuestionsResponseDto> questionsList = questions.getContent();
 
         MultiResponseDto<QuestionsResponseDto> response = new MultiResponseDto<>(questionsList, questions);

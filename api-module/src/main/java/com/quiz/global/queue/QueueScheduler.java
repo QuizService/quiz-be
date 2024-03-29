@@ -11,6 +11,7 @@ import org.springframework.stereotype.Component;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
+import java.util.Set;
 
 @Slf4j
 //@Transactional
@@ -23,18 +24,8 @@ public class QueueScheduler {
     @Async
     @Scheduled(fixedDelay = 2000)
     public void queue() {
-        List<ParticipantQueueDto> participantQueueDtoSet = participantInfoQueueRepository.getUserFromQueue();
-
-        participantInfoQueueRepository.delete();
-
-        for (ParticipantQueueDto participantQueueDto : participantQueueDtoSet) {
-            /*
-            * user info와 quizInfo를 통해 rank를 수집한다
-            *
-            * redis에서 선착순이 다 되었는지 확인한다.
-            *
-            * 이후 정보를 event Publisher로 전달한다.(만약 인원이 다 안 찼으면 순서를 보내고 아니면 안되었다는 메시지를 전송)
-            * */
+        Set<ParticipantQueueDto> queue = participantInfoQueueRepository.getUsers();
+        for (ParticipantQueueDto participantQueueDto : queue) {
             Long quizId = participantQueueDto.quizId();
             Long userId = participantQueueDto.userId();
 
@@ -42,11 +33,12 @@ public class QueueScheduler {
 
             // 아직 자리 다 안찬 경우
             if (participantInfoQueueRepository.getParticipantNumber(quizId) > 0) {
-                eventPublisher.publishEvent(new ParticipantQueueInfoDto(quizId, userId, rank, true));
+                boolean isUserTurn = rank < 10L;
+                eventPublisher.publishEvent(new ParticipantQueueInfoDto(quizId, userId, rank, true, isUserTurn));
             } else {
-                eventPublisher.publishEvent(new ParticipantQueueInfoDto(quizId, userId, rank, false));
+                eventPublisher.publishEvent(new ParticipantQueueInfoDto(quizId, userId, rank, false, false));
             }
-
         }
+        participantInfoQueueRepository.delete();
     }
 }

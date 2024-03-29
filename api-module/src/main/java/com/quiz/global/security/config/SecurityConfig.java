@@ -4,6 +4,13 @@ import com.quiz.global.security.filter.JwtAuthorizationProcessingFilter;
 import com.quiz.global.security.handler.OAuth2AuthenticationFailureHandler;
 import com.quiz.global.security.handler.OAuth2AuthenticationSuccessHandler;
 import com.quiz.global.security.oauth.CustomOAuth2UserService;
+import io.swagger.v3.oas.annotations.OpenAPIDefinition;
+import io.swagger.v3.oas.annotations.enums.SecuritySchemeType;
+import io.swagger.v3.oas.annotations.security.OAuthFlow;
+import io.swagger.v3.oas.annotations.security.OAuthFlows;
+import io.swagger.v3.oas.annotations.security.OAuthScope;
+import io.swagger.v3.oas.annotations.security.SecurityScheme;
+import io.swagger.v3.oas.annotations.servers.Server;
 import lombok.RequiredArgsConstructor;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -42,23 +49,16 @@ public class SecurityConfig {
                 .authorizeHttpRequests(auth -> auth
                         .requestMatchers(new AntPathRequestMatcher("/h2/**")).permitAll()
                         .requestMatchers(new AntPathRequestMatcher("/css/**"),new AntPathRequestMatcher("/images/**"),new AntPathRequestMatcher("/js/**"),new AntPathRequestMatcher("/favicon.ico")).permitAll()
-                        .requestMatchers(new AntPathRequestMatcher("/"), new AntPathRequestMatcher("/login"), new AntPathRequestMatcher("/error"), new AntPathRequestMatcher("/index.html"), new AntPathRequestMatcher("/auth/**")).permitAll()
+                        .requestMatchers(new AntPathRequestMatcher("/"), new AntPathRequestMatcher("/login"), new AntPathRequestMatcher("/error"), new AntPathRequestMatcher("/index.html")).permitAll()
                         .requestMatchers(new AntPathRequestMatcher("/swagger-ui/**"), new AntPathRequestMatcher("/v3/**"), new AntPathRequestMatcher("/swagger-ui.html")).permitAll()
-                        .requestMatchers(new AntPathRequestMatcher("/from/**"), new AntPathRequestMatcher("/to/**"), new AntPathRequestMatcher("/web-socket-connection/**")).permitAll()
+                        .requestMatchers(new AntPathRequestMatcher("/app/**"), new AntPathRequestMatcher("/topic/**"), new AntPathRequestMatcher("/web-socket-connection/**")).permitAll()
                         .anyRequest().authenticated());
         http
                 .oauth2Login(oauth2 ->
                         oauth2.successHandler(oAuth2AuthenticationSuccessHandler)
                                 .failureHandler(oAuth2AuthenticationFailureHandler)
                                 .userInfoEndpoint(userInfo -> userInfo.userService(oAuth2UserService)))
-                .addFilterBefore(jwtAuthorizationProcessingFilter, UsernamePasswordAuthenticationFilter.class)
-                //jwt token 인증
-
-                .logout(logout -> logout
-                        .permitAll()
-                        .deleteCookies("JSESSIONID")
-                        .clearAuthentication(true)
-                        .addLogoutHandler(new SecurityContextLogoutHandler()));
+                .addFilterBefore(jwtAuthorizationProcessingFilter, UsernamePasswordAuthenticationFilter.class);
         return http.build();
 
     }
@@ -66,7 +66,7 @@ public class SecurityConfig {
     @Bean
     public CorsConfigurationSource corsConfigurationSource() {
         CorsConfiguration configuration = new CorsConfiguration();
-        configuration.setAllowedOrigins(List.of("http://localhost:8080", "http://localhost:3000"));
+        configuration.setAllowedOrigins(List.of("http://localhost:8080", "http://localhost:3000", "https://accounts.google.com"));
         configuration.setAllowedMethods(List.of("POST", "PUT", "PATCH", "GET", "DELETE", "OPTIONS"));
         configuration.addAllowedHeader("*"); // 모든 헤더 허용
         configuration.setExposedHeaders(List.of("Authorization", "Refresh"));

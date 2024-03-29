@@ -33,17 +33,13 @@ public class AnswersService {
         }
 
         return Answers.builder()
+                .idx(sequenceGenerator.generateSequence(Answers.SEQUENCE_NAME))
                 .shortAnswer(answer)
                 .multipleChoiceAnswers(answerChoiceIdxs)
                 .build();
     }
 
     public boolean isAnswersChanged(Answers answers, Answers newAnswers) {
-        if(newAnswers.getId() == null) {
-            return true;
-        }
-
         return !answers.isEqualsToNew(newAnswers);
-
     }
 }
