@@ -1,6 +1,7 @@
-package com.quiz.db;
+package com.quiz.global.db;
 
-import com.mongodb.*;
+import com.mongodb.ConnectionString;
+import com.mongodb.MongoClientSettings;
 import com.mongodb.client.MongoClient;
 import com.mongodb.client.MongoClients;
 import lombok.extern.slf4j.Slf4j;
@@ -10,9 +11,9 @@ import org.springframework.context.annotation.Configuration;
 import org.springframework.data.mongodb.MongoDatabaseFactory;
 import org.springframework.data.mongodb.MongoTransactionManager;
 import org.springframework.data.mongodb.config.AbstractMongoClientConfiguration;
-import org.springframework.data.mongodb.core.MongoOperations;
 import org.springframework.data.mongodb.core.MongoTemplate;
 import org.springframework.data.mongodb.repository.config.EnableMongoRepositories;
+import org.springframework.transaction.PlatformTransactionManager;
 import org.springframework.transaction.annotation.EnableTransactionManagement;
 
 import java.util.concurrent.TimeUnit;
@@ -20,7 +21,6 @@ import java.util.concurrent.TimeUnit;
 @Slf4j
 @Configuration
 @EnableMongoRepositories(
-        //com.quiz.domain.participantsinfo.repository.mongo.ParticipantInfoMongoTemplate
         basePackages = {"com.quiz.domain.*.repository.mongo"})
 @EnableTransactionManagement
 public class MongoDBConfig extends AbstractMongoClientConfiguration {
@@ -36,7 +36,8 @@ public class MongoDBConfig extends AbstractMongoClientConfiguration {
     @Value("${spring.data.mongodb.password}")
     private String password;
 
-    @Bean
+
+    @Bean(name = "mongoTx")
     public MongoTransactionManager transactionManager(MongoDatabaseFactory mongoDatabaseFactory) {
         return new MongoTransactionManager(mongoDatabaseFactory);
     }

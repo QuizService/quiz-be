@@ -1,8 +1,9 @@
 package com.quiz.domain.quiz.service;
 
-import com.quiz.domain.quiz.entity.Quiz;
+import com.quiz.domain.participantsinfo.service.ParticipantInfoQueueService;
 import com.quiz.domain.quiz.dto.QuizRequestDto;
 import com.quiz.domain.quiz.dto.QuizResponseDto;
+import com.quiz.domain.quiz.entity.Quiz;
 import com.quiz.utils.TimeConverter;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -10,17 +11,19 @@ import org.springframework.data.domain.Page;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import java.util.List;
-
 @Slf4j
 @Transactional
 @RequiredArgsConstructor
 @Service
 public class QuizFacade {
     private final QuizService quizService;
+    private final ParticipantInfoQueueService participantInfoQueueService;
 
     public Long saveQuiz(QuizRequestDto quizDto, Long userId) {
-        return quizService.saveQuiz(quizDto, userId);
+        Long quizId = quizService.saveQuiz(quizDto, userId);
+        // 생성 시 대기열 생성
+        participantInfoQueueService.createQuizQueue(quizId, quizDto.getCapacity());
+        return quizId;
     }
 
     public Long updateQuiz(QuizRequestDto quizDto, Long quizId, Long userId) {

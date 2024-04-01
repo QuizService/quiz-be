@@ -64,7 +64,7 @@ public class QuestionsController {
     public ResponseEntity<ResponseDto<?>> getQuestionsByEndpoint(@PathVariable("endpoint") String endpoint,
                                                                  @RequestParam("page") int page,
                                                                  @RequestParam("size") int size) {
-        Page<QuestionsResponseDto> questions = questionFacade.findPageByEndpoint(endpoint, page, size);
+        Page<QuestionsResponseDto> questions = questionFacade.findPageByEndpoint(endpoint, page-1, size);
         List<QuestionsResponseDto> questionsList = questions.getContent();
 
         MultiResponseDto<QuestionsResponseDto> response = new MultiResponseDto<>(questionsList, questions);

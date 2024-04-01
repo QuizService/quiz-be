@@ -33,9 +33,9 @@ public class ParticipantInfoController {
         // 대기열 로직 추가
         // queue 에 인간 추가
         Users users = usersService.findByEmail(user.getUsername());
-        participantInfoQueueService.addQueue(quizId, users.getId());
+        Long rank = participantInfoQueueService.addQueue(quizId, users.getId());
 
-        return ResponseEntity.ok(ResponseDto.success());
+        return ResponseEntity.ok(ResponseDto.success(rank));
     }
 
     @PatchMapping("/{quiz-id}")

@@ -1,4 +1,4 @@
-package com.quiz.db;
+package com.quiz.global.db;
 
 
 import jakarta.persistence.EntityManagerFactory;
@@ -83,8 +83,8 @@ public class JpaConfig {
     }
 
     @Primary
-    @Bean
-    public PlatformTransactionManager mysqlTransactionManager() {
+    @Bean(name = "mysqlTransactionManager")
+    public JpaTransactionManager mysqlTransactionManager() {
         JpaTransactionManager transactionManager = new JpaTransactionManager();
         transactionManager.setEntityManagerFactory(mysqlEntityManagerFactory().getObject());
         return transactionManager;

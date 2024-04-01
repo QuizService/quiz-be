@@ -31,6 +31,7 @@ public class ResponsesFacade {
      * 2. 답변을 모았다가 한번에 실행
      * 3. 정답을 다른 캐시 저장소에 저장하여 비교
      * */
+//    @Transactional(propagation = )
     public int calculateScoreAndSaveResponse(Long quizId, List<ResponsesRequestDto> responses, String participantInfoId) {
         List<QuestionsAnswerDto> answers = questionService.findAnswersByQuestionsInQuiz(quizId);
         Map<String, QuestionsAnswerDto> answerDtoMap = answers.stream()
@@ -47,7 +48,7 @@ public class ResponsesFacade {
                         .participantInfoId(participantInfoId)
                         .quizId(quizId)
                         .questionId(r.getQuestionId())
-                        .choices(r.getChoices())
+                        .choices(r.getChoices() != null ? r.getChoices() : new ArrayList<>())
                         .answer(r.getAnswer())
                         .isAnswers(isResponseCorrect(r, answerDtoMap))
                         .build())

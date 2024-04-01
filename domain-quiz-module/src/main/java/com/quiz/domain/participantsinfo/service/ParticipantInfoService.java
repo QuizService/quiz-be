@@ -39,6 +39,7 @@ public class ParticipantInfoService {
         }
         participantInfoMongoTemplate.update(quizId, userId, participatedCnt + 1);
         // 수용 가능 인원 - 참여 인원 - 1 저장
+        log.info("capacity = {}", capacity - participatedCnt - 1);
         participantInfoQueueRepository.setParticipantNumber(quizId, capacity - participatedCnt - 1);
     }
 

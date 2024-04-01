@@ -13,14 +13,16 @@ public class ParticipantInfoQueueService {
 
     public Long addQueue(Long quizId, Long userId) {
         return participantInfoQueueRepository.addQueue(quizId, userId);
+
+    }
+
+    public void createQuizQueue(Long quizId, int capacity) {
+        participantInfoQueueRepository.setParticipantNumber(quizId, capacity);
     }
 
     public Long getRank(Long quizId, Long userId) {
         return participantInfoQueueRepository.getRank(quizId, userId);
     }
 
-    /*
-    * 스케쥴러에서 redis sorted set 순회하면서 클라이언트에게 메시지 전달
-    *
-    * */
+
 }

@@ -2,11 +2,14 @@ package com.quiz.global.event;
 
 
 import com.quiz.domain.participantsinfo.service.ParticipantInfoFacade;
+import com.quiz.domain.response.dto.ResponsesSaveDto;
 import com.quiz.domain.response.service.ResponsesFacade;
 import com.quiz.domain.response.dto.ResponsesRequestDto;
 import com.quiz.global.queue.ParticipantQueueInfoDto;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.context.annotation.Lazy;
+import org.springframework.context.event.EventListener;
 import org.springframework.messaging.simp.SimpMessagingTemplate;
 import org.springframework.scheduling.annotation.Async;
 import org.springframework.stereotype.Component;
@@ -19,6 +22,7 @@ import java.util.List;
 import java.util.Map;
 
 @Slf4j
+//@Lazy(false)
 @RequiredArgsConstructor
 @Component
 public class CustomEventListener {
@@ -29,26 +33,28 @@ public class CustomEventListener {
 
     @Async
     @Transactional(propagation = Propagation.REQUIRES_NEW)
-    @TransactionalEventListener(phase = TransactionPhase.AFTER_COMMIT)
-    public void saveResponses(Map<String, Object> params) {
-        List<ResponsesRequestDto> responses = (List<ResponsesRequestDto>) params.get("responses");
-        String participantInfoId = (String) params.get("participantInfoId");
-        Long quizId = (Long) params.get("quizId");
+    @TransactionalEventListener
+    public void saveResponses(ResponsesSaveDto dto) {
+        log.info("start save response");
 
-        responsesFacade.calculateScoreAndSaveResponse(quizId, responses, participantInfoId);
+        log.info("save responses");
+        responsesFacade.calculateScoreAndSaveResponse(dto.getQuizId(), dto.getResponses(), dto.getParticipantInfoId());
     }
 
     @Async
     @Transactional(propagation = Propagation.REQUIRES_NEW)
-    @TransactionalEventListener(phase = TransactionPhase.AFTER_COMMIT)
+    @EventListener
     public void sendMessage(ParticipantQueueInfoDto participantQueueInfoDto) {
         Long quizId = participantQueueInfoDto.quizId();
         Long userId = participantQueueInfoDto.userId();
+
+        log.info("quizId = {}, userId = {}", quizId, userId);
         String endpoint = String.format("?quiz-id=%s&user-id=%s",quizId, userId);
 
         messagingTemplate.convertAndSend("/" + endpoint, participantQueueInfoDto);
         //참여 가능 시
         if(participantQueueInfoDto.isCapacityLeft()) {
+            log.info("save user start");
             participantInfoFacade.saveParticipants(quizId, userId);
         }
 

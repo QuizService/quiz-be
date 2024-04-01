@@ -3,12 +3,14 @@ package com.quiz.domain.participantsinfo.repository.redis;
 import com.quiz.domain.participantsinfo.dto.ParticipantQueueDto;
 import com.quiz.redis.RedisUtils;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
 import java.util.Set;
 import java.util.stream.Collectors;
 
+@Slf4j
 @Service
 @RequiredArgsConstructor
 public class ParticipantInfoQueueRepository {
@@ -24,6 +26,7 @@ public class ParticipantInfoQueueRepository {
         Long time = System.currentTimeMillis();
 
         ParticipantQueueDto queue = toValue(userId, quizId);
+        log.info("userId = {}", userId);
 
         redisUtils.addQueue(WAITING_QUEUE_KEY_PREFIX, queue, time);
 
@@ -45,6 +48,7 @@ public class ParticipantInfoQueueRepository {
 
     public Set<ParticipantQueueDto> getUsers() {
         Long end = redisUtils.opsForZSet().size(WAITING_QUEUE_KEY_PREFIX);
+//        log.info("size = {}", end);
         Set<Object> usersSet =redisUtils.zRange(WAITING_QUEUE_KEY_PREFIX, START_IDX, end);
         return usersSet.stream()
                 .map(i -> (ParticipantQueueDto) i)
@@ -60,9 +64,9 @@ public class ParticipantInfoQueueRepository {
         redisUtils.setValue(key, (long) leftCapacity);
     }
 
-    public Long getParticipantNumber(Long quizId) {
+    public Integer getParticipantNumber(Long quizId) {
         String key = PARTICIPANT_NUMBER_KEY_PREFIX + quizId;
-        return (Long) redisUtils.getValue(key);
+        return (Integer) redisUtils.getValue(key);
     }
 
     private static ParticipantQueueDto toValue(Long userId, Long quizId) {

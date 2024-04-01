@@ -4,6 +4,7 @@ import com.quiz.domain.answers.entity.Answers;
 import com.quiz.domain.answers.service.AnswersService;
 import com.quiz.domain.choice.entity.Choices;
 import com.quiz.domain.choice.service.ChoicesService;
+import com.quiz.domain.participantsinfo.service.ParticipantInfoQueueService;
 import com.quiz.domain.questions.dto.QuestionsRequestDto;
 import com.quiz.domain.questions.dto.QuestionsResponseDto;
 import com.quiz.domain.questions.entity.QuestionType;

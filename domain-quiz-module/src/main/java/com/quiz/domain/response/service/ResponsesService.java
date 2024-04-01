@@ -1,6 +1,7 @@
 package com.quiz.domain.response.service;
 
 import com.quiz.domain.response.entity.Responses;
+import com.quiz.domain.response.repository.mongo.ResponsesMongoRepository;
 import com.quiz.domain.response.repository.mongo.ResponsesMongoTemplate;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -15,9 +16,10 @@ import java.util.List;
 @Service
 public class ResponsesService {
     private final ResponsesMongoTemplate responsesMongoTemplate;
+    private final ResponsesMongoRepository responsesMongoRepository;
 
     public void saveResponses(List<Responses> responses) {
-        responsesMongoTemplate.saveAll(responses);
+        responsesMongoRepository.saveAll(responses);
     }
 
 

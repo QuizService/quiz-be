@@ -30,9 +30,12 @@ public class QueueScheduler {
             Long userId = participantQueueDto.userId();
 
             Long rank = participantInfoQueueRepository.getRank(quizId, userId);
+            log.info("rank = {}", rank);
 
             // 아직 자리 다 안찬 경우
-            if (participantInfoQueueRepository.getParticipantNumber(quizId) > 0) {
+            int capacity = participantInfoQueueRepository.getParticipantNumber(quizId);
+            if (capacity > 0) {
+                log.info("capacity = {}", capacity);
                 boolean isUserTurn = rank < 10L;
                 eventPublisher.publishEvent(new ParticipantQueueInfoDto(quizId, userId, rank, true, isUserTurn));
             } else {

@@ -5,19 +5,29 @@ import io.swagger.v3.oas.annotations.enums.SecuritySchemeType;
 import io.swagger.v3.oas.annotations.security.OAuthFlow;
 import io.swagger.v3.oas.annotations.security.OAuthFlows;
 import io.swagger.v3.oas.annotations.security.OAuthScope;
+import io.swagger.v3.oas.annotations.security.SecurityScheme;
 import io.swagger.v3.oas.annotations.servers.Server;
 import io.swagger.v3.oas.models.Components;
 import io.swagger.v3.oas.models.OpenAPI;
 import io.swagger.v3.oas.models.info.Info;
 import io.swagger.v3.oas.models.security.SecurityRequirement;
-import io.swagger.v3.oas.models.security.SecurityScheme;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 
+
+/*
+*
+* @SecurityScheme(name = "security_auth", type = SecuritySchemeType.OAUTH2,
+		flows = @OAuthFlows(authorizationCode = @OAuthFlow(
+				authorizationUrl = "${springdoc.oAuthFlow.authorizationUrl}"
+				, tokenUrl = "${springdoc.oAuthFlow.tokenUrl}", scopes = {
+				@OAuthScope(name = "read", description = "read scope"),
+				@OAuthScope(name = "write", description = "write scope") })))
+* */
 @OpenAPIDefinition(servers = @Server(url = "http://localhost:8080"))
-@io.swagger.v3.oas.annotations.security.SecurityScheme(type = SecuritySchemeType.OAUTH2, name = "security auth",
+@SecurityScheme(type = SecuritySchemeType.OAUTH2, name = "security auth",
         flows = @OAuthFlows(clientCredentials =
-        @OAuthFlow(tokenUrl = "https://accounts.google.com/o/oauth2/token", scopes = { @OAuthScope(name = "name"), @OAuthScope(name = "email"), @OAuthScope(name = "profiles") })))
+        @OAuthFlow(tokenUrl = "https://accounts.google.com/o/oauth2/token")))
 @Configuration
 public class SwaggerConfig {
     @Bean
@@ -28,9 +38,9 @@ public class SwaggerConfig {
 
         String jwt = "JWT";
         SecurityRequirement securityRequirement = new SecurityRequirement().addList(jwt); // 헤더에 토큰 포함
-        Components components = new Components().addSecuritySchemes(jwt, new SecurityScheme()
+        Components components = new Components().addSecuritySchemes(jwt, new io.swagger.v3.oas.models.security.SecurityScheme()
                 .name(jwt)
-                .type(SecurityScheme.Type.HTTP)
+                .type(io.swagger.v3.oas.models.security.SecurityScheme.Type.HTTP)
                 .scheme("bearer")
                 .bearerFormat("JWT")
         );

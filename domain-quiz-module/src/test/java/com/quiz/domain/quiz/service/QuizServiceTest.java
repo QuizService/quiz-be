@@ -10,39 +10,40 @@ import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.DynamicPropertyRegistry;
 import org.springframework.test.context.DynamicPropertySource;
+import org.springframework.transaction.annotation.Transactional;
 import org.testcontainers.containers.MongoDBContainer;
 import org.testcontainers.junit.jupiter.Container;
 import org.testcontainers.junit.jupiter.Testcontainers;
 import org.testcontainers.utility.DockerImageName;
 
 import static org.assertj.core.api.Assertions.assertThat;
-@Testcontainers
+//@Testcontainers
 @ContextConfiguration(classes = {TestConfiguration.class})
 @SpringBootTest
 public class QuizServiceTest {
 
-    @Container
-    static MongoDBContainer mongoDBContainer = new MongoDBContainer(DockerImageName.parse("mongo:latest"))
-            .withExposedPorts(27017);
+//    @Container
+//    static MongoDBContainer mongoDBContainer = new MongoDBContainer(DockerImageName.parse("mongo:latest"))
+//            .withExposedPorts(27017);
 
-    @DynamicPropertySource
-    static void setProperties(DynamicPropertyRegistry registry) {
-        registry.add("spring.data.mongodb.uri", () -> mongoDBContainer.getReplicaSetUrl("quiz"));
-        registry.add("spring.data.mongodb.host", mongoDBContainer::getHost);
-        registry.add("spring.data.mongodb.port", mongoDBContainer::getFirstMappedPort);
-        registry.add("spring.data.mongodb.username", () -> "admin");
-        registry.add("spring.data.mongodb.password", () -> "password");
-        registry.add("spring.data.mongodb.database", () -> "quiz");
-    }
+//    @DynamicPropertySource
+//    static void setProperties(DynamicPropertyRegistry registry) {
+//        registry.add("spring.data.mongodb.uri", () -> mongoDBContainer.getReplicaSetUrl("quiz"));
+//        registry.add("spring.data.mongodb.host", mongoDBContainer::getHost);
+//        registry.add("spring.data.mongodb.port", mongoDBContainer::getFirstMappedPort);
+//        registry.add("spring.data.mongodb.username", () -> "admin");
+//        registry.add("spring.data.mongodb.password", () -> "password");
+//        registry.add("spring.data.mongodb.database", () -> "quiz");
+//    }
 
 
     @Autowired
     private QuizService quizService;
 
-    @AfterEach
-    void clear() {
-        quizService.deleteAll();
-    }
+//    @AfterEach
+//    void clear() {
+//        quizService.deleteAll();
+//    }
 
     @Test
     void saveQuizTest() {
@@ -51,13 +52,26 @@ public class QuizServiceTest {
                 .isNotNull();
     }
 
+    @Test
+    @Transactional
+    void testTransaction() {
+        Long userId = 1L;
+        QuizRequestDto quizRequestDto = QuizRequestDto.builder()
+                .title("test")
+                .capacity(10)
+                .startDate("2025-02-02 12:00:00")
+                .dueDate("2025-02-05 12:00:00")
+                .build();
+        quizService.testTx(quizRequestDto, userId);
+    }
+
     Long save() {
         Long userId = 1L;
         QuizRequestDto quizRequestDto = QuizRequestDto.builder()
                 .title("test")
                 .capacity(10)
-                .startDate("2024-02-02 12:00:00")
-                .dueDate("2024-02-05 12:00:00")
+                .startDate("2025-02-02 12:00:00")
+                .dueDate("2025-02-05 12:00:00")
                 .build();
         return quizService.saveQuiz(quizRequestDto, userId);
     }

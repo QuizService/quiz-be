@@ -5,18 +5,24 @@ import com.quiz.domain.quiz.entity.Quiz;
 import com.quiz.domain.quiz.service.QuizService;
 import com.quiz.domain.participantsinfo.dto.ParticipantsRankResponseDto;
 import com.quiz.domain.response.dto.ResponsesRequestDto;
+import com.quiz.domain.response.dto.ResponsesSaveDto;
+import com.quiz.domain.response.service.ResponsesFacade;
 import com.quiz.domain.users.dto.UserNameDto;
 import com.quiz.domain.users.service.UsersService;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.context.ApplicationEventPublisher;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Isolation;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.time.LocalDateTime;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.stream.Collectors;
 
+@Slf4j
 @Transactional
 @RequiredArgsConstructor
 @Service
@@ -26,9 +32,13 @@ public class ParticipantInfoFacade {
     private final QuizService quizService;
     private final UsersService usersService;
     private final ApplicationEventPublisher applicationEventPublisher;
+    private final ResponsesFacade responsesFacade;
 
     public void saveParticipants(Long quizId, Long userId) {
         Quiz quiz = quizService.findById(quizId);
+//        if(quiz.getStartDate().isBefore(LocalDateTime.now())) {
+//            throw new RuntimeException("startDate is not now");
+//        }
         int capacity = quiz.getCapacity();
         if(capacity > 0) {
             participantInfoService.saveFcfs(quizId, userId, capacity);
@@ -45,13 +55,18 @@ public class ParticipantInfoFacade {
         }
         String participantInfoId = participantInfoService.findByQuizIdAndUserId(quizId, userId)
                 .getId();
+        log.info("participantInfoId = {}", participantInfoId);
 
-        Map<String, Object> params = new HashMap<>();
-        params.put("participantInfoId", participantInfoId);
-        params.put("responses", responses);
-        params.put("quizId", quizId);
+        ResponsesSaveDto responsesSaveDto = ResponsesSaveDto.builder()
+                .participantInfoId(participantInfoId)
+                .responses(responses)
+                .quizId(quizId)
+                .build();
+
+        log.info("save response start");
         //event 로 저장과정 분리
-        applicationEventPublisher.publishEvent(params);
+        applicationEventPublisher.publishEvent(responsesSaveDto);
+//        responsesFacade.calculateScoreAndSaveResponse(quizId, responses, participantInfoId);
     }
 
     public void checkUserParticipatedOrOwner(Long quizId, Long userId) {

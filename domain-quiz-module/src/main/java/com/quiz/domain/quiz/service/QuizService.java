@@ -43,7 +43,14 @@ public class QuizService {
                 .startDate(request.getStartDate())
                 .dueDate(request.getDueDate())
                 .build();
+
         return quizRepository.save(quiz).getIdx();
+    }
+
+    @Transactional
+    public void testTx(QuizRequestDto request, Long userId) {
+        saveQuiz(request, userId);
+        throw new RuntimeException("test tx throw err");
     }
 
     public Long update(QuizRequestDto request, Long quizId) {

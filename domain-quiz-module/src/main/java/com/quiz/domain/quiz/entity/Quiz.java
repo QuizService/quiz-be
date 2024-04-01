@@ -14,8 +14,7 @@ import org.springframework.data.mongodb.core.mapping.FieldType;
 import java.time.LocalDateTime;
 import java.util.UUID;
 
-import static com.quiz.global.exception.quiz.enums.QuizErrorType.CANNOT_UPDATE_AFTER_START_DATE;
-import static com.quiz.global.exception.quiz.enums.QuizErrorType.MAXSCORE_CANNOT_BE_MINUS;
+import static com.quiz.global.exception.quiz.enums.QuizErrorType.*;
 
 @ToString
 @Getter
@@ -57,12 +56,18 @@ public class Quiz {
 
     @Builder
     public Quiz(Long idx, String title, Integer capacity, Long userId, String startDate, String dueDate) {
+        LocalDateTime st = startDate == null ? null : TimeConverter.stringToLocalDateTime(startDate);
+        LocalDateTime dt = startDate == null ? null : TimeConverter.stringToLocalDateTime(dueDate);
+
+        validateStartDate(st);
+        validateDueDateIsAfterStartDate(st, dt);
+
         this.idx = idx;
         this.title = title;
         this.capacity = capacity;
         this.userId = userId;
-        this.startDate = startDate == null ? LocalDateTime.now() : TimeConverter.stringToLocalDateTime(startDate);
-        this.dueDate = dueDate == null ? null : TimeConverter.stringToLocalDateTime(dueDate);
+        this.startDate = st;
+        this.dueDate = dt;
         generateRandomEndPoint();
         this.created = LocalDateTime.now();
         this.updated = LocalDateTime.now();
@@ -85,6 +90,10 @@ public class Quiz {
         if(dueDate != null) {
             this.dueDate = TimeConverter.stringToLocalDateTime(request.getDueDate());
         }
+
+        validateStartDate(this.startDate);
+        validateDueDateIsAfterStartDate(this.startDate, this.dueDate);
+
         this.updated = LocalDateTime.now();
     }
 
@@ -98,8 +107,23 @@ public class Quiz {
         this.maxScore = maxScore;
     }
 
-    public void generateRandomEndPoint() {
+    private void generateRandomEndPoint() {
         String uuid = UUID.randomUUID().toString();
         this.endpoint = uuid.substring(0, 8);
+    }
+
+    private void validateStartDate(LocalDateTime startDate) {
+        if(startDate == null) return;
+        LocalDateTime today = LocalDateTime.now();
+        if(today.isAfter(startDate)) {
+            throw new QuizException(CANNOT_CREATE_AFTER_START_DATE);
+        }
+    }
+
+    private void validateDueDateIsAfterStartDate(LocalDateTime startDate, LocalDateTime dueDate) {
+        if(startDate == null || dueDate == null) return;
+        if(startDate.isAfter(dueDate)) {
+            throw new QuizException(START_DATE_CANNOT_BE_AFTER_DUE_DATE);
+        }
     }
 }
