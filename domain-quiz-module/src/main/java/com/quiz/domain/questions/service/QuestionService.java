@@ -23,7 +23,7 @@ import java.util.List;
 import static com.quiz.global.exception.questions.enums.QuestionErrorType.QUESTION_NOT_FOUND;
 
 @RequiredArgsConstructor
-@Transactional
+@Transactional(value = "mongoTx")
 @Service
 public class QuestionService {
     private final QuestionsRepository questionsRepository;

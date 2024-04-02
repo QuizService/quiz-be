@@ -1,7 +1,7 @@
 package com.quiz.domain.participantsinfo.repository.redis;
 
 import com.quiz.domain.participantsinfo.dto.ParticipantQueueDto;
-import com.quiz.redis.RedisUtils;
+import com.quiz.global.db.redis.RedisUtils;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;

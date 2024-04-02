@@ -14,7 +14,7 @@ import java.util.List;
 import java.util.Set;
 
 @Slf4j
-//@Transactional
+@Transactional
 @Component
 @RequiredArgsConstructor
 public class QueueScheduler {
@@ -22,6 +22,7 @@ public class QueueScheduler {
     private final ApplicationEventPublisher eventPublisher;
 
     @Async
+    @Transactional(value = "redisTx")
     @Scheduled(fixedDelay = 2000)
     public void queue() {
         Set<ParticipantQueueDto> queue = participantInfoQueueRepository.getUsers();
@@ -41,7 +42,7 @@ public class QueueScheduler {
             } else {
                 eventPublisher.publishEvent(new ParticipantQueueInfoDto(quizId, userId, rank, false, false));
             }
+            participantInfoQueueRepository.delete();
         }
-        participantInfoQueueRepository.delete();
     }
 }

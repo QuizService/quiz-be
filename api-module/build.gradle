@@ -10,7 +10,6 @@ dependencies {
     implementation 'com.auth0:java-jwt:4.4.0'
 
     implementation project(':global-util-module')
-    implementation project(':independent-module')
     implementation project(':domain-quiz-module')
 
     testImplementation 'com.h2database:h2:2.2.224'

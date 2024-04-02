@@ -12,7 +12,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 @Slf4j
-@Transactional
+@Transactional(value = "mongoTx")
 @RequiredArgsConstructor
 @Service
 public class QuizFacade {

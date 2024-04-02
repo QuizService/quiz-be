@@ -23,7 +23,7 @@ import java.util.Map;
 import java.util.stream.Collectors;
 
 @Slf4j
-@Transactional
+@Transactional(value = "mongoTx")
 @RequiredArgsConstructor
 @Service
 public class ParticipantInfoFacade {
@@ -32,7 +32,6 @@ public class ParticipantInfoFacade {
     private final QuizService quizService;
     private final UsersService usersService;
     private final ApplicationEventPublisher applicationEventPublisher;
-    private final ResponsesFacade responsesFacade;
 
     public void saveParticipants(Long quizId, Long userId) {
         Quiz quiz = quizService.findById(quizId);
@@ -92,7 +91,7 @@ public class ParticipantInfoFacade {
                         .builder()
                         .id(p.getId())
                         .userId(p.getUserId())
-                        .username(userDtoMap.get(p.getId()).getName())
+                        .username(userDtoMap.get(p.getUserId()).getName())
                         .number(p.getNumber())
                         .totalScore(p.getTotalScore())
                         .build())

@@ -1,4 +1,4 @@
-package com.quiz.lock;
+package com.quiz.global.lock;
 
 import java.lang.annotation.ElementType;
 import java.lang.annotation.Retention;

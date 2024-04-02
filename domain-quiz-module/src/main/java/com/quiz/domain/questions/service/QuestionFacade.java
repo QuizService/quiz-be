@@ -18,7 +18,7 @@ import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
 
-@Transactional
+@Transactional(value = "mongoTx")
 @RequiredArgsConstructor
 @Service
 public class QuestionFacade {

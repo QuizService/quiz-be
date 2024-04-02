@@ -1,4 +1,4 @@
-package com.quiz.lock;
+package com.quiz.global.lock;
 
 import org.redisson.Redisson;
 import org.redisson.api.RedissonClient;

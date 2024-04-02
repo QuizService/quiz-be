@@ -1,4 +1,4 @@
-package com.quiz.lock;
+package com.quiz.global.lock;
 
 import org.aspectj.lang.ProceedingJoinPoint;
 import org.springframework.stereotype.Component;

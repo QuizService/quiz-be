@@ -16,7 +16,7 @@ import java.util.*;
 import java.util.stream.Collectors;
 
 @Slf4j
-@Transactional
+@Transactional(value = "mongoTx")
 @RequiredArgsConstructor
 @Service
 public class ResponsesFacade {

@@ -24,7 +24,7 @@ import static com.quiz.global.exception.quiz.enums.QuizErrorType.QUIZ_NOT_FOUND;
 import static com.quiz.global.exception.quiz.enums.QuizErrorType.QUIZ_OWNER_NOT_MATCH;
 
 @Slf4j
-@Transactional
+@Transactional(value = "mongoTx")
 @RequiredArgsConstructor
 @Service
 public class QuizService {
@@ -33,7 +33,6 @@ public class QuizService {
     private final SequenceGenerator sequenceGenerator;
 
 
-    @Transactional
     public Long saveQuiz(QuizRequestDto request, Long userId) {
         Quiz quiz = Quiz.builder()
                 .idx(sequenceGenerator.generateSequence(Quiz.SEQUENCE_NAME))
@@ -47,7 +46,6 @@ public class QuizService {
         return quizRepository.save(quiz).getIdx();
     }
 
-    @Transactional
     public void testTx(QuizRequestDto request, Long userId) {
         saveQuiz(request, userId);
         throw new RuntimeException("test tx throw err");
@@ -100,12 +98,6 @@ public class QuizService {
         }
     }
 
-    // for test
-    public void deleteAll() {
-        quizRepository.deleteAll();
-    }
-
-
     public Page<QuizResponseDto> findAllByUserId(Long userId, int page, int size) {
         Pageable pageable = PageRequest.of(page, size, Sort.Direction.DESC, "created");
         Page<Quiz> quizzes = quizMongoTemplate.findQuizByUserId(userId, pageable);
@@ -118,5 +110,14 @@ public class QuizService {
                 .dueDate(TimeConverter.localDateTimeToString(quiz.getDueDate()))
                 .created(TimeConverter.localDateTimeToString(quiz.getCreated()))
                 .build());
+    }
+
+    // for test
+    public void deleteAll() {
+        quizRepository.deleteAll();
+    }
+
+    public int findByUserId(Long userId) {
+        return quizRepository.findByUserId(userId).size();
     }
 }

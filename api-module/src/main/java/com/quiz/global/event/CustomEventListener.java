@@ -33,17 +33,19 @@ public class CustomEventListener {
 
     @Async
     @Transactional(propagation = Propagation.REQUIRES_NEW)
-    @TransactionalEventListener
+    @TransactionalEventListener(phase = TransactionPhase.AFTER_COMMIT)
     public void saveResponses(ResponsesSaveDto dto) {
-        log.info("start save response");
-
-        log.info("save responses");
-        responsesFacade.calculateScoreAndSaveResponse(dto.getQuizId(), dto.getResponses(), dto.getParticipantInfoId());
+        try {
+            log.info("start save response");
+            responsesFacade.calculateScoreAndSaveResponse(dto.getQuizId(), dto.getResponses(), dto.getParticipantInfoId());
+        } catch (Exception e) {
+            throw e;
+        }
     }
 
     @Async
     @Transactional(propagation = Propagation.REQUIRES_NEW)
-    @EventListener
+    @TransactionalEventListener(phase = TransactionPhase.AFTER_COMMIT)
     public void sendMessage(ParticipantQueueInfoDto participantQueueInfoDto) {
         Long quizId = participantQueueInfoDto.quizId();
         Long userId = participantQueueInfoDto.userId();

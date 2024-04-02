@@ -1,10 +1,11 @@
-package com.quiz.global.db;
+package com.quiz.global.db.mongo;
 
 import com.mongodb.ConnectionString;
 import com.mongodb.MongoClientSettings;
 import com.mongodb.client.MongoClient;
 import com.mongodb.client.MongoClients;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -38,8 +39,14 @@ public class MongoDBConfig extends AbstractMongoClientConfiguration {
 
 
     @Bean(name = "mongoTx")
-    public MongoTransactionManager transactionManager(MongoDatabaseFactory mongoDatabaseFactory) {
+    public MongoTransactionManager transactionManager(@Qualifier("mongoDbFactory") MongoDatabaseFactory mongoDatabaseFactory) {
         return new MongoTransactionManager(mongoDatabaseFactory);
+    }
+
+    @Bean(name = "mongoDbFactory")
+    @Override
+    public MongoDatabaseFactory mongoDbFactory() {
+        return super.mongoDbFactory();
     }
 
     //connections = ((core_count * 2) + effective_spindle_count)

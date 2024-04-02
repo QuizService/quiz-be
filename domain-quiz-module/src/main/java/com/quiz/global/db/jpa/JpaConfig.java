@@ -1,4 +1,4 @@
-package com.quiz.global.db;
+package com.quiz.global.db.jpa;
 
 
 import jakarta.persistence.EntityManagerFactory;
@@ -33,7 +33,7 @@ import java.util.Properties;
 @EnableJpaRepositories(
         basePackages = "com.quiz.domain.users.repository",
         entityManagerFactoryRef = "mysqlEntityManagerFactory",
-        transactionManagerRef = "mysqlTransactionManager")
+        transactionManagerRef = "mysqlTx")
 @EnableTransactionManagement
 public class JpaConfig {
 
@@ -83,7 +83,7 @@ public class JpaConfig {
     }
 
     @Primary
-    @Bean(name = "mysqlTransactionManager")
+    @Bean(name = "mysqlTx")
     public JpaTransactionManager mysqlTransactionManager() {
         JpaTransactionManager transactionManager = new JpaTransactionManager();
         transactionManager.setEntityManagerFactory(mysqlEntityManagerFactory().getObject());

@@ -5,7 +5,7 @@ import com.quiz.domain.participantsinfo.entity.ParticipantInfo;
 import com.quiz.domain.participantsinfo.repository.mongo.ParticipantInfoMongoTemplate;
 import com.quiz.domain.participantsinfo.repository.mongo.ParticipantInfoRepository;
 import com.quiz.domain.participantsinfo.repository.redis.ParticipantInfoQueueRepository;
-import com.quiz.lock.DistributedLock;
+import com.quiz.global.lock.DistributedLock;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
@@ -15,7 +15,7 @@ import java.util.List;
 
 @Slf4j
 @RequiredArgsConstructor
-@Transactional
+@Transactional(value = "mongoTx")
 @Service
 public class ParticipantInfoService {
     private final ParticipantInfoMongoTemplate participantInfoMongoTemplate;
@@ -34,6 +34,7 @@ public class ParticipantInfoService {
     @DistributedLock(key = "'updateFcFs : quizId - ' + #quizId")
     public void updateFcFs(Long quizId, Long userId, int capacity) {
         int participatedCnt = participantInfoMongoTemplate.countParticipantsByQuizId(quizId);
+        log.info("participantCnt = {}", participatedCnt);
         if(participatedCnt + 1 > capacity) {
             throw new RuntimeException("cannot participate2");
         }

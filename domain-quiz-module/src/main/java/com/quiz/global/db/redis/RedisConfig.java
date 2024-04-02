@@ -1,4 +1,4 @@
-package com.quiz.redis;
+package com.quiz.global.db.redis;
 
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Value;
@@ -9,9 +9,13 @@ import org.springframework.data.redis.connection.lettuce.LettuceConnectionFactor
 import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.data.redis.serializer.GenericJackson2JsonRedisSerializer;
 import org.springframework.data.redis.serializer.StringRedisSerializer;
+import org.springframework.orm.jpa.JpaTransactionManager;
+import org.springframework.transaction.PlatformTransactionManager;
+import org.springframework.transaction.annotation.EnableTransactionManagement;
 
 @Slf4j
 @Configuration
+@EnableTransactionManagement
 public class RedisConfig {
     @Value("${spring.data.redis.host}")
     private String host;
@@ -31,5 +35,10 @@ public class RedisConfig {
         redisTemplate.setKeySerializer(new StringRedisSerializer());
         redisTemplate.setValueSerializer(new GenericJackson2JsonRedisSerializer());
         return redisTemplate;
+    }
+
+    @Bean(name = "redisTx")
+    public PlatformTransactionManager transactionManager() {
+        return new JpaTransactionManager();
     }
 }

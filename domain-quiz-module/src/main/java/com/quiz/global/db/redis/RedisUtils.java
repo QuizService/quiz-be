@@ -1,4 +1,4 @@
-package com.quiz.redis;
+package com.quiz.global.db.redis;
 
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;

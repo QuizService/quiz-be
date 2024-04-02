@@ -1,4 +1,4 @@
-package com.quiz.lock;
+package com.quiz.global.lock;
 
 import org.springframework.expression.ExpressionParser;
 import org.springframework.expression.spel.standard.SpelExpressionParser;

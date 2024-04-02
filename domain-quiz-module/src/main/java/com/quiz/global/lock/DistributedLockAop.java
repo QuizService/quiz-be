@@ -1,4 +1,4 @@
-package com.quiz.lock;
+package com.quiz.global.lock;
 
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;

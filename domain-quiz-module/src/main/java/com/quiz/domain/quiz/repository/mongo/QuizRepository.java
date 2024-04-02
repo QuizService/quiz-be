@@ -3,6 +3,7 @@ package com.quiz.domain.quiz.repository.mongo;
 import com.quiz.domain.quiz.entity.Quiz;
 import org.springframework.data.mongodb.repository.MongoRepository;
 
+import java.util.List;
 import java.util.Optional;
 
 public interface QuizRepository extends MongoRepository<Quiz, String> {
@@ -10,4 +11,6 @@ public interface QuizRepository extends MongoRepository<Quiz, String> {
     Optional<Quiz> findByIdx(Long idx);
 
     Optional<Quiz> findByEndpoint(String endpoint);
+
+    List<Quiz> findByUserId(Long userId);
 }

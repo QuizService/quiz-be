@@ -5,6 +5,9 @@ dependencies {
     runtimeOnly 'com.mysql:mysql-connector-j'
     api 'org.springframework.boot:spring-boot-starter-data-jpa'
     api 'org.springframework.boot:spring-boot-starter-data-mongodb'
+    implementation 'org.springframework.boot:spring-boot-starter-data-redis'
+    implementation 'org.redisson:redisson:3.27.1'
+    implementation 'org.springframework.boot:spring-boot-starter-aop'
 
     testImplementation 'com.h2database:h2:2.2.224'
     testImplementation 'org.springframework.boot:spring-boot-testcontainers:3.2.3'
@@ -12,5 +15,4 @@ dependencies {
 
 
     implementation project(':global-util-module')
-    implementation project(':independent-module')
 }
