@@ -17,12 +17,13 @@ import org.springframework.web.socket.config.annotation.WebSocketMessageBrokerCo
 @Configuration
 @EnableWebSocketMessageBroker
 public class WebSocketConfig implements WebSocketMessageBrokerConfigurer {
-    private final WebSocketInterceptor webSocketInterceptor;
+//    private final WebSocketInterceptor webSocketInterceptor;
 
     @Override
     public void registerStompEndpoints(StompEndpointRegistry registry) {
         registry.addEndpoint("/web-socket-connection") //web socket connection이 최초로 이루어지는 곳
-                .setAllowedOrigins("*")
+                .setAllowedOrigins("http://localhost:8080","http://localhost:3000")
+                .setAllowedOriginPatterns("*")
                 .withSockJS();
     }
 
@@ -32,8 +33,8 @@ public class WebSocketConfig implements WebSocketMessageBrokerConfigurer {
         registry.setApplicationDestinationPrefixes("/app"); // 도착 경로
     }
 
-    @Override
-    public void configureClientInboundChannel(ChannelRegistration registration) {
-        registration.interceptors(webSocketInterceptor);
-    }
+//    @Override
+//    public void configureClientInboundChannel(ChannelRegistration registration) {
+//        registration.interceptors(webSocketInterceptor);
+//    }
 }

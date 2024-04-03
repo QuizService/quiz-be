@@ -9,7 +9,6 @@ import org.springframework.messaging.MessageChannel;
 import org.springframework.messaging.simp.stomp.StompCommand;
 import org.springframework.messaging.simp.stomp.StompHeaderAccessor;
 import org.springframework.messaging.support.ChannelInterceptor;
-import org.springframework.messaging.support.MessageHeaderAccessor;
 import org.springframework.stereotype.Component;
 
 import static com.quiz.global.exception.auth.AuthErrorCode.JWT_NOT_VALID;
@@ -26,11 +25,11 @@ public class WebSocketInterceptor implements ChannelInterceptor {
         log.info("websocket interceptor start");
         StompHeaderAccessor accessor = StompHeaderAccessor.wrap(message);
         if(accessor.getCommand() == StompCommand.CONNECT) {
-//            String jwt = accessor.getFirstNativeHeader("Authorization");
-//
-//            if(jwt == null || !jwtTokenizer.isTokenValid(jwt)) {
-//                throw new AuthException(JWT_NOT_VALID);
-//            }
+            String jwt = accessor.getFirstNativeHeader("Authorization");
+
+            if(jwt == null || !jwtTokenizer.isTokenValid(jwt)) {
+                throw new AuthException(JWT_NOT_VALID);
+            }
         }
         return message;
     }

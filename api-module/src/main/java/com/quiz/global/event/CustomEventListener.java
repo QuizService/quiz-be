@@ -51,9 +51,9 @@ public class CustomEventListener {
         Long userId = participantQueueInfoDto.userId();
 
         log.info("quizId = {}, userId = {}", quizId, userId);
-        String endpoint = String.format("?quiz-id=%s&user-id=%s",quizId, userId);
+        String endpoint = String.format("?quiz-id=%d&user-id=%d",quizId, userId);
 
-        messagingTemplate.convertAndSend("/" + endpoint, participantQueueInfoDto);
+        messagingTemplate.convertAndSend("/topic/participant" + endpoint, participantQueueInfoDto);
         //참여 가능 시
         if(participantQueueInfoDto.isCapacityLeft()) {
             log.info("save user start");
