@@ -56,7 +56,6 @@ public class ParticipantInfoController {
 
         List<ParticipantsRankResponseDto> response = participantInfoFacade.showRanks(quizId);
 
-
         return ResponseEntity.ok(ResponseDto.success(response));
     }
 }

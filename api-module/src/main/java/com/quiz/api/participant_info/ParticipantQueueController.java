@@ -12,6 +12,7 @@ import org.springframework.stereotype.Controller;
 @RequiredArgsConstructor
 @Controller
 public class ParticipantQueueController {
+    // websocket test
     @MessageMapping("/queue")
     public void getQueue() {
         log.info("connected");

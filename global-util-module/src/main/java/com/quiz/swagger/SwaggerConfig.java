@@ -1,4 +1,4 @@
-package com.quiz.global.swagger;
+package com.quiz.swagger;
 
 import io.swagger.v3.oas.annotations.OpenAPIDefinition;
 import io.swagger.v3.oas.annotations.enums.SecuritySchemeType;
@@ -15,15 +15,6 @@ import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 
 
-/*
-*
-* @SecurityScheme(name = "security_auth", type = SecuritySchemeType.OAUTH2,
-		flows = @OAuthFlows(authorizationCode = @OAuthFlow(
-				authorizationUrl = "${springdoc.oAuthFlow.authorizationUrl}"
-				, tokenUrl = "${springdoc.oAuthFlow.tokenUrl}", scopes = {
-				@OAuthScope(name = "read", description = "read scope"),
-				@OAuthScope(name = "write", description = "write scope") })))
-* */
 @OpenAPIDefinition(servers = @Server(url = "http://localhost:8080"))
 @SecurityScheme(type = SecuritySchemeType.OAUTH2, name = "security auth",
         flows = @OAuthFlows(clientCredentials =

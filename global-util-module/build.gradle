@@ -2,6 +2,7 @@ bootJar.enabled=false
 jar.enabled=true
 
 dependencies {
+    api 'org.springdoc:springdoc-openapi-starter-webmvc-ui:2.3.0'
     implementation 'org.springframework.data:spring-data-commons:3.2.4'
 }
 
