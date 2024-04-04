@@ -28,7 +28,6 @@ import static com.quiz.global.exception.questions.enums.QuestionErrorType.QUESTI
 public class QuestionService {
     private final QuestionsRepository questionsRepository;
     private final QuestionsMongoTemplate questionsMongoTemplate;
-    private final SequenceGenerator sequenceGenerator;
 
     public String save(List<Choices> choices, Answers answers, QuestionsRequestDto questionDto, Long quizId) {
         Questions question = Questions.builder()

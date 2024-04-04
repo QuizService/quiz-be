@@ -9,6 +9,7 @@ import com.quiz.domain.response.dto.ResponsesSaveDto;
 import com.quiz.domain.response.service.ResponsesFacade;
 import com.quiz.domain.users.dto.UserNameDto;
 import com.quiz.domain.users.service.UsersService;
+import com.quiz.global.exception.participantinfo.ParticipantInfoException;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.context.ApplicationEventPublisher;
@@ -21,6 +22,9 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.stream.Collectors;
+
+import static com.quiz.global.exception.participantinfo.ParticipantInfoErrorCode.PARTICIPANT_IS_NOT_IN_QUIZ;
+import static com.quiz.global.exception.participantinfo.ParticipantInfoErrorCode.START_DATE_IS_NOT_NOW;
 
 @Slf4j
 @Transactional(value = "mongoTx")
@@ -36,7 +40,7 @@ public class ParticipantInfoFacade {
     public void saveParticipants(Long quizId, Long userId) {
         Quiz quiz = quizService.findById(quizId);
 //        if(quiz.getStartDate().isBefore(LocalDateTime.now())) {
-//            throw new RuntimeException("startDate is not now");
+//            throw new ParticipantInfoException(START_DATE_IS_NOT_NOW);
 //        }
         int capacity = quiz.getCapacity();
         if(capacity > 0) {
@@ -65,14 +69,13 @@ public class ParticipantInfoFacade {
         log.info("save response start");
         //event 로 저장과정 분리
         applicationEventPublisher.publishEvent(responsesSaveDto);
-//        responsesFacade.calculateScoreAndSaveResponse(quizId, responses, participantInfoId);
     }
 
     public void checkUserParticipatedOrOwner(Long quizId, Long userId) {
         boolean userIsParticipant = participantInfoService.isUserParticipated(quizId, userId);
         boolean userIsQuizOwner = quizService.isUserIsQuizOwner(userId, quizId);
 
-        if(!(userIsParticipant || userIsQuizOwner)) throw new RuntimeException("not participate in quiz");
+        if(!(userIsParticipant || userIsQuizOwner)) throw new ParticipantInfoException(PARTICIPANT_IS_NOT_IN_QUIZ);
     }
 
     public List<ParticipantsRankResponseDto> showRanks(Long quizId) {

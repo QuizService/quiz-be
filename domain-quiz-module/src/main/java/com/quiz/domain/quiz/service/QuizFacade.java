@@ -7,6 +7,7 @@ import com.quiz.domain.quiz.entity.Quiz;
 import com.quiz.utils.TimeConverter;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.data.domain.Page;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -16,6 +17,9 @@ import org.springframework.transaction.annotation.Transactional;
 @RequiredArgsConstructor
 @Service
 public class QuizFacade {
+    @Value("${spring.url}")
+    private String url;
+
     private final QuizService quizService;
     private final ParticipantInfoQueueService participantInfoQueueService;
 
@@ -33,7 +37,7 @@ public class QuizFacade {
 
     public String findEndpointByQuizId(Long quizId) {
         String endpoint = quizService.findEndPointById(quizId);
-        return "http://localhost:8080/form/" + endpoint;
+        return url + endpoint;
     }
 
     public QuizResponseDto findByEndPoint(String endpoint) {

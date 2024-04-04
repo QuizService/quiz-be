@@ -22,7 +22,7 @@ public class ChoicesService {
     //정답인 questionId 만 리턴
     public List<Choices> getChoicesFromDtos(QuestionsRequestDto questionDto, QuestionType questionType) {
         List<Choices> choices = new ArrayList<>();
-        if(questionType.equals(QuestionType.MULTIPLE_CHOICE)) {
+        if (questionType.equals(QuestionType.MULTIPLE_CHOICE)) {
             List<ChoicesRequestDto> choicesDtoList = questionDto.getChoices();
             choices = choicesDtoList.stream()
                     .map(c -> Choices.builder()
@@ -37,22 +37,21 @@ public class ChoicesService {
     }
 
     public boolean isChoicesChanged(List<Choices> choices, List<Choices> newChoices) {
-        if(choices.size() != newChoices.size()) {
+        if (choices.size() != newChoices.size()) {
             return true;
         }
-
-        if(!choices.isEmpty()) {
+        if (!choices.isEmpty()) {
             choices.sort(Comparator.comparingInt(Choices::getSequence));
         }
         List<Choices> newChoices1 = new ArrayList<>(newChoices);
-        if(!newChoices.isEmpty()) {
+        if (!newChoices.isEmpty()) {
             newChoices1.sort(Comparator.comparingInt(Choices::getSequence));
         }
-        for(int i = 0; i<choices.size(); i++) {
+        for (int i = 0; i < choices.size(); i++) {
             Choices choice = choices.get(i);
             Choices newChoice = newChoices1.get(i);
 
-            if(!choice.isEqualsFromNew(newChoice)) {
+            if (!choice.isEqualsFromNew(newChoice)) {
                 return true;
             }
         }

@@ -3,7 +3,6 @@ package com.quiz.global.exception.auth;
 import com.quiz.exception.enums.ErrorType;
 import lombok.Getter;
 
-@Getter
 public enum AuthErrorCode implements ErrorType {
     INVALID_AUTH_TYPE("유효하지 않은 Auth type", 400)
     , JWT_NOT_VALID("jwt not valid", 403)

@@ -33,7 +33,7 @@ public class ParticipantInfoMongoTemplate {
 
     @Transactional
     public ParticipantInfo save(ParticipantInfo participantInfo) {
-        participantInfo = mongoTemplate.save(participantInfo,"participant_info");
+        participantInfo = mongoTemplate.save(participantInfo, "participant_info");
         return participantInfo;
     }
 
@@ -93,13 +93,13 @@ public class ParticipantInfoMongoTemplate {
     public List<ParticipantInfo> findAll() {
         Query query = new Query();
 
-        List<ParticipantInfo> participantInfos =  mongoTemplate.findAll(ParticipantInfo.class);
+        List<ParticipantInfo> participantInfos = mongoTemplate.findAll(ParticipantInfo.class);
 
         return participantInfos;
     }
 
     public void deleteAll() {
-        mongoTemplate.dropCollection("participant_info");
-        mongoTemplate.createCollection("participant_info");
+        Query query = new Query();
+        mongoTemplate.remove(query, ParticipantInfo.class);
     }
 }

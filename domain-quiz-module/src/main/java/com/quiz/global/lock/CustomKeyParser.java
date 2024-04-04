@@ -11,7 +11,7 @@ public class CustomKeyParser {
         ExpressionParser parser = new SpelExpressionParser();
         StandardEvaluationContext context = new StandardEvaluationContext();
 
-        for (int i = 0; i < parameterNames.length; i++) {
+        for (int i = 0; i < parameterNames.length; i++) { //파라미터 이름과 값들을 합쳐 키 이름 생성
             context.setVariable(parameterNames[i], args[i]);
         }
 

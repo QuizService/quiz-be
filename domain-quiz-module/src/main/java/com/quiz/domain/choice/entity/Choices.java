@@ -37,7 +37,7 @@ public class Choices {
     }
 
     public boolean isEqualsFromNew(Object obj) {
-        if(!(obj instanceof Choices choices)) return false;
+        if (!(obj instanceof Choices choices)) return false;
         return choices.getIsAnswer().equals(this.isAnswer)
                 && choices.getSequence().equals(this.sequence)
                 && choices.getTitle().equals(this.title);
