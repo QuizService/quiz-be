@@ -29,7 +29,6 @@ import java.util.Map;
 import java.util.Properties;
 
 @Configuration
-@RequiredArgsConstructor
 @EnableJpaRepositories(
         basePackages = "com.quiz.domain.users.repository",
         entityManagerFactoryRef = "mysqlEntityManagerFactory",
@@ -62,7 +61,7 @@ public class JpaConfig {
         em.setJpaVendorAdapter(vendorAdapter);
 
         HashMap<String, Object> properties = new HashMap<>();
-        properties.put("hibernate.hbm2ddl.auto", ddl_auto);
+        properties.put("hibernate.hbm2ddl.auto", ddl_auto); // application 시작시 table 생성 (true 시 spring.jpa.hibernate.ddl-auto create)
         properties.put("hibernate.show_sql","true");
         properties.put("hibernate.format_sql","true");
         em.setJpaPropertyMap(properties);
@@ -84,12 +83,9 @@ public class JpaConfig {
 
     @Primary
     @Bean(name = "mysqlTx")
-    public JpaTransactionManager mysqlTransactionManager() {
+    public PlatformTransactionManager mysqlTransactionManager() {
         JpaTransactionManager transactionManager = new JpaTransactionManager();
         transactionManager.setEntityManagerFactory(mysqlEntityManagerFactory().getObject());
         return transactionManager;
     }
-
-
-
 }

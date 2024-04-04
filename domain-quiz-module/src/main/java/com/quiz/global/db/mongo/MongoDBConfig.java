@@ -31,15 +31,9 @@ public class MongoDBConfig extends AbstractMongoClientConfiguration {
     @Value("${spring.data.mongodb.database}")
     private String databaseName;
 
-    @Value("${spring.data.mongodb.username}")
-    private String username;
-
-    @Value("${spring.data.mongodb.password}")
-    private String password;
-
 
     @Bean(name = "mongoTx")
-    public MongoTransactionManager transactionManager(@Qualifier("mongoDbFactory") MongoDatabaseFactory mongoDatabaseFactory) {
+    public PlatformTransactionManager transactionManager(@Qualifier("mongoDbFactory") MongoDatabaseFactory mongoDatabaseFactory) {
         return new MongoTransactionManager(mongoDatabaseFactory);
     }
 
@@ -49,14 +43,13 @@ public class MongoDBConfig extends AbstractMongoClientConfiguration {
         return super.mongoDbFactory();
     }
 
-    //connections = ((core_count * 2) + effective_spindle_count)
     @Override
     public MongoClient mongoClient() {
         ConnectionString connectionString = new ConnectionString(this.connectionString);
 
         MongoClientSettings mongoClientSettings = MongoClientSettings.builder()
                 .applyToConnectionPoolSettings(builder -> builder
-                        .maxConnectionIdleTime(10, TimeUnit.MINUTES))
+                        .maxConnectionIdleTime(10, TimeUnit.SECONDS))
                 .applyConnectionString(connectionString)
                 .build();
 
@@ -67,7 +60,6 @@ public class MongoDBConfig extends AbstractMongoClientConfiguration {
     protected String getDatabaseName() {
         return databaseName;
     }
-
 
     @Bean
     public MongoTemplate mongoTemplate() {
