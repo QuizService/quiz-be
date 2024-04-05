@@ -4,13 +4,11 @@ package com.quiz.domain.questions.repository.mongo;
 import com.quiz.TestConfiguration;
 import com.quiz.domain.answers.entity.Answers;
 import com.quiz.domain.choice.entity.Choices;
-import com.quiz.domain.questions.repository.mongo.QuestionsMongoTemplate;
-import com.quiz.domain.questions.repository.mongo.QuestionsRepository;
 import com.quiz.global.mock.TestEntities;
 import com.quiz.domain.questions.entity.QuestionType;
 import com.quiz.domain.questions.entity.Questions;
 import com.quiz.global.exception.questions.QuestionException;
-import com.quiz.global.exception.questions.enums.QuestionErrorType;
+import com.quiz.global.exception.questions.code.QuestionErrorCode;
 import lombok.extern.slf4j.Slf4j;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
@@ -99,7 +97,7 @@ public class QuestionsRepositoryTest {
     void findByIdxTest() {
         String id = save();
         Questions question = questionsRepository.findById(id)
-                .orElseThrow(() -> new QuestionException(QuestionErrorType.QUESTION_NOT_FOUND));
+                .orElseThrow(() -> new QuestionException(QuestionErrorCode.QUESTION_NOT_FOUND));
         assertThat(question.getQuestionType())
                 .isEqualTo(QuestionType.MULTIPLE_CHOICE);
         assertThat(question.getChoices().size())
@@ -116,7 +114,7 @@ public class QuestionsRepositoryTest {
         questionsRepository.updateChoices(id, newChoices);
         questionsRepository.updateAnswers(id, newAnswer);
         Questions questions = questionsRepository.findById(id)
-                .orElseThrow(() -> new QuestionException(QuestionErrorType.QUESTION_NOT_FOUND));
+                .orElseThrow(() -> new QuestionException(QuestionErrorCode.QUESTION_NOT_FOUND));
         List<Choices> updatedChoices = questions.getChoices();
         assertThat(updatedChoices.size())
                 .isEqualTo(5);

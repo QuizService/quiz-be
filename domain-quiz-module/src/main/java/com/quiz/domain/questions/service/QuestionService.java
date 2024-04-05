@@ -10,7 +10,6 @@ import com.quiz.domain.choice.dto.ChoicesResponseDto;
 import com.quiz.domain.questions.dto.QuestionsAnswerDto;
 import com.quiz.domain.questions.dto.QuestionsRequestDto;
 import com.quiz.domain.questions.dto.QuestionsResponseDto;
-import com.quiz.global.SequenceGenerator;
 import com.quiz.global.exception.questions.QuestionException;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
@@ -20,7 +19,7 @@ import org.springframework.transaction.annotation.Transactional;
 import java.time.LocalDateTime;
 import java.util.List;
 
-import static com.quiz.global.exception.questions.enums.QuestionErrorType.QUESTION_NOT_FOUND;
+import static com.quiz.global.exception.questions.code.QuestionErrorCode.QUESTION_NOT_FOUND;
 
 @RequiredArgsConstructor
 @Transactional(value = "mongoTx")

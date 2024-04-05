@@ -1,7 +1,7 @@
 package com.quiz.domain.participantsinfo.repository.redis;
 
 import com.quiz.domain.participantsinfo.dto.ParticipantQueueDto;
-import com.quiz.global.db.redis.RedisUtils;
+import com.quiz.global.db.redis.Redis1Utils;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
@@ -14,7 +14,7 @@ import java.util.stream.Collectors;
 @Service
 @RequiredArgsConstructor
 public class ParticipantInfoQueueRepository {
-    private final RedisUtils redisUtils;
+    private final Redis1Utils redis1Utils;
 
     private static final String WAITING_QUEUE_KEY_PREFIX = "WAITING_QUIZ_ID";
     private static final String PARTICIPANT_NUMBER_KEY_PREFIX = "PARTICIPANT_IN_QUIZ_ID";
@@ -28,45 +28,45 @@ public class ParticipantInfoQueueRepository {
         ParticipantQueueDto queue = toValue(userId, quizId);
         log.info("userId = {}", userId);
 
-        redisUtils.addQueue(WAITING_QUEUE_KEY_PREFIX, queue, time);
+        redis1Utils.addQueue(WAITING_QUEUE_KEY_PREFIX, queue, time);
 
-        return redisUtils.getZRank(WAITING_QUEUE_KEY_PREFIX, userId);
+        return redis1Utils.getZRank(WAITING_QUEUE_KEY_PREFIX, userId);
     }
 
     // 현재 대기 상태
     public Long getRank(Long quizId, Long userId) {
         ParticipantQueueDto queue = toValue(userId, quizId);
-        return redisUtils.getZRank(WAITING_QUEUE_KEY_PREFIX, queue);
+        return redis1Utils.getZRank(WAITING_QUEUE_KEY_PREFIX, queue);
     }
 
     public List<ParticipantQueueDto> getUserFromQueue() {
-        Set<Object> usersSet = redisUtils.zRange(WAITING_QUEUE_KEY_PREFIX, START_IDX, END_IDX);
+        Set<Object> usersSet = redis1Utils.zRange(WAITING_QUEUE_KEY_PREFIX, START_IDX, END_IDX);
         return usersSet.stream()
                 .map(i -> (ParticipantQueueDto) i)
                 .toList();
     }
 
     public Set<ParticipantQueueDto> getUsers() {
-        Long end = redisUtils.opsForZSet().size(WAITING_QUEUE_KEY_PREFIX);
+        Long end = redis1Utils.opsForZSet().size(WAITING_QUEUE_KEY_PREFIX);
 //        log.info("size = {}", end);
-        Set<Object> usersSet =redisUtils.zRange(WAITING_QUEUE_KEY_PREFIX, START_IDX, end);
+        Set<Object> usersSet = redis1Utils.zRange(WAITING_QUEUE_KEY_PREFIX, START_IDX, end);
         return usersSet.stream()
                 .map(i -> (ParticipantQueueDto) i)
                 .collect(Collectors.toSet());
     }
 
     public void delete() {
-        redisUtils.deleteRange(WAITING_QUEUE_KEY_PREFIX, START_IDX, END_IDX);
+        redis1Utils.deleteRange(WAITING_QUEUE_KEY_PREFIX, START_IDX, END_IDX);
     }
 
     public void setParticipantNumber(Long quizId, int leftCapacity) {
         String key = PARTICIPANT_NUMBER_KEY_PREFIX + quizId;
-        redisUtils.setValue(key, (long) leftCapacity);
+        redis1Utils.setValue(key, (long) leftCapacity);
     }
 
     public Integer getParticipantNumber(Long quizId) {
         String key = PARTICIPANT_NUMBER_KEY_PREFIX + quizId;
-        return (Integer) redisUtils.getValue(key);
+        return (Integer) redis1Utils.getValue(key);
     }
 
     private static ParticipantQueueDto toValue(Long userId, Long quizId) {

@@ -1,4 +1,4 @@
-package com.quiz.global.exception.participantinfo;
+package com.quiz.global.exception.participantinfo.code;
 
 import com.quiz.exception.enums.ErrorType;
 

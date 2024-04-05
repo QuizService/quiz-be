@@ -3,8 +3,7 @@ package com.quiz.domain.questions.entity;
 
 import com.quiz.enums.CodeValue;
 import com.quiz.global.exception.quiz.QuizException;
-import com.quiz.global.exception.quiz.enums.QuizErrorType;
-import lombok.Getter;
+import com.quiz.global.exception.quiz.code.QuizErrorCode;
 
 import java.util.Arrays;
 
@@ -24,14 +23,14 @@ public enum QuestionType implements CodeValue {
         return Arrays.stream(values())
                 .filter(questionType -> questionType.value.equals(type))
                 .findFirst()
-                .orElseThrow(() -> new QuizException(QuizErrorType.QUIZ_TYPE_NOT_FOUND));
+                .orElseThrow(() -> new QuizException(QuizErrorCode.QUIZ_TYPE_NOT_FOUND));
     }
 
     public static QuestionType findByInitial(String initial) {
         return Arrays.stream(values())
                 .filter(questionType -> questionType.code.equals(initial))
                 .findFirst()
-                .orElseThrow(() -> new QuizException(QuizErrorType.QUIZ_TYPE_NOT_FOUND));
+                .orElseThrow(() -> new QuizException(QuizErrorCode.QUIZ_TYPE_NOT_FOUND));
     }
 
     @Override

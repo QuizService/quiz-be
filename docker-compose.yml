@@ -57,6 +57,17 @@ services:
     depends_on:
       - mongodb1
 
+  redis1:
+    image: redis
+    container_name: redis1
+    ports:
+      - 6379:6379
+  redis2:
+    image: redis
+    container_name: redis2
+    ports:
+      - 6380:6379
+
 
 
 networks:

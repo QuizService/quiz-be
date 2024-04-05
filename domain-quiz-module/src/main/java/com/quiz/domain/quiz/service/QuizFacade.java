@@ -17,8 +17,7 @@ import org.springframework.transaction.annotation.Transactional;
 @RequiredArgsConstructor
 @Service
 public class QuizFacade {
-    @Value("${spring.url}")
-    private String url;
+    private static final String url = "http://localhost:8080/form/";
 
     private final QuizService quizService;
     private final ParticipantInfoQueueService participantInfoQueueService;

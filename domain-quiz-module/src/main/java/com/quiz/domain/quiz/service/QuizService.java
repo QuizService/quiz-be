@@ -20,8 +20,8 @@ import org.springframework.transaction.annotation.Transactional;
 
 import java.util.NoSuchElementException;
 
-import static com.quiz.global.exception.quiz.enums.QuizErrorType.QUIZ_NOT_FOUND;
-import static com.quiz.global.exception.quiz.enums.QuizErrorType.QUIZ_OWNER_NOT_MATCH;
+import static com.quiz.global.exception.quiz.code.QuizErrorCode.QUIZ_NOT_FOUND;
+import static com.quiz.global.exception.quiz.code.QuizErrorCode.QUIZ_OWNER_NOT_MATCH;
 
 @Slf4j
 @Transactional(value = "mongoTx")

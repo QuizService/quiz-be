@@ -9,9 +9,9 @@ import org.springframework.context.annotation.Configuration;
 
 @Configuration
 public class RedissonConfig {
-    @Value("${spring.data.redis.host}")
+    @Value("${spring.data.redis.host1}")
     private String host;
-    @Value("${spring.data.redis.port}")
+    @Value("${spring.data.redis.port1}")
     private int port;
 
     private static final String REDISSON_HOST_PREFIX = "redis://";

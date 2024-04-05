@@ -22,7 +22,7 @@ public class QueueScheduler {
     private final ApplicationEventPublisher eventPublisher;
 
     @Async
-    @Transactional(value = "redisTx")
+    @Transactional(value = "redisTx1")
     @Scheduled(fixedDelay = 2000)
     public void queue() {
         Set<ParticipantQueueDto> queue = participantInfoQueueRepository.getUsers();

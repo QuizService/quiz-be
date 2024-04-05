@@ -14,8 +14,8 @@ import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
 
-import static com.quiz.global.exception.participantinfo.ParticipantInfoErrorCode.FIRST_COME_FIRST_SERVED_END;
-import static com.quiz.global.exception.participantinfo.ParticipantInfoErrorCode.PARTICIPANT_NOT_FOUND;
+import static com.quiz.global.exception.participantinfo.code.ParticipantInfoErrorCode.FIRST_COME_FIRST_SERVED_END;
+import static com.quiz.global.exception.participantinfo.code.ParticipantInfoErrorCode.PARTICIPANT_NOT_FOUND;
 
 @Slf4j
 @RequiredArgsConstructor

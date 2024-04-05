@@ -2,9 +2,13 @@ package com.quiz.global.security.jwt;
 
 import com.auth0.jwt.JWT;
 import com.auth0.jwt.algorithms.Algorithm;
+import com.auth0.jwt.exceptions.TokenExpiredException;
+import com.auth0.jwt.interfaces.DecodedJWT;
+import com.quiz.global.db.redis.Redis2Utils;
 import jakarta.annotation.PostConstruct;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
+import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
@@ -23,6 +27,7 @@ import java.util.Optional;
 
 @Slf4j
 @Component
+@RequiredArgsConstructor
 public class JwtTokenizer {
     @Value("${jwt.secretKey}")
     private String secretKey;
@@ -40,6 +45,8 @@ public class JwtTokenizer {
     private String refreshHeader;
 
     private Algorithm jwtAlgorithm;
+
+    private final Redis2Utils redisUtils;
 
     @PostConstruct
     public void setJwtAlgorithm() {
@@ -61,31 +68,37 @@ public class JwtTokenizer {
                 .sign(jwtAlgorithm); //algorithm
     }
 
-    public String createRefreshToken() {
+    public String createRefreshToken(Long userId) {
         Date now = new Date();
 
-        return JWT.create()
+        // 기존 refresh token 삭제
+        redisUtils.deleteObject(userId);
+
+        String refreshToken = JWT.create()
                 .withSubject(REFRESH_TOKEN_SUBJECT)
                 .withExpiresAt(new Date(now.getTime() + refreshTokenExpirationPeriod))
                 .sign(jwtAlgorithm);
+        redisUtils.addObject(userId, refreshToken, refreshTokenExpirationPeriod);
+
+        return refreshToken;
     }
 
     public void sendAccessToken(HttpServletResponse response, String accessToken) {
         response.setHeader(accessHeader, accessToken);
-        log.info("accessToken : {}", accessToken);
+        log.info("set accessToken to header");
     }
 
     public void sendRefreshToken(HttpServletResponse response, String refreshToken) {
         response.setHeader(refreshHeader, refreshToken);
-        log.info("refreshToken : {}", refreshToken);
+        log.info("set refreshToken to header");
     }
 
     public Optional<String> extractEmail(HttpServletRequest request) {
         Optional<String> accessToken = extractAccessToken(request);
         try {
-            if(accessToken.isPresent()) {
+            if (accessToken.isPresent()) {
                 String token = accessToken.get();
-                String optionalEmail =  JWT.require(Algorithm.HMAC512(secretKey))
+                String optionalEmail = JWT.require(Algorithm.HMAC512(secretKey))
                         .build()
                         .verify(token)
                         .getClaim(EMAIL_CLAIM)
@@ -101,11 +114,8 @@ public class JwtTokenizer {
     }
 
     public String getEmail(String accessToken) {
-        return JWT.require(Algorithm.HMAC512(secretKey))
-                .build()
-                .verify(accessToken)
-                .getClaim(EMAIL_CLAIM)
-                .asString();
+        DecodedJWT jwt = JWT.decode(accessToken);
+        return jwt.getClaim(EMAIL_CLAIM).asString();
     }
 
     public Optional<String> extractAccessToken(HttpServletRequest request) {
@@ -126,13 +136,20 @@ public class JwtTokenizer {
                     .build()
                     .verify(token);
             return true;
+        } catch (TokenExpiredException e) {
+            log.error("token expired : {}", e.getMessage());
+            return false;
         } catch (Exception e) {
-            log.error("error : {}", e.getMessage());
+            log.error("jwt error : {}", e.getMessage());
             return false;
         }
     }
 
+    public boolean isTokenExpired(String token) {
+        DecodedJWT jwt = JWT.decode(token);
+        Date expDate = jwt.getExpiresAt();
+        Date now = new Date();
 
-
-
+        return now.after(expDate);
+    }
 }

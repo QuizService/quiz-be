@@ -1,7 +1,7 @@
 package com.quiz.global.db.redis;
 
-import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.data.redis.core.ZSetOperations;
 import org.springframework.stereotype.Component;
@@ -10,9 +10,12 @@ import java.util.Set;
 
 @Slf4j
 @Component
-@RequiredArgsConstructor
-public class RedisUtils {
+public class Redis1Utils {
     private final RedisTemplate<String, Object> redisTemplate;
+
+    public Redis1Utils(@Qualifier("redisTemplate1") RedisTemplate<String, Object> redisTemplate) {
+        this.redisTemplate = redisTemplate;
+    }
 
     public void deleteKey(String key) {
         redisTemplate.delete(key);
@@ -51,7 +54,6 @@ public class RedisUtils {
     public void setValue(String key, Long value) {
         redisTemplate.opsForValue().set(key, value);
     }
-
 
     public Object getValue(String key) {
         return redisTemplate.opsForValue().get(key);

@@ -6,7 +6,6 @@ import com.quiz.domain.quiz.service.QuizService;
 import com.quiz.domain.participantsinfo.dto.ParticipantsRankResponseDto;
 import com.quiz.domain.response.dto.ResponsesRequestDto;
 import com.quiz.domain.response.dto.ResponsesSaveDto;
-import com.quiz.domain.response.service.ResponsesFacade;
 import com.quiz.domain.users.dto.UserNameDto;
 import com.quiz.domain.users.service.UsersService;
 import com.quiz.global.exception.participantinfo.ParticipantInfoException;
@@ -14,17 +13,13 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.context.ApplicationEventPublisher;
 import org.springframework.stereotype.Service;
-import org.springframework.transaction.annotation.Isolation;
 import org.springframework.transaction.annotation.Transactional;
 
-import java.time.LocalDateTime;
-import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.stream.Collectors;
 
-import static com.quiz.global.exception.participantinfo.ParticipantInfoErrorCode.PARTICIPANT_IS_NOT_IN_QUIZ;
-import static com.quiz.global.exception.participantinfo.ParticipantInfoErrorCode.START_DATE_IS_NOT_NOW;
+import static com.quiz.global.exception.participantinfo.code.ParticipantInfoErrorCode.PARTICIPANT_IS_NOT_IN_QUIZ;
 
 @Slf4j
 @Transactional(value = "mongoTx")
