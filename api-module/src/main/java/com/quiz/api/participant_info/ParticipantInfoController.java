@@ -8,13 +8,18 @@ import com.quiz.domain.users.entity.Users;
 import com.quiz.domain.users.service.UsersService;
 import com.quiz.dto.ResponseDto;
 import com.quiz.global.security.userdetails.UserAccount;
+import jakarta.annotation.PostConstruct;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.ArrayList;
+import java.util.LinkedList;
 import java.util.List;
+import java.util.Queue;
+import java.util.concurrent.atomic.AtomicLong;
 
 @Slf4j
 @RequiredArgsConstructor
@@ -25,6 +30,7 @@ public class ParticipantInfoController {
     private final ParticipantInfoQueueService participantInfoQueueService;
     private final UsersService usersService;
 
+    AtomicLong atomicLong = new AtomicLong(1);
 
 
     @PostMapping("/{quiz-id}")
@@ -33,8 +39,9 @@ public class ParticipantInfoController {
         // 대기열 로직 추가
         // queue 에 인간 추가
         Users users = usersService.findByEmail(user.getUsername());
-        Long rank = participantInfoQueueService.addQueue(quizId, users.getId());
 
+
+        Long rank = participantInfoQueueService.addQueue(quizId, atomicLong.incrementAndGet());
         return ResponseEntity.ok(ResponseDto.success(rank));
     }
 
@@ -43,7 +50,8 @@ public class ParticipantInfoController {
                                                             @RequestBody ResponsesRequestsDto request,
                                                             @AuthenticationPrincipal UserAccount user) {
         Users users = usersService.findByEmail(user.getUsername());
-        participantInfoFacade.updateParticipantAndSaveResponse(quizId, users.getId(), request.getResponses());
+
+        participantInfoFacade.updateParticipantAndSaveResponse(quizId, atomicLong.decrementAndGet(), request.getResponses());
 
         return ResponseEntity.ok(ResponseDto.success());
     }

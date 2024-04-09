@@ -23,8 +23,7 @@ public class WebSocketConfig implements WebSocketMessageBrokerConfigurer {
     public void registerStompEndpoints(StompEndpointRegistry registry) {
         registry.addEndpoint("/web-socket-connection") //web socket connection이 최초로 이루어지는 곳
                 .setAllowedOrigins("http://localhost:8080","http://localhost:3000")
-                .setAllowedOriginPatterns("*")
-                .withSockJS();
+                .setAllowedOriginPatterns("*");
     }
 
     @Override

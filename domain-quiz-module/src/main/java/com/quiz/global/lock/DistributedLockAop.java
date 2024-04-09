@@ -24,6 +24,7 @@ public class DistributedLockAop {
 
     @Around("@annotation(com.quiz.global.lock.DistributedLock)")
     public Object lock(final ProceedingJoinPoint joinPoint) throws Throwable {
+        log.info("start lock");
         MethodSignature signature = (MethodSignature) joinPoint.getSignature();
         Method method = signature.getMethod();
         DistributedLock distributedLock = method.getAnnotation(DistributedLock.class);
@@ -43,6 +44,7 @@ public class DistributedLockAop {
         } finally {
             try {
                 rLock.unlock();
+                log.info("end lock");
             } catch (IllegalMonitorStateException e) {
                 log.info("Lock Already Unlocked serviceName = {}, Key = {}", method.getName(), REDISSON_LOCK_KEY);
             }

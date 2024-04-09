@@ -13,23 +13,29 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
+import java.util.Optional;
+import java.util.concurrent.atomic.AtomicInteger;
 
-import static com.quiz.global.exception.participantinfo.code.ParticipantInfoErrorCode.FIRST_COME_FIRST_SERVED_END;
-import static com.quiz.global.exception.participantinfo.code.ParticipantInfoErrorCode.PARTICIPANT_NOT_FOUND;
+import static com.quiz.global.exception.participantinfo.code.ParticipantInfoErrorCode.*;
 
 @Slf4j
 @RequiredArgsConstructor
-@Transactional(value = "mongoTx")
 @Service
 public class ParticipantInfoService {
     private final ParticipantInfoMongoTemplate participantInfoMongoTemplate;
     private final ParticipantInfoRepository participantInfoRepository;
     private final ParticipantInfoQueueRepository participantInfoQueueRepository;
+    AtomicInteger cnt = new AtomicInteger();
 
     @DistributedLock(key = "'saveFcfs : quizId - ' + #quizId")
     public String saveFcfs(Long quizId, Long userId, int capacity) {
+//        Optional<ParticipantInfo> participantInfoOptional = participantInfoMongoTemplate.findByQuizIdAndUserId(quizId, userId);
+//        if(participantInfoOptional.isPresent()) {
+//            throw new ParticipantInfoException(ALREADY_PARTICIPATED);
+//        }
         int participatedCnt = participantInfoMongoTemplate.countParticipantsByQuizId(quizId);
-        if(participatedCnt + 1 > capacity) {
+        if(participatedCnt  >= capacity) {
+            log.info("failed count = {}", cnt.incrementAndGet());
             throw new ParticipantInfoException(FIRST_COME_FIRST_SERVED_END);
         }
         return save(quizId, userId);
@@ -63,23 +69,28 @@ public class ParticipantInfoService {
         return participantInfo.getId();
     }
 
+    @Transactional(value = "mongoTx")
     public ParticipantInfo findByQuizIdAndUserId(Long quizId, Long userId) {
         return participantInfoMongoTemplate.findByQuizIdAndUserId(quizId, userId)
                 .orElseThrow(() -> new ParticipantInfoException(PARTICIPANT_NOT_FOUND));
     }
 
+    @Transactional(value = "mongoTx")
     public boolean isUserParticipated(Long quizId, Long userId) {
         return participantInfoMongoTemplate.findByQuizIdAndUserId(quizId, userId).isPresent();
     }
 
+    @Transactional(value = "mongoTx")
     public void updateTotalScore(String participantId, Integer score) {
         participantInfoMongoTemplate.updateScore(participantId, score);
     }
 
+    @Transactional(value = "mongoTx")
     public List<ParticipantInfo> findParticipantInfoByQuizId(Long quizId) {
         return participantInfoMongoTemplate.findAllByQuizIdOrderByNumber(quizId);
     }
 
+    @Transactional(value = "mongoTx")
     public List<ParticipantsRankResponseDto> findRanksByQuizId(Long quizId) {
         return participantInfoMongoTemplate.findParticipantsRankResponsesByQuizIdOrderByNumber(quizId);
     }

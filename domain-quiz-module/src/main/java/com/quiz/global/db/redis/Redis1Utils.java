@@ -26,6 +26,11 @@ public class Redis1Utils {
         zSetOperations.removeRange(key, start, end);
     }
 
+    public void delete(String key, Object value) {
+        ZSetOperations<String, Object> zSetOperations = opsForZSet();
+        zSetOperations.remove(key, value);
+    }
+
     public ZSetOperations<String, Object> opsForZSet() {
         return redisTemplate.opsForZSet();
     }

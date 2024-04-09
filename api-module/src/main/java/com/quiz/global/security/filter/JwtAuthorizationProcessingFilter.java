@@ -35,7 +35,7 @@ import static com.quiz.global.security.exception.code.AuthErrorCode.*;
 @Component
 @RequiredArgsConstructor
 public class JwtAuthorizationProcessingFilter extends OncePerRequestFilter {
-    private static final List<String> AUTHORIZATION_NOT_REQUIRED = List.of("/login", "/", "/favicon.ico", "/h2/**", "/favicon.ico", "/index.html");
+    private static final String[] AUTHORIZATION_NOT_REQUIRED = new String[]{"/login", "/favicon.ico", "/h2", "/favicon.ico", "/index.html", "/web-socket-connection","/swagger-ui","/v3/api-docs","/topic/participant"};
     private final JwtTokenizer jwtTokenizer;
     private final UsersRepository usersRepository;
     private final Redis2Utils redisUtils;
@@ -44,7 +44,7 @@ public class JwtAuthorizationProcessingFilter extends OncePerRequestFilter {
     protected void doFilterInternal(HttpServletRequest request, HttpServletResponse response, FilterChain filterChain) throws ServletException, IOException {
         log.info("JwtAuthorizationProcessingFilter start");
         log.info("request.getRequestURI() = {}", request.getRequestURI());
-        if (AUTHORIZATION_NOT_REQUIRED.contains(request.getRequestURI())) {
+        if (StringUtils.startsWithAny(request.getRequestURI(), AUTHORIZATION_NOT_REQUIRED)) {
             filterChain.doFilter(request, response);
             log.info("AUTHORIZATION_NOT_REQUIRED");
             return;
@@ -58,7 +58,6 @@ public class JwtAuthorizationProcessingFilter extends OncePerRequestFilter {
             if (isAccessTokenValid) {
                 log.info("accessToken valid");
                 setAuthentication(accessToken.get());
-                filterChain.doFilter(request, response);
             } else {
                 if(jwtTokenizer.isTokenExpired(accessToken.get())) {
                     log.info("access token expired");
@@ -138,7 +137,7 @@ public class JwtAuthorizationProcessingFilter extends OncePerRequestFilter {
     @Override
     protected boolean shouldNotFilter(HttpServletRequest request) throws ServletException {
         log.info("should not filter = {}", request.getRequestURI());
-        boolean result =  StringUtils.startsWithAny(request.getRequestURI(), "/login", "/favicon.ico", "/h2", "/favicon.ico", "/index.html", "/web-socket-connection");
+        boolean result =  StringUtils.startsWithAny(request.getRequestURI(), AUTHORIZATION_NOT_REQUIRED);
         log.info("should not filter = {}", result);
 
         return result;

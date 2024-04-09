@@ -10,17 +10,17 @@ import org.springframework.scheduling.annotation.EnableAsync;
 import java.util.concurrent.Executor;
 import java.util.concurrent.Executors;
 
-@EnableAsync
-@Configuration
-public class AsyncConfig {
-
-    @Bean(TaskExecutionAutoConfiguration.APPLICATION_TASK_EXECUTOR_BEAN_NAME)
-    public Executor asyncTaskExecutor() {
-        return new TaskExecutorAdapter(Executors.newVirtualThreadPerTaskExecutor());
-    }
-
-    @Bean
-    public TomcatProtocolHandlerCustomizer<?> protocolHandlerVirtualThreadExecutorCustomizer() {
-        return protocolHandler -> protocolHandler.setExecutor(Executors.newVirtualThreadPerTaskExecutor());
-    }
-}
+//@EnableAsync
+//@Configuration
+//public class AsyncConfig {
+//
+//    @Bean(TaskExecutionAutoConfiguration.APPLICATION_TASK_EXECUTOR_BEAN_NAME)
+//    public Executor asyncTaskExecutor() {
+//        return new TaskExecutorAdapter(Executors.newVirtualThreadPerTaskExecutor());
+//    }
+//
+//    @Bean
+//    public TomcatProtocolHandlerCustomizer<?> protocolHandlerVirtualThreadExecutorCustomizer() {
+//        return protocolHandler -> protocolHandler.setExecutor(Executors.newVirtualThreadPerTaskExecutor());
+//    }
+//}

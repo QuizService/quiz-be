@@ -35,7 +35,8 @@ public class QuizController {
         Users users = findUsers(user);
         Long quizId = quizFacade.saveQuiz(quizRequest, users.getId());
 
-        return ResponseEntity.ok(ResponseDto.success(quizId));
+        return ResponseEntity.ok()
+                .body(ResponseDto.success(quizId));
     }
 
     @Operation(summary = "quiz 업데이트 (questions 제외)")
@@ -46,7 +47,8 @@ public class QuizController {
         Users users = findUsers(user);
         quizId = quizFacade.updateQuiz(quizRequest, quizId, users.getId());
 
-        return ResponseEntity.ok(ResponseDto.success(quizId));
+        return ResponseEntity.ok()
+                .body(ResponseDto.success(quizId));
     }
 
     @Operation(summary = "quiz 조회 (questions 제외), 생성자 전용")

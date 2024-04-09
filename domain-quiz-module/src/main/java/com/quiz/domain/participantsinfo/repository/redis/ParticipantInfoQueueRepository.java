@@ -29,8 +29,9 @@ public class ParticipantInfoQueueRepository {
         log.info("userId = {}", userId);
 
         redis1Utils.addQueue(WAITING_QUEUE_KEY_PREFIX, queue, time);
-
-        return redis1Utils.getZRank(WAITING_QUEUE_KEY_PREFIX, userId);
+        Long rank = redis1Utils.getZRank(WAITING_QUEUE_KEY_PREFIX, queue);
+        log.info("rank = {}", rank);
+        return rank;
     }
 
     // 현재 대기 상태
@@ -47,16 +48,16 @@ public class ParticipantInfoQueueRepository {
     }
 
     public Set<ParticipantQueueDto> getUsers() {
-        Long end = redis1Utils.opsForZSet().size(WAITING_QUEUE_KEY_PREFIX);
-//        log.info("size = {}", end);
-        Set<Object> usersSet = redis1Utils.zRange(WAITING_QUEUE_KEY_PREFIX, START_IDX, end);
+        Long size = redis1Utils.getZSetSize(WAITING_QUEUE_KEY_PREFIX);
+        Set<Object> usersSet = redis1Utils.zRange(WAITING_QUEUE_KEY_PREFIX, START_IDX, size < 10L ? size : 10L);
         return usersSet.stream()
                 .map(i -> (ParticipantQueueDto) i)
                 .collect(Collectors.toSet());
     }
 
-    public void delete() {
-        redis1Utils.deleteRange(WAITING_QUEUE_KEY_PREFIX, START_IDX, END_IDX);
+    public void delete(ParticipantQueueDto queue) {
+//        redis1Utils.deleteRange(WAITING_QUEUE_KEY_PREFIX, START_IDX, END_IDX);
+        redis1Utils.delete(WAITING_QUEUE_KEY_PREFIX,queue);
     }
 
     public void setParticipantNumber(Long quizId, int leftCapacity) {
@@ -74,6 +75,10 @@ public class ParticipantInfoQueueRepository {
                 .quizId(quizId)
                 .userId(userId)
                 .build();
+    }
+
+    public Long getZSetSize() {
+        return redis1Utils.getZSetSize(WAITING_QUEUE_KEY_PREFIX);
     }
 
 

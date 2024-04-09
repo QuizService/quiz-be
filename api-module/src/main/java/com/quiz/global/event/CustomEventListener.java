@@ -44,14 +44,16 @@ public class CustomEventListener {
     }
 
     @Async
-    @Transactional(propagation = Propagation.REQUIRES_NEW)
+    @Transactional(value = "mongoTx",propagation = Propagation.REQUIRES_NEW)
+//    @EventListener
     @TransactionalEventListener(phase = TransactionPhase.AFTER_COMMIT)
     public void sendMessage(ParticipantQueueInfoDto participantQueueInfoDto) {
         Long quizId = participantQueueInfoDto.quizId();
         Long userId = participantQueueInfoDto.userId();
 
         log.info("quizId = {}, userId = {}", quizId, userId);
-        String endpoint = String.format("?quiz-id=%d&user-id=%d",quizId, userId);
+//        String endpoint = String.format("?quiz-id=%d&user-id=%d",quizId, userId);
+        String endpoint = String.format("?quiz-id=%d",quizId);
 
         messagingTemplate.convertAndSend("/topic/participant" + endpoint, participantQueueInfoDto);
         //참여 가능 시
