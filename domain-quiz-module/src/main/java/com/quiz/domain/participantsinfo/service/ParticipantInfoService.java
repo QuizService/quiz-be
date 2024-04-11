@@ -13,7 +13,6 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
-import java.util.Optional;
 import java.util.concurrent.atomic.AtomicInteger;
 
 import static com.quiz.global.exception.participantinfo.code.ParticipantInfoErrorCode.*;
@@ -33,7 +32,7 @@ public class ParticipantInfoService {
 //        if(participantInfoOptional.isPresent()) {
 //            throw new ParticipantInfoException(ALREADY_PARTICIPATED);
 //        }
-        int participatedCnt = participantInfoMongoTemplate.countParticipantsByQuizId(quizId);
+        int participatedCnt = participantInfoMongoTemplate.countParticipantsByQuizIdAndSubmitResponses(quizId);
         if(participatedCnt  >= capacity) {
             log.info("failed count = {}", cnt.incrementAndGet());
             throw new ParticipantInfoException(FIRST_COME_FIRST_SERVED_END);
@@ -42,8 +41,11 @@ public class ParticipantInfoService {
     }
 
     @DistributedLock(key = "'updateFcFs : quizId - ' + #quizId")
-    public void updateFcFs(Long quizId, Long userId, int capacity) {
-        int participatedCnt = participantInfoMongoTemplate.countParticipantsByQuizId(quizId);
+    public String updateFcFs(Long quizId, Long userId, int capacity) {
+        //check user participated
+        ParticipantInfo participantInfo = findByQuizIdAndUserId(quizId, userId);
+
+        int participatedCnt = participantInfoMongoTemplate.countParticipantsByQuizIdAndSubmitResponses(quizId);
         log.info("participantCnt = {}", participatedCnt);
         if(participatedCnt + 1 > capacity) {
             throw new ParticipantInfoException(FIRST_COME_FIRST_SERVED_END);
@@ -52,10 +54,12 @@ public class ParticipantInfoService {
         // 수용 가능 인원 - 참여 인원 - 1 저장
         log.info("capacity = {}", capacity - participatedCnt - 1);
         participantInfoQueueRepository.setParticipantNumber(quizId, capacity - participatedCnt - 1);
+
+        return participantInfo.getId();
     }
 
     public int countParticipantInfoCntByQuizId(Long quizId) {
-        return participantInfoMongoTemplate.countParticipantsByQuizId(quizId);
+        return participantInfoMongoTemplate.countParticipantsByQuizIdAndSubmitResponses(quizId);
     }
 
 
@@ -63,6 +67,7 @@ public class ParticipantInfoService {
         ParticipantInfo participantInfo = ParticipantInfo.builder()
                 .quizId(quizId)
                 .userId(userId)
+                .submitResponses(false)
                 .build();
         participantInfo = participantInfoRepository.save(participantInfo);
 

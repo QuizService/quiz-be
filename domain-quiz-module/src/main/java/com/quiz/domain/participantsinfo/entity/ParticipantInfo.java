@@ -14,7 +14,6 @@ import java.time.LocalDateTime;
 @Document(collection = "participant_info")
 public class ParticipantInfo {
 
-
     @Id
     @Field(value = "_id", targetType = FieldType.OBJECT_ID)
     private String id;
@@ -33,23 +32,28 @@ public class ParticipantInfo {
 
     private Integer number;
 
+    @Field(name = "submit_responses")
+    private boolean submitResponses;
+
     private LocalDateTime created;
 
     @Builder
-    public ParticipantInfo(Long quizId, Long userId) {
+    public ParticipantInfo(Long quizId, Long userId, Boolean submitResponses) {
         this.quizId = quizId;
         this.userId = userId;
+        this.submitResponses = submitResponses != null && submitResponses;
         this.created = LocalDateTime.now();
     }
 
     @Builder(builderMethodName = "testBuilder", buildMethodName = "testBuild")
-    public ParticipantInfo(String id, Long idx, Long quizId, Long userId, Integer totalScore, Integer number, LocalDateTime created) {
+    public ParticipantInfo(String id, Long idx, Long quizId, Long userId, Integer totalScore, Integer number, Boolean submitResponses) {
         this.id = id;
         this.idx = idx;
         this.quizId = quizId;
         this.userId = userId;
         this.totalScore = totalScore;
         this.number = number;
+        this.submitResponses = submitResponses != null && submitResponses;
         this.created = LocalDateTime.now();
     }
 }

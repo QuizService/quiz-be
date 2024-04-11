@@ -39,9 +39,9 @@ public class ParticipantInfoController {
         // 대기열 로직 추가
         // queue 에 인간 추가
         Users users = usersService.findByEmail(user.getUsername());
+//        Long fakeUserId = atomicLong.incrementAndGet();
 
-
-        Long rank = participantInfoQueueService.addQueue(quizId, atomicLong.incrementAndGet());
+        Long rank = participantInfoQueueService.addQueue(quizId, users.getId());
         return ResponseEntity.ok(ResponseDto.success(rank));
     }
 
@@ -50,8 +50,8 @@ public class ParticipantInfoController {
                                                             @RequestBody ResponsesRequestsDto request,
                                                             @AuthenticationPrincipal UserAccount user) {
         Users users = usersService.findByEmail(user.getUsername());
-
-        participantInfoFacade.updateParticipantAndSaveResponse(quizId, atomicLong.decrementAndGet(), request.getResponses());
+//        Long fakeUserId = atomicLong.getAndDecrement();
+        participantInfoFacade.updateParticipantAndSaveResponse(quizId, users.getId(), request.getResponses());
 
         return ResponseEntity.ok(ResponseDto.success());
     }

@@ -21,17 +21,15 @@ public class ParticipantInfoQueueRepository {
     private static final Long START_IDX = 0L;
     private static final Long END_IDX = 10L;
 
+
     // 대기열 큐에 추가
     public Long addQueue(Long quizId, Long userId) {
         Long time = System.currentTimeMillis();
 
         ParticipantQueueDto queue = toValue(userId, quizId);
-        log.info("userId = {}", userId);
 
         redis1Utils.addQueue(WAITING_QUEUE_KEY_PREFIX, queue, time);
-        Long rank = redis1Utils.getZRank(WAITING_QUEUE_KEY_PREFIX, queue);
-        log.info("rank = {}", rank);
-        return rank;
+        return redis1Utils.getZRank(WAITING_QUEUE_KEY_PREFIX, queue);
     }
 
     // 현재 대기 상태
@@ -47,9 +45,17 @@ public class ParticipantInfoQueueRepository {
                 .toList();
     }
 
-    public Set<ParticipantQueueDto> getUsers() {
+    public Set<ParticipantQueueDto> get10Users() {
         Long size = redis1Utils.getZSetSize(WAITING_QUEUE_KEY_PREFIX);
         Set<Object> usersSet = redis1Utils.zRange(WAITING_QUEUE_KEY_PREFIX, START_IDX, size < 10L ? size : 10L);
+        return usersSet.stream()
+                .map(i -> (ParticipantQueueDto) i)
+                .collect(Collectors.toSet());
+    }
+
+    public Set<ParticipantQueueDto> getAllUsers() {
+        Long size = redis1Utils.getZSetSize(WAITING_QUEUE_KEY_PREFIX);
+        Set<Object> usersSet = redis1Utils.zRange(WAITING_QUEUE_KEY_PREFIX, START_IDX, size);
         return usersSet.stream()
                 .map(i -> (ParticipantQueueDto) i)
                 .collect(Collectors.toSet());

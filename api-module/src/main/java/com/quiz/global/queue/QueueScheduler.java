@@ -14,9 +14,7 @@ import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Component;
 import org.springframework.transaction.annotation.Transactional;
 
-import java.util.Collections;
-import java.util.List;
-import java.util.Set;
+import java.util.*;
 
 @Slf4j
 @EnableScheduling // 추가
@@ -25,33 +23,52 @@ import java.util.Set;
 public class QueueScheduler {
     private final ParticipantInfoQueueRepository participantInfoQueueRepository;
     private final ApplicationEventPublisher eventPublisher;
+    private final SimpMessagingTemplate messagingTemplate;
 
+    @Async
     @Transactional(value = "redisTx1")
     @Scheduled(fixedDelay = 2000)
     public void queue() {
-        Long queueSize = participantInfoQueueRepository.getZSetSize();
-        if(queueSize == null) return;
-        Set<ParticipantQueueDto> queue = participantInfoQueueRepository.getUsers();
+        Set<ParticipantQueueDto> queue = participantInfoQueueRepository.get10Users();
+
         for (ParticipantQueueDto participantQueueDto : queue) {
             Long quizId = participantQueueDto.quizId();
             Long userId = participantQueueDto.userId();
-            log.info("quizId = {}", quizId);
-            log.info("userId = {}", userId);
+            log.info("quizId = {}, userId = {}", quizId, userId);
 
             Long rank = participantInfoQueueRepository.getRank(quizId, userId);
-            log.info("rank = {}", rank);
+            rank = rank == null ? 0 : rank;
 
             // 아직 자리 다 안찬 경우
             int capacity = participantInfoQueueRepository.getParticipantNumber(quizId);
             if (capacity > 0) {
                 log.info("capacity = {}", capacity);
                 boolean isUserTurn = rank < 10L;
-                eventPublisher.publishEvent(new ParticipantQueueInfoDto(quizId, userId, rank, true, isUserTurn));
+                eventPublisher.publishEvent(new ParticipantQueueInfoDto(quizId, userId, true, isUserTurn));
             } else {
-                eventPublisher.publishEvent(new ParticipantQueueInfoDto(quizId, userId, rank, false, false));
+                eventPublisher.publishEvent(new ParticipantQueueInfoDto(quizId, userId, false, false));
             }
             participantInfoQueueRepository.delete(participantQueueDto);
         }
+    }
 
+    @Async
+    @Transactional(value = "redisTx1")
+    @Scheduled(fixedDelay = 2000)
+    public void showRank() {
+        Set<ParticipantQueueDto> queue = participantInfoQueueRepository.getAllUsers();
+
+        for (ParticipantQueueDto participantQueueDto : queue) {
+            Long quizId = participantQueueDto.quizId();
+            Long userId = participantQueueDto.userId();
+
+            Long rank = participantInfoQueueRepository.getRank(quizId, userId);
+            rank = rank == null ? 0 : rank;
+            log.info("userId = {}, rank = {}", userId, rank);
+            //        String endpoint = String.format("?quiz-id=%d&user-id=%d",quizId, userId);
+            String endpoint = String.format("?quiz-id=%d",quizId);
+
+            messagingTemplate.convertAndSend("/topic/rank" + endpoint, rank);
+        }
     }
 }

@@ -48,11 +48,14 @@ public class ParticipantInfoFacade {
     public void updateParticipantAndSaveResponse(Long quizId, Long userId, List<ResponsesRequestDto> responses) {
         Integer quizCapacity = quizService.findById(quizId)
                 .getCapacity();
+
+        String participantInfoId;
         if (quizCapacity > 0) {
-            participantInfoService.updateFcFs(quizId, userId, quizCapacity);
+            participantInfoId = participantInfoService.updateFcFs(quizId, userId, quizCapacity);
+        } else {
+            participantInfoId = participantInfoService.findByQuizIdAndUserId(quizId, userId)
+                    .getId();
         }
-        String participantInfoId = participantInfoService.findByQuizIdAndUserId(quizId, userId)
-                .getId();
         log.info("participantInfoId = {}", participantInfoId);
 
         ResponsesSaveDto responsesSaveDto = ResponsesSaveDto.builder()
@@ -85,14 +88,24 @@ public class ParticipantInfoFacade {
                 .collect(Collectors.toMap(UserNameDto::getId, i2 -> i2));
 
        return result.stream()
-                .map(p -> ParticipantsRankResponseDto
-                        .builder()
-                        .id(p.getId())
-                        .userId(p.getUserId())
-                        .username(userDtoMap.get(p.getUserId()).getName())
-                        .number(p.getNumber())
-                        .totalScore(p.getTotalScore())
-                        .build())
+                .map(p -> {
+                    String username;
+                    UserNameDto userNameDto = userDtoMap.getOrDefault(p.getUserId(), null);
+                    if(userNameDto == null) {
+                        username = "not found";
+                    } else {
+                        username = userNameDto.getName();
+                    }
+
+                    return ParticipantsRankResponseDto
+                            .builder()
+                            .id(p.getId())
+                            .userId(p.getUserId())
+                            .username(username)
+                            .number(p.getNumber())
+                            .totalScore(p.getTotalScore())
+                            .build();
+                })
                 .toList();
     }
 

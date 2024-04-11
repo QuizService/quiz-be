@@ -9,7 +9,6 @@ import org.springframework.data.mongodb.core.query.Criteria;
 import org.springframework.data.mongodb.core.query.Query;
 import org.springframework.data.mongodb.core.query.Update;
 import org.springframework.stereotype.Component;
-import org.springframework.stereotype.Repository;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
@@ -21,11 +20,21 @@ public class ParticipantInfoMongoTemplate {
 
     private final MongoTemplate mongoTemplate;
 
-    public int countParticipantsByQuizId(Long quizId) {
+    public int countParticipantsByQuizIdAndSubmitResponses(Long quizId) {
         Query query = new Query();
 
-        query.addCriteria(Criteria.where("quizId").is(quizId));
+        query.addCriteria(Criteria.where("quiz_id").is(quizId)
+                .and("submit_responses").is(true));
+        long cnt = mongoTemplate.count(query, ParticipantInfo.class);
 
+        return (int) cnt;
+    }
+
+    public int countParticipantsByQuizIdAndNotSubmitResponses(Long quizId) {
+        Query query = new Query();
+
+        query.addCriteria(Criteria.where("quiz_id").is(quizId)
+                .and("submit_responses").is(false));
         long cnt = mongoTemplate.count(query, ParticipantInfo.class);
 
         return (int) cnt;
@@ -51,12 +60,11 @@ public class ParticipantInfoMongoTemplate {
 
     public void update(Long quizId, Long userId, int participantCount) {
         Query query = new Query();
-        Criteria criteria = new Criteria();
-        criteria.and("quizId").is(quizId);
-        criteria.and("userId").is(userId);
-        query.addCriteria(criteria);
+        query.addCriteria(Criteria.where("quiz_id").is(quizId)
+                .and("user_id").is(userId));
 
         Update update = new Update();
+        update.set("submit_responses", true);
         update.set("number", participantCount);
 
         mongoTemplate.updateFirst(query, update, ParticipantInfo.class);
