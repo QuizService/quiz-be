@@ -1,6 +1,7 @@
 package com.quiz.domain.questions.service;
 
 import com.quiz.domain.answers.entity.Answers;
+import com.quiz.domain.choice.dto.ChoicesResponseAdminDto;
 import com.quiz.domain.choice.entity.Choices;
 import com.quiz.domain.questions.dto.QuestionsResponseAdminDto;
 import com.quiz.domain.questions.entity.QuestionType;
@@ -89,7 +90,7 @@ public class QuestionService {
                 .title(question.getTitle())
                 .score(question.getScore())
                 .questionType(question.getQuestionType().getValue())
-                .choicesResponseDtos(toDto(question.getChoices()))
+                .choicesResponseDtos(ChoicesResponseDto(question.getChoices()))
                 .build());
     }
 
@@ -101,9 +102,8 @@ public class QuestionService {
                 .title(question.getTitle())
                 .score(question.getScore())
                 .questionType(question.getQuestionType().getValue())
-                .choicesResponseDtos(toDto(question.getChoices()))
-                .multipleChoiceAnswer(question.getAnswers().getMultipleChoiceAnswers())
-                .shortAnswer(question.getAnswers().getShortAnswer())
+                .choicesResponseDtos(toChoicesResponseAdminDto(question.getChoices()))
+                .answer(question.getAnswers().getShortAnswer())
                 .build());
     }
 
@@ -114,14 +114,22 @@ public class QuestionService {
                 .title(question.getTitle())
                 .score(question.getScore())
                 .questionType(question.getQuestionType().getValue())
-                .choicesResponseDtos(toDto(question.getChoices()))
+                .choicesResponseDtos(ChoicesResponseDto(question.getChoices()))
                 .build());
     }
 
-    private List<ChoicesResponseDto> toDto(List<Choices> choices) {
+    private List<ChoicesResponseDto> ChoicesResponseDto(List<Choices> choices) {
         return choices.stream().map(choice -> ChoicesResponseDto.builder()
                 .seq(choice.getSequence())
                 .title(choice.getTitle())
+                .build()).toList();
+    }
+
+    private List<ChoicesResponseAdminDto> toChoicesResponseAdminDto(List<Choices> choices) {
+        return choices.stream().map(choice -> ChoicesResponseAdminDto.builder()
+                .seq(choice.getSequence())
+                .title(choice.getTitle())
+                .isAnswer(choice.getIsAnswer())
                 .build()).toList();
     }
 
