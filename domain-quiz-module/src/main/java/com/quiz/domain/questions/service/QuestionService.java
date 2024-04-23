@@ -2,6 +2,7 @@ package com.quiz.domain.questions.service;
 
 import com.quiz.domain.answers.entity.Answers;
 import com.quiz.domain.choice.entity.Choices;
+import com.quiz.domain.questions.dto.QuestionsResponseAdminDto;
 import com.quiz.domain.questions.entity.QuestionType;
 import com.quiz.domain.questions.entity.Questions;
 import com.quiz.domain.questions.repository.mongo.QuestionsMongoTemplate;
@@ -89,6 +90,20 @@ public class QuestionService {
                 .score(question.getScore())
                 .questionType(question.getQuestionType().getValue())
                 .choicesResponseDtos(toDto(question.getChoices()))
+                .build());
+    }
+
+    public Page<QuestionsResponseAdminDto> findResponseForAdminByQuizId(Long quizId, int page, int size) {
+        Page<Questions> questions = questionsMongoTemplate.findPageByQuizId(quizId, page, size);
+
+        return questions.map(question -> QuestionsResponseAdminDto.builder()
+                .questionId(question.getId())
+                .title(question.getTitle())
+                .score(question.getScore())
+                .questionType(question.getQuestionType().getValue())
+                .choicesResponseDtos(toDto(question.getChoices()))
+                .multipleChoiceAnswer(question.getAnswers().getMultipleChoiceAnswers())
+                .shortAnswer(question.getAnswers().getShortAnswer())
                 .build());
     }
 

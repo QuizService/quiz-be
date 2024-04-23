@@ -6,6 +6,7 @@ import com.quiz.domain.choice.entity.Choices;
 import com.quiz.domain.choice.service.ChoicesService;
 import com.quiz.domain.participantsinfo.service.ParticipantInfoQueueService;
 import com.quiz.domain.questions.dto.QuestionsRequestDto;
+import com.quiz.domain.questions.dto.QuestionsResponseAdminDto;
 import com.quiz.domain.questions.dto.QuestionsResponseDto;
 import com.quiz.domain.questions.entity.QuestionType;
 import com.quiz.domain.questions.entity.Questions;
@@ -94,9 +95,9 @@ public class QuestionFacade {
     }
 
     @Transactional(readOnly = true)
-    public Page<QuestionsResponseDto> findPageByQuizId(Long quizId, Long userId, int page, int size) {
+    public Page<QuestionsResponseAdminDto> findPageByQuizId(Long quizId, Long userId, int page, int size) {
         quizService.checkQuizOwnerIsUser(userId, quizId);
-        return questionService.findResponseByQuizId(quizId, page, size);
+        return questionService.findResponseForAdminByQuizId(quizId, page, size);
     }
 
     public Integer calculateQuestionsTotalScore(List<QuestionsRequestDto> questionsDtos) {
