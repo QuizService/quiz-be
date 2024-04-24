@@ -1,16 +1,19 @@
 package com.quiz.domain.quiz.service;
 
 import com.quiz.domain.participantsinfo.service.ParticipantInfoQueueService;
+import com.quiz.domain.questions.entity.Questions;
+import com.quiz.domain.questions.service.QuestionService;
 import com.quiz.domain.quiz.dto.QuizRequestDto;
 import com.quiz.domain.quiz.dto.QuizResponseDto;
 import com.quiz.domain.quiz.entity.Quiz;
 import com.quiz.utils.TimeConverter;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.beans.factory.annotation.Value;
 import org.springframework.data.domain.Page;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+
+import java.util.List;
 
 @Slf4j
 @Transactional(value = "mongoTx")
@@ -20,6 +23,7 @@ public class QuizFacade {
     private static final String url = "http://localhost:8080/form/";
 
     private final QuizService quizService;
+    private final QuestionService questionService;
     private final ParticipantInfoQueueService participantInfoQueueService;
 
     public Long saveQuiz(QuizRequestDto quizDto, Long userId) {
@@ -41,7 +45,7 @@ public class QuizFacade {
 
     public QuizResponseDto findByEndPoint(String endpoint) {
         Quiz quiz = quizService.findByEndpoint(endpoint);
-        return toDto(quiz);
+        return toDto(quiz, null);
     }
 
     public Page<QuizResponseDto> findAllByUserId(Long userId, int page, int size) {
@@ -50,11 +54,23 @@ public class QuizFacade {
 
     public QuizResponseDto findById(Long quizId) {
         Quiz quiz = quizService.findById(quizId);
-        return toDto(quiz);
+        List<Questions> questionsList = questionService.findByQuizId(quizId);
+        boolean isQuestionsCreated = !questionsList.isEmpty();
+        return toDto(quiz, isQuestionsCreated);
     }
 
-    private QuizResponseDto toDto(Quiz quiz) {
-        return QuizResponseDto.builder()
+    private QuizResponseDto toDto(Quiz quiz, Boolean isQuestionsCreated) {
+        if(isQuestionsCreated != null) {
+            return QuizResponseDto.builder()
+                    .quizId(quiz.getIdx())
+                    .title(quiz.getTitle())
+                    .maxScore(quiz.getMaxScore())
+                    .startDate(TimeConverter.localDateTimeToString(quiz.getStartDate()))
+                    .dueDate(TimeConverter.localDateTimeToString(quiz.getDueDate()))
+                    .isQuestionsCreated(isQuestionsCreated)
+                    .created(TimeConverter.localDateTimeToString(quiz.getCreated()))
+                    .build();
+        } return QuizResponseDto.builder()
                 .quizId(quiz.getIdx())
                 .title(quiz.getTitle())
                 .maxScore(quiz.getMaxScore())
@@ -62,6 +78,8 @@ public class QuizFacade {
                 .dueDate(TimeConverter.localDateTimeToString(quiz.getDueDate()))
                 .created(TimeConverter.localDateTimeToString(quiz.getCreated()))
                 .build();
+
+
     }
 
 }

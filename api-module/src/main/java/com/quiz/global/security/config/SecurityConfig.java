@@ -45,6 +45,7 @@ public class SecurityConfig {
                 .httpBasic(AbstractHttpConfigurer::disable)
                 .formLogin(FormLoginConfigurer::disable)
                 .csrf(CsrfConfigurer::disable)
+                .cors(cors -> cors.configurationSource(corsConfigurationSource()))
                 .sessionManagement(session -> session.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
                 .authorizeHttpRequests(auth -> auth
                         .requestMatchers(new AntPathRequestMatcher("/h2/**")).permitAll()
@@ -55,9 +56,10 @@ public class SecurityConfig {
                         .anyRequest().authenticated());
         http
                 .oauth2Login(oauth2 ->
-                        oauth2.successHandler(oAuth2AuthenticationSuccessHandler)
+                        oauth2.userInfoEndpoint(userInfo -> userInfo.userService(oAuth2UserService))
+                                .successHandler(oAuth2AuthenticationSuccessHandler)
                                 .failureHandler(oAuth2AuthenticationFailureHandler)
-                                .userInfoEndpoint(userInfo -> userInfo.userService(oAuth2UserService)))
+                                )
                 .addFilterBefore(jwtAuthorizationProcessingFilter, UsernamePasswordAuthenticationFilter.class);
         return http.build();
 
@@ -66,9 +68,9 @@ public class SecurityConfig {
     @Bean
     public CorsConfigurationSource corsConfigurationSource() {
         CorsConfiguration configuration = new CorsConfiguration();
-        configuration.setAllowedOrigins(List.of("http://localhost:8080", "http://localhost:3000", "https://accounts.google.com"));
-        configuration.setAllowedMethods(List.of("POST", "PUT", "PATCH", "GET", "DELETE", "OPTIONS"));
-        configuration.addAllowedHeader("*"); // 모든 헤더 허용
+        configuration.setAllowedOrigins(List.of("http://localhost:8080", "http://localhost:3000", "https://accounts.google.com/o/oauth2/v2/auth"));
+        configuration.setAllowedMethods(List.of("*"));
+        configuration.setAllowedHeaders(List.of("*"));
         configuration.setExposedHeaders(List.of("Authorization", "Refresh"));
 
         UrlBasedCorsConfigurationSource source = new UrlBasedCorsConfigurationSource();

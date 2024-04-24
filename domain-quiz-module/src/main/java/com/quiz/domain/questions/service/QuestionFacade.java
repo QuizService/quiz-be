@@ -84,8 +84,6 @@ public class QuestionFacade {
         if (isChanged) {
             questionService.updateAnswers(questions.getId(), newAnswers);
         }
-
-
     }
 
     @Transactional(readOnly = true)
