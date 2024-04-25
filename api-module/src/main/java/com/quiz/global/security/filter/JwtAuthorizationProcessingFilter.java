@@ -35,7 +35,7 @@ import static com.quiz.global.security.exception.code.AuthErrorCode.*;
 @Component
 @RequiredArgsConstructor
 public class JwtAuthorizationProcessingFilter extends OncePerRequestFilter {
-    private static final String[] AUTHORIZATION_NOT_REQUIRED = new String[]{"/login", "/favicon.ico", "/h2", "/favicon.ico", "/index.html", "/web-socket-connection","/swagger-ui","/v3/api-docs","/topic/participant","/api/login"};
+    private static final String[] AUTHORIZATION_NOT_REQUIRED = new String[]{"/login", "/favicon.ico", "/h2", "/favicon.ico", "/index.html", "/web-socket-connection","/swagger-ui","/v3/api-docs","/topic/participant","/api/login","/api/googleLogin"};
     private final JwtTokenizer jwtTokenizer;
     private final UsersRepository usersRepository;
     private final Redis2Utils redisUtils;

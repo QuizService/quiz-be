@@ -50,17 +50,17 @@ public class SecurityConfig {
                 .authorizeHttpRequests(auth -> auth
                         .requestMatchers(new AntPathRequestMatcher("/h2/**")).permitAll()
                         .requestMatchers(new AntPathRequestMatcher("/css/**"),new AntPathRequestMatcher("/images/**"),new AntPathRequestMatcher("/js/**"),new AntPathRequestMatcher("/favicon.ico")).permitAll()
-                        .requestMatchers(new AntPathRequestMatcher("/"), new AntPathRequestMatcher("/login"), new AntPathRequestMatcher("/error"), new AntPathRequestMatcher("/index.html")).permitAll()
+                        .requestMatchers(new AntPathRequestMatcher("/"), new AntPathRequestMatcher("/login"),new AntPathRequestMatcher("/api/googleLogin"), new AntPathRequestMatcher("/error"), new AntPathRequestMatcher("/index.html")).permitAll()
                         .requestMatchers(new AntPathRequestMatcher("/swagger-ui/**"), new AntPathRequestMatcher("/v3/**"), new AntPathRequestMatcher("/swagger-ui.html")).permitAll()
                         .requestMatchers(new AntPathRequestMatcher("/app/**"), new AntPathRequestMatcher("/topic/**"), new AntPathRequestMatcher("/web-socket-connection/**")).permitAll()
                         .anyRequest().authenticated());
         http
-                .oauth2Login(oauth2 ->
-                        oauth2.userInfoEndpoint(userInfo -> userInfo.userService(oAuth2UserService))
-                                .authorizationEndpoint(auth -> auth.baseUri("/api/login"))
-                                .successHandler(oAuth2AuthenticationSuccessHandler)
-                                .failureHandler(oAuth2AuthenticationFailureHandler)
-                                )
+//                .oauth2Login(oauth2 ->
+//                        oauth2.userInfoEndpoint(userInfo -> userInfo.userService(oAuth2UserService))
+//                                .authorizationEndpoint(auth -> auth.baseUri("/api/login"))
+//                                .successHandler(oAuth2AuthenticationSuccessHandler)
+//                                .failureHandler(oAuth2AuthenticationFailureHandler)
+//                                )
                 .addFilterBefore(jwtAuthorizationProcessingFilter, UsernamePasswordAuthenticationFilter.class);
         return http.build();
 
