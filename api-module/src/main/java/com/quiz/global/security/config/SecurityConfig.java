@@ -57,6 +57,7 @@ public class SecurityConfig {
         http
                 .oauth2Login(oauth2 ->
                         oauth2.userInfoEndpoint(userInfo -> userInfo.userService(oAuth2UserService))
+                                .authorizationEndpoint(auth -> auth.baseUri("/api/login"))
                                 .successHandler(oAuth2AuthenticationSuccessHandler)
                                 .failureHandler(oAuth2AuthenticationFailureHandler)
                                 )
@@ -68,9 +69,9 @@ public class SecurityConfig {
     @Bean
     public CorsConfigurationSource corsConfigurationSource() {
         CorsConfiguration configuration = new CorsConfiguration();
-        configuration.setAllowedOrigins(List.of("http://localhost:8080", "http://localhost:3000", "https://accounts.google.com/o/oauth2/v2/auth"));
+        configuration.setAllowedOrigins(List.of("http://localhost:8080", "http://localhost:3000", "https://accounts.google.com"));
         configuration.setAllowedMethods(List.of("*"));
-        configuration.setAllowedHeaders(List.of("*"));
+        configuration.setAllowedHeaders(List.of("Authorization", "Refresh", "Content-type", "Origin", "Accept", "Access-Control-Allow-Origin", "Access-Control-Allow-Headers", "Access-Control-Allow-Methods"));
         configuration.setExposedHeaders(List.of("Authorization", "Refresh"));
 
         UrlBasedCorsConfigurationSource source = new UrlBasedCorsConfigurationSource();

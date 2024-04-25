@@ -22,6 +22,7 @@ import org.springframework.security.oauth2.core.user.DefaultOAuth2User;
 import org.springframework.security.oauth2.core.user.OAuth2User;
 import org.springframework.security.web.authentication.SimpleUrlAuthenticationSuccessHandler;
 import org.springframework.stereotype.Component;
+import org.springframework.web.util.UriComponentsBuilder;
 
 import java.io.IOException;
 import java.util.ArrayList;
@@ -64,8 +65,16 @@ public class OAuth2AuthenticationSuccessHandler extends SimpleUrlAuthenticationS
 
             saveAuthentication(users);
 
-            response.addHeader(accessHeader, accessToken);
-            response.addHeader(refreshHeader, refreshToken);
+            String targetUrl = "http://localhost:3000/login";
+//
+//            response.addHeader(accessHeader, accessToken);
+//            response.addHeader(refreshHeader, refreshToken);
+            String url = UriComponentsBuilder.fromUriString(targetUrl)
+                            .queryParam(accessHeader, accessToken)
+                                    .queryParam(refreshHeader, refreshToken)
+                                            .build().toString();
+
+            getRedirectStrategy().sendRedirect(request, response, url);
 
         } catch (Exception e) {
             log.error("error : ",e);
