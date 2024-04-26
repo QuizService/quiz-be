@@ -12,6 +12,7 @@ import org.springframework.transaction.annotation.Propagation;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
+import java.util.Optional;
 
 import static com.quiz.global.exception.user.code.UserErrorCode.USER_NOT_FOUND;
 
@@ -29,6 +30,15 @@ public class UsersService {
                 .provider(request.getProvider())
                 .build();
         usersRepository.save(users);
+    }
+
+    public Users findOrCreateUsers(UsersRequestDto request) {
+        return usersRepository.findByEmail(request.getEmail())
+                .orElseGet(() -> usersRepository.save(Users.builder()
+                        .email(request.getEmail())
+                        .name(request.getName())
+                        .provider(request.getProvider())
+                        .build()));
     }
 
     @Transactional(value = "mysqlTx", propagation = Propagation.REQUIRES_NEW)
