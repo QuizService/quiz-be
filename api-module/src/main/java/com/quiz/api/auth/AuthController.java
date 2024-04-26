@@ -27,8 +27,8 @@ public class AuthController {
     @PostMapping("/api/googleLogin")
     public ResponseEntity<?> googleAuthLogin(@RequestBody IdToken request, HttpServletResponse response) {
         TokenDto tokenDto = authService.login(request.code());
-        response.addHeader("Authorization", tokenDto.getAccessToken());
-        response.addHeader("Refresh", tokenDto.getRefreshToken());
+        response.addHeader("Authorization", tokenDto.accessToken());
+        response.addHeader("Refresh", tokenDto.refreshToken());
 
         return ResponseEntity.ok().build();
     }

@@ -9,7 +9,6 @@ import com.quiz.api.users.TokenDto;
 import com.quiz.domain.users.dto.UsersRequestDto;
 import com.quiz.domain.users.entity.Users;
 import com.quiz.domain.users.service.UsersService;
-import com.quiz.global.db.redis.Redis2Utils;
 import com.quiz.global.security.exception.AuthException;
 import com.quiz.global.security.exception.code.AuthErrorCode;
 import com.quiz.global.security.jwt.JwtTokenizer;
@@ -72,7 +71,10 @@ public class AuthService {
             log.info("access token = {}", accessToken);
             saveAuthentication(users);
 
-            return new TokenDto(accessToken, refreshToken);
+            return TokenDto.builder()
+                    .accessToken(accessToken)
+                    .refreshToken(refreshToken)
+                    .build();
         } catch (Exception e) {
             log.error("error : ", e);
             throw new AuthException(AuthErrorCode.LOGIN_FAILED);
