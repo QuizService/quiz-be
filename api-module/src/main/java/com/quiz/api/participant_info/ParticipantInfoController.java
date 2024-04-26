@@ -1,5 +1,6 @@
 package com.quiz.api.participant_info;
 
+import com.quiz.domain.participantsinfo.dto.ParticipantQueueResponseDto;
 import com.quiz.domain.participantsinfo.dto.ParticipantsRankResponseDto;
 import com.quiz.domain.participantsinfo.service.ParticipantInfoFacade;
 import com.quiz.domain.participantsinfo.service.ParticipantInfoQueueService;
@@ -33,16 +34,17 @@ public class ParticipantInfoController {
     AtomicLong atomicLong = new AtomicLong(100);
 
 
-    @PostMapping("/{quiz-id}")
-    public ResponseEntity<ResponseDto<?>> saveParticipant(@PathVariable("quiz-id") Long quizId,
+    @GetMapping("/wait/{endpoint}")
+    public ResponseEntity<ResponseDto<?>> saveParticipant(@PathVariable("endpoint") String endpoint,
                                                           @AuthenticationPrincipal UserAccount user) {
         // 대기열 로직 추가
         // queue 에 인간 추가
         Users users = usersService.findByEmail(user.getUsername());
-        Long fakeUserId = atomicLong.incrementAndGet();
+//        Long fakeUserId = atomicLong.incrementAndGet();
 
-        Long rank = participantInfoQueueService.addQueue(quizId, fakeUserId);
-        return ResponseEntity.ok(ResponseDto.success(rank));
+        Long quizId = participantInfoFacade.getQuizIdByEndpoint(endpoint);
+        Long rank = participantInfoQueueService.addQueue(quizId, users.getId());
+        return ResponseEntity.ok(ResponseDto.success(new ParticipantQueueResponseDto(quizId, users.getId(),rank)));
     }
 
     @PatchMapping("/{quiz-id}")
@@ -50,8 +52,8 @@ public class ParticipantInfoController {
                                                             @RequestBody ResponsesRequestsDto request,
                                                             @AuthenticationPrincipal UserAccount user) {
         Users users = usersService.findByEmail(user.getUsername());
-        Long fakeUserId = atomicLong.getAndDecrement();
-        participantInfoFacade.updateParticipantAndSaveResponse(quizId, fakeUserId, request.getResponses());
+//        Long fakeUserId = atomicLong.getAndDecrement();
+        participantInfoFacade.updateParticipantAndSaveResponse(quizId, users.getId(), request.getResponses());
 
         return ResponseEntity.ok(ResponseDto.success());
     }

@@ -76,6 +76,11 @@ public class ParticipantInfoFacade {
         if(!(userIsParticipant || userIsQuizOwner)) throw new ParticipantInfoException(PARTICIPANT_IS_NOT_IN_QUIZ);
     }
 
+    public Long getQuizIdByEndpoint(String endpoint) {
+        Quiz quiz = quizService.findByEndpoint(endpoint);
+        return quiz.getIdx();
+    }
+
     public List<ParticipantsRankResponseDto> showRanks(Long quizId) {
         List<ParticipantInfo> result = participantInfoService.findParticipantInfoByQuizId(quizId);
 

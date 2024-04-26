@@ -52,8 +52,8 @@ public class CustomEventListener {
         Long userId = participantQueueInfoDto.userId();
 
         log.info("quizId = {}, userId = {}", quizId, userId);
-//        String endpoint = String.format("?quiz-id=%d&user-id=%d",quizId, userId);
-        String endpoint = String.format("?quiz-id=%d",quizId);
+        String endpoint = String.format("?quiz-id=%d&user-id=%d",quizId, userId);
+//        String endpoint = String.format("?quiz-id=%d",quizId);
 
         messagingTemplate.convertAndSend("/topic/participant" + endpoint, participantQueueInfoDto);
         //참여 가능 시
