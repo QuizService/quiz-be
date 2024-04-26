@@ -1,13 +1,8 @@
 package com.quiz.api.auth;
 
 
-import com.google.api.client.googleapis.auth.oauth2.GoogleIdToken;
-import com.google.api.client.googleapis.auth.oauth2.GoogleIdTokenVerifier;
-import com.google.api.client.http.javanet.NetHttpTransport;
-import com.google.api.client.json.JsonFactory;
-import com.google.api.client.json.gson.GsonFactory;
-import com.quiz.api.users.IdToken;
-import com.quiz.api.users.TokenDto;
+import com.quiz.global.security.dto.IdToken;
+import com.quiz.global.security.dto.TokenDto;
 import com.quiz.global.security.service.AuthService;
 import jakarta.servlet.http.HttpServletResponse;
 import lombok.RequiredArgsConstructor;

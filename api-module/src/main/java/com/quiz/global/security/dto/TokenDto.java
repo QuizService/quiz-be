@@ -1,4 +1,4 @@
-package com.quiz.api.users;
+package com.quiz.global.security.dto;
 
 
 import lombok.*;

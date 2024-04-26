@@ -20,7 +20,6 @@ import java.util.List;
 @RequiredArgsConstructor
 @Service
 public class QuizFacade {
-    private static final String url = "http://localhost:8080/form/";
 
     private final QuizService quizService;
     private final QuestionService questionService;
@@ -39,8 +38,7 @@ public class QuizFacade {
     }
 
     public String findEndpointByQuizId(Long quizId) {
-        String endpoint = quizService.findEndPointById(quizId);
-        return url + endpoint;
+        return quizService.findEndPointById(quizId);
     }
 
     public QuizResponseDto findByEndPoint(String endpoint) {

@@ -44,9 +44,9 @@ public class QueueScheduler {
             if (capacity > 0) {
                 log.info("capacity = {}", capacity);
                 boolean isUserTurn = rank < 10L;
-                eventPublisher.publishEvent(new ParticipantQueueInfoDto(quizId, userId, true, isUserTurn));
+                eventPublisher.publishEvent(new ParticipantQueueInfoDto(quizId, userId, rank,true, isUserTurn));
             } else {
-                eventPublisher.publishEvent(new ParticipantQueueInfoDto(quizId, userId, false, false));
+                eventPublisher.publishEvent(new ParticipantQueueInfoDto(quizId, userId, rank,false, false));
             }
             participantInfoQueueRepository.delete(participantQueueDto);
         }
