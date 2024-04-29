@@ -3,15 +3,12 @@ package com.quiz.domain.questions.service;
 import com.quiz.domain.answers.entity.Answers;
 import com.quiz.domain.choice.dto.ChoicesResponseAdminDto;
 import com.quiz.domain.choice.entity.Choices;
-import com.quiz.domain.questions.dto.QuestionsResponseAdminDto;
+import com.quiz.domain.questions.dto.*;
 import com.quiz.domain.questions.entity.QuestionType;
 import com.quiz.domain.questions.entity.Questions;
 import com.quiz.domain.questions.repository.mongo.QuestionsMongoTemplate;
 import com.quiz.domain.questions.repository.mongo.QuestionsRepository;
 import com.quiz.domain.choice.dto.ChoicesResponseDto;
-import com.quiz.domain.questions.dto.QuestionsAnswerDto;
-import com.quiz.domain.questions.dto.QuestionsRequestDto;
-import com.quiz.domain.questions.dto.QuestionsResponseDto;
 import com.quiz.global.exception.questions.QuestionException;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
@@ -20,6 +17,8 @@ import org.springframework.transaction.annotation.Transactional;
 
 import java.time.LocalDateTime;
 import java.util.List;
+import java.util.Map;
+import java.util.stream.Collectors;
 
 import static com.quiz.global.exception.questions.code.QuestionErrorCode.QUESTION_NOT_FOUND;
 
@@ -131,6 +130,12 @@ public class QuestionService {
                 .title(choice.getTitle())
                 .isAnswer(choice.getIsAnswer())
                 .build()).toList();
+    }
+
+    public Map<Long, Integer> findQuestionsCntByQuizId(List<Long> quizIds) {
+        List<QuestionCountDto> questionCountDtos = questionsMongoTemplate.findQuestionCntsByQuizId(quizIds);
+        return questionCountDtos.stream()
+                .collect(Collectors.toMap(QuestionCountDto::getQuizId, QuestionCountDto::getQuestionCnt));
     }
 
     //get Answers from questions

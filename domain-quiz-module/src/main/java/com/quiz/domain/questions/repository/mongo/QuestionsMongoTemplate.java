@@ -1,5 +1,6 @@
 package com.quiz.domain.questions.repository.mongo;
 
+import com.quiz.domain.questions.dto.QuestionCountDto;
 import com.quiz.domain.questions.entity.QuestionType;
 import com.quiz.domain.questions.entity.Questions;
 import lombok.RequiredArgsConstructor;
@@ -8,6 +9,7 @@ import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
 import org.springframework.data.mongodb.core.MongoTemplate;
+import org.springframework.data.mongodb.core.aggregation.*;
 import org.springframework.data.mongodb.core.query.Criteria;
 import org.springframework.data.mongodb.core.query.Query;
 import org.springframework.data.mongodb.core.query.Update;
@@ -66,5 +68,25 @@ public class QuestionsMongoTemplate {
         query.with(Sort.by(Sort.Direction.ASC, "sequence"));
 
         return mongoTemplate.find(query, Questions.class, "questions");
+    }
+
+    public List<QuestionCountDto> findQuestionCntsByQuizId(List<Long> quizIds) {
+        MatchOperation matchOperation =
+                Aggregation.match(Criteria.where("quiz_id").in(quizIds));
+
+        GroupOperation groupOperation =
+                Aggregation.group("quiz_id")
+                        .count().as("questionCnt");
+
+        ProjectionOperation projectionOperation =
+                Aggregation.project()
+                        .andExpression("quiz_id").as("quizId")
+                        .andExpression("questionCnt").as("questionCnt");
+
+
+        Aggregation aggregation =
+                Aggregation.newAggregation(matchOperation, groupOperation, projectionOperation);
+        AggregationResults<QuestionCountDto> results = mongoTemplate.aggregate(aggregation, "questions", QuestionCountDto.class);
+        return results.getMappedResults();
     }
 }

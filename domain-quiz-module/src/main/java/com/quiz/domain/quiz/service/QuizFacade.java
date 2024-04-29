@@ -14,6 +14,8 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
+import java.util.Map;
+import java.util.stream.Collectors;
 
 @Slf4j
 @Transactional(value = "mongoTx")
@@ -47,7 +49,20 @@ public class QuizFacade {
     }
 
     public Page<QuizResponseDto> findAllByUserId(Long userId, int page, int size) {
-        return quizService.findAllByUserId(userId, page, size);
+        Page<Quiz> quizzes = quizService.findAllByUserId(userId, page, size);
+        List<Long> quizIds = quizzes.stream().map(Quiz::getIdx)
+                .toList();
+        Map<Long, Integer> questionCntByQuizIds = questionService.findQuestionsCntByQuizId(quizIds);
+
+        return quizzes.map(quiz -> QuizResponseDto.builder()
+                .quizId(quiz.getIdx())
+                .title(quiz.getTitle())
+                .capacity(quiz.getCapacity())
+                .maxScore(quiz.getMaxScore())
+                .startDate(TimeConverter.localDateTimeToString(quiz.getStartDate()))
+                .dueDate(TimeConverter.localDateTimeToString(quiz.getDueDate()))
+                .isQuestionsCreated(questionCntByQuizIds.getOrDefault(quiz.getIdx(), 0) != 0)
+                .build());
     }
 
     public QuizResponseDto findById(Long quizId) {

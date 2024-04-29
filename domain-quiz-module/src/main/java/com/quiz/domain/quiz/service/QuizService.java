@@ -98,18 +98,10 @@ public class QuizService {
         }
     }
 
-    public Page<QuizResponseDto> findAllByUserId(Long userId, int page, int size) {
+    public Page<Quiz> findAllByUserId(Long userId, int page, int size) {
         Pageable pageable = PageRequest.of(page, size, Sort.Direction.DESC, "created");
-        Page<Quiz> quizzes = quizMongoTemplate.findQuizByUserId(userId, pageable);
+        return quizMongoTemplate.findQuizByUserId(userId, pageable);
 
-        return quizzes.map(quiz -> QuizResponseDto.builder()
-                .quizId(quiz.getIdx())
-                .title(quiz.getTitle())
-                .maxScore(quiz.getMaxScore())
-                .startDate(TimeConverter.localDateTimeToString(quiz.getStartDate()))
-                .dueDate(TimeConverter.localDateTimeToString(quiz.getDueDate()))
-                .created(TimeConverter.localDateTimeToString(quiz.getCreated()))
-                .build());
     }
 
     // for test

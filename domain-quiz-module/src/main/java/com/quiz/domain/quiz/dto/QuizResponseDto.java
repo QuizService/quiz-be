@@ -13,6 +13,7 @@ public class QuizResponseDto {
     @Schema(description = "Quiz id")
     private Long quizId;
     private String title;
+    private int capacity;
     @Schema(description = "Quiz 총 점수")
     private Integer maxScore;
     @Schema(description = "Quiz 시작일")
@@ -23,9 +24,10 @@ public class QuizResponseDto {
     private String created;
 
     @Builder
-    public QuizResponseDto(Long quizId, String title, Integer maxScore, String startDate, String dueDate, Boolean isQuestionsCreated, String created) {
+    public QuizResponseDto(Long quizId, String title, int capacity, Integer maxScore, String startDate, String dueDate, Boolean isQuestionsCreated, String created) {
         this.quizId = quizId;
         this.title = title;
+        this.capacity = capacity;
         this.maxScore = maxScore;
         this.startDate = startDate;
         this.dueDate = dueDate;
