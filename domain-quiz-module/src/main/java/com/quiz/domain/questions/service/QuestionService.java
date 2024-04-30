@@ -11,6 +11,7 @@ import com.quiz.domain.questions.repository.mongo.QuestionsRepository;
 import com.quiz.domain.choice.dto.ChoicesResponseDto;
 import com.quiz.global.exception.questions.QuestionException;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.data.domain.Page;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -22,6 +23,7 @@ import java.util.stream.Collectors;
 
 import static com.quiz.global.exception.questions.code.QuestionErrorCode.QUESTION_NOT_FOUND;
 
+@Slf4j
 @RequiredArgsConstructor
 @Transactional(value = "mongoTx")
 @Service
@@ -134,6 +136,7 @@ public class QuestionService {
 
     public Map<Long, Integer> findQuestionsCntByQuizId(List<Long> quizIds) {
         List<QuestionCountDto> questionCountDtos = questionsMongoTemplate.findQuestionCntsByQuizId(quizIds);
+        log.info("questionsCntDto = {}", questionCountDtos);
         return questionCountDtos.stream()
                 .collect(Collectors.toMap(QuestionCountDto::getQuizId, QuestionCountDto::getQuestionCnt));
     }

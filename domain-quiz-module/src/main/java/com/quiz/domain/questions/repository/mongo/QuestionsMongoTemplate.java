@@ -4,6 +4,7 @@ import com.quiz.domain.questions.dto.QuestionCountDto;
 import com.quiz.domain.questions.entity.QuestionType;
 import com.quiz.domain.questions.entity.Questions;
 import lombok.RequiredArgsConstructor;
+import org.bson.Document;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
@@ -78,15 +79,13 @@ public class QuestionsMongoTemplate {
                 Aggregation.group("quiz_id")
                         .count().as("questionCnt");
 
-        ProjectionOperation projectionOperation =
-                Aggregation.project()
-                        .andExpression("quiz_id").as("quizId")
-                        .andExpression("questionCnt").as("questionCnt");
-
 
         Aggregation aggregation =
-                Aggregation.newAggregation(matchOperation, groupOperation, projectionOperation);
-        AggregationResults<QuestionCountDto> results = mongoTemplate.aggregate(aggregation, "questions", QuestionCountDto.class);
-        return results.getMappedResults();
+                Aggregation.newAggregation(matchOperation, groupOperation);
+        AggregationResults<Document> results = mongoTemplate.aggregate(aggregation, "questions", Document.class);
+        List<Document> documentList = results.getMappedResults();
+        return documentList.stream()
+                .map(QuestionCountDto::new)
+                .toList();
     }
 }
