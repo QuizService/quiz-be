@@ -3,26 +3,27 @@ package com.quiz.domain.questions.service;
 import com.quiz.domain.answers.entity.Answers;
 import com.quiz.domain.choice.dto.ChoicesResponseAdminDto;
 import com.quiz.domain.choice.entity.Choices;
-import com.quiz.domain.questions.dto.QuestionsResponseAdminDto;
+import com.quiz.domain.questions.dto.*;
 import com.quiz.domain.questions.entity.QuestionType;
 import com.quiz.domain.questions.entity.Questions;
 import com.quiz.domain.questions.repository.mongo.QuestionsMongoTemplate;
 import com.quiz.domain.questions.repository.mongo.QuestionsRepository;
 import com.quiz.domain.choice.dto.ChoicesResponseDto;
-import com.quiz.domain.questions.dto.QuestionsAnswerDto;
-import com.quiz.domain.questions.dto.QuestionsRequestDto;
-import com.quiz.domain.questions.dto.QuestionsResponseDto;
 import com.quiz.global.exception.questions.QuestionException;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.data.domain.Page;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.time.LocalDateTime;
 import java.util.List;
+import java.util.Map;
+import java.util.stream.Collectors;
 
 import static com.quiz.global.exception.questions.code.QuestionErrorCode.QUESTION_NOT_FOUND;
 
+@Slf4j
 @RequiredArgsConstructor
 @Transactional(value = "mongoTx")
 @Service
@@ -76,35 +77,41 @@ public class QuestionService {
 
 
     public void updateChoices(String questionId, List<Choices> newChoices) {
-        questionsRepository.updateChoices(questionId, newChoices);
+        questionsMongoTemplate.updateChoices(questionId, newChoices);
     }
 
     public void updateAnswers(String questionId,Answers newAnswers) {
-        questionsRepository.updateAnswers(questionId,newAnswers);
+        questionsMongoTemplate.updateAnswers(questionId, newAnswers);
     }
 
-    public Page<QuestionsResponseDto> findResponseByQuizId(Long quizId, int page, int size) {
-        Page<Questions> questions = questionsMongoTemplate.findPageByQuizId(quizId, page, size);
-        return questions.map(question -> QuestionsResponseDto.builder()
-                .questionId(question.getId())
-                .title(question.getTitle())
-                .score(question.getScore())
-                .questionType(question.getQuestionType().getValue())
-                .choicesResponseDtos(ChoicesResponseDto(question.getChoices()))
-                .build());
+    public List<QuestionsResponseDto> findResponseByQuizId(Long quizId) {
+        List<Questions> questions = questionsMongoTemplate.findPageByQuizId(quizId);
+        return questions.stream()
+                .map(question -> QuestionsResponseDto.builder()
+                        .questionId(question.getId())
+                        .title(question.getTitle())
+                        .score(question.getScore())
+                        .questionType(question.getQuestionType().getCode())
+                        .choicesResponseDtos(ChoicesResponseDto(question.getChoices()))
+                        .build())
+                .toList();
     }
 
-    public Page<QuestionsResponseAdminDto> findResponseForAdminByQuizId(Long quizId, int page, int size) {
-        Page<Questions> questions = questionsMongoTemplate.findPageByQuizId(quizId, page, size);
+    public List<QuestionsResponseAdminDto> findResponseForAdminByQuizId(Long quizId) {
+        List<Questions> questions = questionsMongoTemplate.findPageByQuizId(quizId);
 
-        return questions.map(question -> QuestionsResponseAdminDto.builder()
-                .questionId(question.getId())
-                .title(question.getTitle())
-                .score(question.getScore())
-                .questionType(question.getQuestionType().getValue())
-                .choicesResponseDtos(toChoicesResponseAdminDto(question.getChoices()))
-                .answer(question.getAnswers().getShortAnswer())
-                .build());
+        List<QuestionsResponseAdminDto> result = questions
+                .stream().map(question -> QuestionsResponseAdminDto.builder()
+                        .questionId(question.getId())
+                        .title(question.getTitle())
+                        .score(question.getScore())
+                        .questionType(question.getQuestionType().getCode())
+                        .choicesResponseDtos(toChoicesResponseAdminDto(question.getChoices()))
+                        .answer(question.getAnswers().getShortAnswer())
+                        .build())
+                .toList();
+        log.info("result = {}", result);
+        return result;
     }
 
     public Page<QuestionsResponseDto> findResponseByEndpoint(Long quizId, int page, int size) {
@@ -133,6 +140,13 @@ public class QuestionService {
                 .build()).toList();
     }
 
+    public Map<Long, Integer> findQuestionsCntByQuizId(List<Long> quizIds) {
+        List<QuestionCountDto> questionCountDtos = questionsMongoTemplate.findQuestionCntsByQuizId(quizIds);
+        log.info("questionsCntDto = {}", questionCountDtos);
+        return questionCountDtos.stream()
+                .collect(Collectors.toMap(QuestionCountDto::getQuizId, QuestionCountDto::getQuestionCnt));
+    }
+
     //get Answers from questions
     public List<QuestionsAnswerDto> findAnswersByQuestionsInQuiz(Long quizId) {
         List<Questions> questions = questionsMongoTemplate.findAllByQuizIdOrderBySequence(quizId);
@@ -151,5 +165,10 @@ public class QuestionService {
     //for test
     public void deleteAll() {
         questionsRepository.deleteAll();
+    }
+
+    public void deleteQuestionsByIds(List<String> questionIds) {
+        log.info("questionIds={}",questionIds);
+        questionsMongoTemplate.deleteQuestionsByQuestionIds(questionIds);
     }
 }

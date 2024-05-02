@@ -43,7 +43,7 @@ public class QuizServiceTest {
     @Autowired
     private QuizService quizService;
 
-    private Long userId = 10L;
+    private Long userId = 1L;
 
 //    @AfterEach
 //    void clear() {
@@ -58,20 +58,18 @@ public class QuizServiceTest {
     }
 
     @Test
-    @Transactional(value = "mongoTx")
-    void testTx() {
-        testTransaction();
+    void createDummyQuiz() {
+        for(int i = 0; i<50; i++) {
+            QuizRequestDto quizRequestDto = QuizRequestDto.builder()
+                    .title("title" + i)
+                    .capacity(100)
+                    .startDate("2025-02-01 12:00:00")
+                    .dueDate("2025-02-02 12:00:00")
+                    .build();
+            quizService.saveQuiz(quizRequestDto, userId);
+        }
     }
 
-    void testTransaction() {
-        QuizRequestDto quizRequestDto = QuizRequestDto.builder()
-                .title("test")
-                .capacity(10)
-                .startDate("2025-02-02 12:00:00")
-                .dueDate("2025-02-05 12:00:00")
-                .build();
-        quizService.testTx(quizRequestDto, userId);
-    }
 
     Long save() {
         QuizRequestDto quizRequestDto = QuizRequestDto.builder()

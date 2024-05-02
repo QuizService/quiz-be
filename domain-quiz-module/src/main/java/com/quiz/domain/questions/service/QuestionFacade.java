@@ -4,10 +4,10 @@ import com.quiz.domain.answers.entity.Answers;
 import com.quiz.domain.answers.service.AnswersService;
 import com.quiz.domain.choice.entity.Choices;
 import com.quiz.domain.choice.service.ChoicesService;
-import com.quiz.domain.participantsinfo.service.ParticipantInfoQueueService;
 import com.quiz.domain.questions.dto.QuestionsRequestDto;
 import com.quiz.domain.questions.dto.QuestionsResponseAdminDto;
 import com.quiz.domain.questions.dto.QuestionsResponseDto;
+import com.quiz.domain.questions.dto.QuestionsUpdateDto;
 import com.quiz.domain.questions.entity.QuestionType;
 import com.quiz.domain.questions.entity.Questions;
 import com.quiz.domain.quiz.entity.Quiz;
@@ -41,9 +41,19 @@ public class QuestionFacade {
         }
     }
 
-    public void updateQuestions(List<QuestionsRequestDto> questionsDtos, Long quizId, Long userId) {
+    public void saveQuestion(QuestionsRequestDto questionDto, Long quizId, Long userId) {
         quizService.checkQuizOwnerIsUser(userId, quizId);
-        for (QuestionsRequestDto questionsDto : questionsDtos) {
+
+        QuestionType questionType = QuestionType.findByInitial(questionDto.getQuestionType());
+        List<Choices> choices = choicesService.getChoicesFromDtos(questionDto, questionType);
+        Answers answers = answersService.getAnswersFromDto(questionDto, questionType);
+
+        questionService.save(choices, answers, questionDto, quizId);
+    }
+
+    public void updateQuestions(QuestionsUpdateDto questionsDtos, Long quizId, Long userId) {
+        quizService.checkQuizOwnerIsUser(userId, quizId);
+        for (QuestionsRequestDto questionsDto : questionsDtos.getQuestionRequestDtos()) {
             if (questionsDto.getQuestionId() != null) {
                 Questions questions = questionService.findById(questionsDto.getQuestionId());
                 QuestionType newQuestionType = QuestionType.findByInitial(questionsDto.getQuestionType());
@@ -58,10 +68,11 @@ public class QuestionFacade {
                 questionService.update(questionsDto, questions.getId());
             } else {
                 //save
-                saveQuestions(questionsDtos, quizId, userId);
+                saveQuestion(questionsDto, quizId, userId);
             }
         }
-        saveMaxScore(questionsDtos, quizId);
+        saveMaxScore(questionsDtos.getQuestionRequestDtos(), quizId);
+        deleteQuestions(questionsDtos.getRemoveQuestionIds());
     }
 
     public void saveMaxScore(List<QuestionsRequestDto> questionsRequestDtos, Long quizId) {
@@ -87,20 +98,24 @@ public class QuestionFacade {
     }
 
     @Transactional(readOnly = true)
-    public Page<QuestionsResponseDto> findPageByEndpoint(String endpoint, int page, int size) {
+    public List<QuestionsResponseDto> findPageByEndpoint(String endpoint) {
         Quiz quiz = quizService.findByEndpoint(endpoint);
-        return questionService.findResponseByQuizId(quiz.getIdx(), page, size);
+        return questionService.findResponseByQuizId(quiz.getIdx());
     }
 
     @Transactional(readOnly = true)
-    public Page<QuestionsResponseAdminDto> findPageByQuizId(Long quizId, Long userId, int page, int size) {
+    public List<QuestionsResponseAdminDto> findAllByQuizId(Long quizId, Long userId) {
         quizService.checkQuizOwnerIsUser(userId, quizId);
-        return questionService.findResponseForAdminByQuizId(quizId, page, size);
+        return questionService.findResponseForAdminByQuizId(quizId);
     }
 
     public Integer calculateQuestionsTotalScore(List<QuestionsRequestDto> questionsDtos) {
         return questionsDtos.stream()
                 .mapToInt(QuestionsRequestDto::getScore)
                 .sum();
+    }
+
+    public void deleteQuestions(List<String> questionIds) {
+        questionService.deleteQuestionsByIds(questionIds);
     }
 }

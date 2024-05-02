@@ -31,7 +31,6 @@ public class Quiz {
     @Field(name = "user_id")
     private Long userId;
 
-
     private String title;
 
     @Field(name = "max_score")

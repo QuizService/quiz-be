@@ -40,7 +40,7 @@ public class QueueScheduler {
             rank = rank == null ? 0 : rank;
 
             // 아직 자리 다 안찬 경우
-            int capacity = participantInfoQueueRepository.getParticipantNumber(quizId);
+            Integer capacity = participantInfoQueueRepository.getParticipantNumber(quizId);
             if (capacity > 0) {
                 log.info("capacity = {}", capacity);
                 boolean isUserTurn = rank < 10L;

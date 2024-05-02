@@ -2,13 +2,11 @@ package com.quiz.domain.questions.dto;
 
 import com.quiz.domain.choice.dto.ChoicesResponseAdminDto;
 import com.quiz.domain.choice.dto.ChoicesResponseDto;
-import lombok.AccessLevel;
-import lombok.Builder;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
+import lombok.*;
 
 import java.util.List;
 
+@ToString
 @Getter
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 public class QuestionsResponseAdminDto {
