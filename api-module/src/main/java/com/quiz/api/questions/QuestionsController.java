@@ -1,8 +1,6 @@
 package com.quiz.api.questions;
 
-import com.quiz.domain.questions.dto.QuestionIntegratedDto;
-import com.quiz.domain.questions.dto.QuestionsResponseAdminDto;
-import com.quiz.domain.questions.dto.QuestionsResponseDto;
+import com.quiz.domain.questions.dto.*;
 import com.quiz.domain.questions.service.QuestionFacade;
 import com.quiz.domain.users.entity.Users;
 import com.quiz.domain.users.service.UsersService;
@@ -43,10 +41,10 @@ public class QuestionsController {
     @Operation(summary = "questions 수정")
     @PatchMapping("/{quiz-id}")
     public ResponseEntity<ResponseDto<?>> updateQuestions(@PathVariable("quiz-id") Long quizId,
-                                                          @RequestBody QuestionIntegratedDto request,
+                                                          @RequestBody QuestionsUpdateDto request,
                                                           @AuthenticationPrincipal UserAccount user) {
         Users users = usersService.findByEmail(user.getUsername());
-        questionFacade.updateQuestions(request.getQuestionRequestDtos(), quizId, users.getId());
+        questionFacade.updateQuestions(request, quizId, users.getId());
 
         return ResponseEntity.ok(ResponseDto.success());
     }
@@ -54,29 +52,20 @@ public class QuestionsController {
     @Operation(summary = "questions 조회 (생성자 전용)")
     @GetMapping("/{quiz-id}")
     public ResponseEntity<ResponseDto<?>> getQuestionsByQuizId(@PathVariable("quiz-id") Long quizId,
-                                                               @RequestParam("page") int page,
-                                                               @RequestParam("size") int size,
                                                                @AuthenticationPrincipal UserAccount user) {
         Users users = usersService.findByEmail(user.getUsername());
-        Page<QuestionsResponseAdminDto> questions = questionFacade.findPageByQuizId(quizId, users.getId(), page-1, size);
-        List<QuestionsResponseAdminDto> questionsList = questions.getContent();
-
-        MultiResponseDto<QuestionsResponseAdminDto> response = new MultiResponseDto<>(questionsList, questions);
-
-        return ResponseEntity.ok(ResponseDto.success(response));
+        List<QuestionsResponseAdminDto> questions = questionFacade.findAllByQuizId(quizId, users.getId());
+        log.info("questions={}", questions);
+        return ResponseEntity.ok(ResponseDto.success(questions));
     }
 
     @Operation(summary = "questions 조회 (참여자 전용)")
     @GetMapping("/form/{endpoint}")
-    public ResponseEntity<ResponseDto<?>> getQuestionsByEndpoint(@PathVariable("endpoint") @Parameter(description = "사용자에게 발급된 url의 뒷자리 8자") String endpoint,
-                                                                 @RequestParam("page") int page,
-                                                                 @RequestParam("size") int size) {
-        Page<QuestionsResponseDto> questions = questionFacade.findPageByEndpoint(endpoint, page-1, size);
-        List<QuestionsResponseDto> questionsList = questions.getContent();
+    public ResponseEntity<ResponseDto<?>> getQuestionsByEndpoint(@PathVariable("endpoint") @Parameter(description = "사용자에게 발급된 url의 뒷자리 8자") String endpoint) {
+        List<QuestionsResponseDto> questions = questionFacade.findPageByEndpoint(endpoint);
 
-        MultiResponseDto<QuestionsResponseDto> response = new MultiResponseDto<>(questionsList, questions);
-
-        return ResponseEntity.ok(ResponseDto.success(response));
+        return ResponseEntity.ok(ResponseDto.success(questions));
     }
+
 
 }

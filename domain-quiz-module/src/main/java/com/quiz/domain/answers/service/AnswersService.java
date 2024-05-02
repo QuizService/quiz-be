@@ -6,12 +6,14 @@ import com.quiz.domain.choice.dto.ChoicesRequestDto;
 import com.quiz.domain.questions.dto.QuestionsRequestDto;
 import com.quiz.global.SequenceGenerator;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.ArrayList;
 import java.util.List;
 
+@Slf4j
 @Transactional
 @RequiredArgsConstructor
 @Service
@@ -40,6 +42,9 @@ public class AnswersService {
     }
 
     public boolean isAnswersChanged(Answers answers, Answers newAnswers) {
+        log.info("answers={}", answers);
+        log.info("newAnswers={}", newAnswers);
+
         return !answers.isEqualsToNew(newAnswers);
     }
 }

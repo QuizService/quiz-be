@@ -1,5 +1,7 @@
 package com.quiz.domain.questions.repository.mongo;
 
+import com.quiz.domain.answers.entity.Answers;
+import com.quiz.domain.choice.entity.Choices;
 import com.quiz.domain.questions.dto.QuestionCountDto;
 import com.quiz.domain.questions.entity.QuestionType;
 import com.quiz.domain.questions.entity.Questions;
@@ -47,13 +49,28 @@ public class QuestionsMongoTemplate {
         mongoTemplate.updateFirst(query, update, Questions.class);
     }
 
+    public void updateChoices(String questionId, List<Choices> choices) {
+        Query query = new Query();
+        Update update = new Update();
+        update.set("choices", choices);
+
+        query.addCriteria(Criteria.where("_id").is(questionId));
+        mongoTemplate.updateFirst(query, update, Questions.class);
+    }
+
+    public void updateAnswers(String questionId, Answers answers) {
+        Query query = new Query();
+        Update update = new Update();
+        update.set("answers", answers);
+
+        query.addCriteria(Criteria.where("_id").is(questionId));
+        mongoTemplate.updateFirst(query, update, Questions.class);
+    }
+
     public Page<Questions> findPageByQuizId(Long quizId, int page, int size) {
         Pageable pageable = PageRequest.of(page, size, Sort.Direction.ASC, "sequence");
 
-        Query query = new Query()
-                .with(pageable)
-                .skip((long) pageable.getPageSize() * pageable.getPageNumber())
-                .limit(pageable.getPageSize());
+        Query query = new Query();
         query.addCriteria(Criteria.where("quiz_id").is(quizId));
 
         List<Questions> filteredQuestions = mongoTemplate.find(query, Questions.class, "questions");
@@ -61,6 +78,14 @@ public class QuestionsMongoTemplate {
         return PageableExecutionUtils.getPage(filteredQuestions,
                 pageable,
                 () -> mongoTemplate.count(query.skip(-1).limit(-1), Questions.class));
+    }
+
+    public List<Questions> findPageByQuizId(Long quizId) {
+        Query query = new Query();
+        query.addCriteria(Criteria.where("quiz_id").is(quizId))
+                .with(Sort.by(new Sort.Order(Sort.Direction.ASC, "sequence")));
+
+        return mongoTemplate.find(query, Questions.class, "questions");
     }
 
     public List<Questions> findAllByQuizIdOrderBySequence(Long quizId) {
@@ -87,5 +112,12 @@ public class QuestionsMongoTemplate {
         return documentList.stream()
                 .map(QuestionCountDto::new)
                 .toList();
+    }
+
+    public void deleteQuestionsByQuestionIds(List<String> questionIds) {
+        Query query = new Query();
+        query.addCriteria(Criteria.where("_id").in(questionIds));
+
+        mongoTemplate.remove(query, Questions.class);
     }
 }

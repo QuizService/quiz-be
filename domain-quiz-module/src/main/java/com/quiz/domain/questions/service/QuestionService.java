@@ -77,35 +77,41 @@ public class QuestionService {
 
 
     public void updateChoices(String questionId, List<Choices> newChoices) {
-        questionsRepository.updateChoices(questionId, newChoices);
+        questionsMongoTemplate.updateChoices(questionId, newChoices);
     }
 
     public void updateAnswers(String questionId,Answers newAnswers) {
-        questionsRepository.updateAnswers(questionId,newAnswers);
+        questionsMongoTemplate.updateAnswers(questionId, newAnswers);
     }
 
-    public Page<QuestionsResponseDto> findResponseByQuizId(Long quizId, int page, int size) {
-        Page<Questions> questions = questionsMongoTemplate.findPageByQuizId(quizId, page, size);
-        return questions.map(question -> QuestionsResponseDto.builder()
-                .questionId(question.getId())
-                .title(question.getTitle())
-                .score(question.getScore())
-                .questionType(question.getQuestionType().getValue())
-                .choicesResponseDtos(ChoicesResponseDto(question.getChoices()))
-                .build());
+    public List<QuestionsResponseDto> findResponseByQuizId(Long quizId) {
+        List<Questions> questions = questionsMongoTemplate.findPageByQuizId(quizId);
+        return questions.stream()
+                .map(question -> QuestionsResponseDto.builder()
+                        .questionId(question.getId())
+                        .title(question.getTitle())
+                        .score(question.getScore())
+                        .questionType(question.getQuestionType().getCode())
+                        .choicesResponseDtos(ChoicesResponseDto(question.getChoices()))
+                        .build())
+                .toList();
     }
 
-    public Page<QuestionsResponseAdminDto> findResponseForAdminByQuizId(Long quizId, int page, int size) {
-        Page<Questions> questions = questionsMongoTemplate.findPageByQuizId(quizId, page, size);
+    public List<QuestionsResponseAdminDto> findResponseForAdminByQuizId(Long quizId) {
+        List<Questions> questions = questionsMongoTemplate.findPageByQuizId(quizId);
 
-        return questions.map(question -> QuestionsResponseAdminDto.builder()
-                .questionId(question.getId())
-                .title(question.getTitle())
-                .score(question.getScore())
-                .questionType(question.getQuestionType().getValue())
-                .choicesResponseDtos(toChoicesResponseAdminDto(question.getChoices()))
-                .answer(question.getAnswers().getShortAnswer())
-                .build());
+        List<QuestionsResponseAdminDto> result = questions
+                .stream().map(question -> QuestionsResponseAdminDto.builder()
+                        .questionId(question.getId())
+                        .title(question.getTitle())
+                        .score(question.getScore())
+                        .questionType(question.getQuestionType().getCode())
+                        .choicesResponseDtos(toChoicesResponseAdminDto(question.getChoices()))
+                        .answer(question.getAnswers().getShortAnswer())
+                        .build())
+                .toList();
+        log.info("result = {}", result);
+        return result;
     }
 
     public Page<QuestionsResponseDto> findResponseByEndpoint(Long quizId, int page, int size) {
@@ -159,5 +165,10 @@ public class QuestionService {
     //for test
     public void deleteAll() {
         questionsRepository.deleteAll();
+    }
+
+    public void deleteQuestionsByIds(List<String> questionIds) {
+        log.info("questionIds={}",questionIds);
+        questionsMongoTemplate.deleteQuestionsByQuestionIds(questionIds);
     }
 }
