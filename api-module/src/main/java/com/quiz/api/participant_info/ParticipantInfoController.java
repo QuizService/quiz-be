@@ -68,4 +68,15 @@ public class ParticipantInfoController {
 
         return ResponseEntity.ok(ResponseDto.success(response));
     }
+
+    @GetMapping("/user/{quiz-id}")
+    public ResponseEntity<ResponseDto<?>> showRank(@PathVariable("quiz-id") Long quizId,
+                                                    @AuthenticationPrincipal UserAccount user) {
+        Users users = usersService.findByEmail(user.getUsername());
+        participantInfoFacade.checkUserParticipatedOrOwner(quizId, users.getId());
+
+        ParticipantsRankResponseDto response = participantInfoFacade.showRank(quizId, users.getId(), users.getName());
+
+        return ResponseEntity.ok(ResponseDto.success(response));
+    }
 }

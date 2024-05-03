@@ -20,6 +20,9 @@ public class Redis2Utils {
     public void addObject(Long key, String value, Long time) {
         redisTemplate.opsForValue().set(String.valueOf(key), value, time, TimeUnit.MILLISECONDS);
     }
+    public void addObject(String key, Object value, Long time) {
+        redisTemplate.opsForValue().set(key, value, time, TimeUnit.MILLISECONDS);
+    }
 
     public Optional<String> getObject(Long key) {
         Object value = redisTemplate.opsForValue().get(String.valueOf(key));
@@ -32,8 +35,24 @@ public class Redis2Utils {
         return result;
     }
 
+    public Optional<Long> getObject(String key) {
+        Object value = redisTemplate.opsForValue().get(key);
+        Optional<Long> result;
+        if(value == null) {
+            result = Optional.empty();
+        } else {
+            result = Optional.of(Long.parseLong(key));
+        }
+        return result;
+    }
+
     public void deleteObject(Long key) {
         redisTemplate.delete(String.valueOf(key));
+        log.info("key deleted : {}", key);
+    }
+
+    public void deleteObject(String key) {
+        redisTemplate.delete(key);
         log.info("key deleted : {}", key);
     }
 }
