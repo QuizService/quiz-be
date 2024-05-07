@@ -30,6 +30,15 @@ public class ParticipantInfoMongoTemplate {
         return (int) cnt;
     }
 
+    public int countParticipantsByQuizId(Long quizId) {
+        Query query = new Query();
+
+        query.addCriteria(Criteria.where("quiz_id").is(quizId));
+        long cnt = mongoTemplate.count(query, ParticipantInfo.class);
+
+        return (int) cnt;
+    }
+
     public int countParticipantsByQuizIdAndNotSubmitResponses(Long quizId) {
         Query query = new Query();
 

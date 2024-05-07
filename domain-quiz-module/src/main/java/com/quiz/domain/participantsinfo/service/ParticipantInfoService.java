@@ -40,6 +40,17 @@ public class ParticipantInfoService {
         return save(quizId, userId);
     }
 
+    // for test
+    @DistributedLock(key = "'saveFcfs : quizId - ' + #quizId")
+    public String saveFcfsTest(Long quizId, Long userId, int capacity) {
+        int participatedCnt = participantInfoMongoTemplate.countParticipantsByQuizId(quizId);
+        if(participatedCnt  >= capacity) {
+            log.info("failed count = {}", cnt.incrementAndGet());
+            throw new ParticipantInfoException(FIRST_COME_FIRST_SERVED_END);
+        }
+        return save(quizId, userId);
+    }
+
     @DistributedLock(key = "'updateFcFs : quizId - ' + #quizId")
     public String updateFcFs(Long quizId, Long userId, int capacity) {
         //check user participated
@@ -58,8 +69,8 @@ public class ParticipantInfoService {
         return participantInfo.getId();
     }
 
-    public int countParticipantInfoCntByQuizId(Long quizId) {
-        return participantInfoMongoTemplate.countParticipantsByQuizIdAndSubmitResponses(quizId);
+    public int countParticipantInfoByQuizId(Long quizId) {
+        return participantInfoMongoTemplate.countParticipantsByQuizId(quizId);
     }
 
 
