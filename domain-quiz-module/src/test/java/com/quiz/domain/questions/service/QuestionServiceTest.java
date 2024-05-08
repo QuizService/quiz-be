@@ -7,9 +7,12 @@ import com.quiz.domain.questions.entity.QuestionType;
 import com.quiz.domain.questions.entity.Questions;
 import com.quiz.global.mock.TestDto;
 import com.quiz.global.mock.TestEntities;
+import com.quiz.global.testContainer.TestContainerConfig;
 import lombok.extern.slf4j.Slf4j;
 import org.junit.jupiter.api.AfterEach;
+import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.extension.ExtendWith;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.context.ContextConfiguration;
@@ -48,6 +51,11 @@ public class QuestionServiceTest {
 
     @Autowired
     QuestionService questionService;
+
+    @BeforeAll
+    static void setup() {
+
+    }
 
     @AfterEach
     void clear() {

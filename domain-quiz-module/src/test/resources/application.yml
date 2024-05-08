@@ -17,11 +17,3 @@ spring:
       hibernate:
         format_sql: true
         show_sql: true
-
-
-  data:
-    redis:
-      host1: localhost
-      port1: 6379
-      host2: localhost
-      port2: 6380

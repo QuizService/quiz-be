@@ -1,10 +1,8 @@
 package com.quiz.domain.participantinfo.service;
 
-import com.quiz.domain.participantsinfo.entity.ParticipantInfo;
+import com.quiz.TestConfiguration;
 import com.quiz.domain.participantsinfo.service.ParticipantInfoQueueService;
 import com.quiz.domain.participantsinfo.service.ParticipantInfoService;
-import com.quiz.global.exception.participantinfo.ParticipantInfoException;
-import com.quiz.global.lock.DistributedLock;
 import com.quiz.global.testContainer.TestContainerConfig;
 import lombok.extern.slf4j.Slf4j;
 import org.junit.jupiter.api.AfterEach;
@@ -14,7 +12,7 @@ import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
-import org.springframework.boot.test.context.TestConfiguration;
+import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.DynamicPropertyRegistry;
 import org.springframework.test.context.DynamicPropertySource;
 import org.testcontainers.containers.MongoDBContainer;
@@ -24,17 +22,14 @@ import org.testcontainers.utility.DockerImageName;
 import java.util.concurrent.CountDownLatch;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
-import java.util.*;
 import java.util.concurrent.atomic.AtomicInteger;
 import java.util.stream.IntStream;
 
-import static com.quiz.global.exception.participantinfo.code.ParticipantInfoErrorCode.FIRST_COME_FIRST_SERVED_END;
 import static org.assertj.core.api.Assertions.assertThat;
 
 @Slf4j
 @Testcontainers
-@ExtendWith(TestContainerConfig.class)
-@TestConfiguration
+@ContextConfiguration(classes = {TestConfiguration.class})
 @SpringBootTest
 public class ParticipantInfoServiceTest {
 
