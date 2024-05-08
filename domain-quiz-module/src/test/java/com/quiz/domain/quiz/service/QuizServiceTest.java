@@ -19,25 +19,25 @@ import org.testcontainers.junit.jupiter.Testcontainers;
 import org.testcontainers.utility.DockerImageName;
 
 import static org.assertj.core.api.Assertions.assertThat;
-//@Testcontainers
+@Testcontainers
 @Slf4j
 @ContextConfiguration(classes = {TestConfiguration.class})
 @SpringBootTest
 public class QuizServiceTest {
 
-//    @Container
-//    static MongoDBContainer mongoDBContainer = new MongoDBContainer(DockerImageName.parse("mongo:latest"))
-//            .withExposedPorts(27017);
+    @Container
+    static MongoDBContainer mongoDBContainer = new MongoDBContainer(DockerImageName.parse("mongo:latest"))
+            .withExposedPorts(27017);
 
-//    @DynamicPropertySource
-//    static void setProperties(DynamicPropertyRegistry registry) {
-//        registry.add("spring.data.mongodb.uri", () -> mongoDBContainer.getReplicaSetUrl("quiz"));
-//        registry.add("spring.data.mongodb.host", mongoDBContainer::getHost);
-//        registry.add("spring.data.mongodb.port", mongoDBContainer::getFirstMappedPort);
-//        registry.add("spring.data.mongodb.username", () -> "admin");
-//        registry.add("spring.data.mongodb.password", () -> "password");
-//        registry.add("spring.data.mongodb.database", () -> "quiz");
-//    }
+    @DynamicPropertySource
+    static void setProperties(DynamicPropertyRegistry registry) {
+        registry.add("spring.data.mongodb.uri", () -> mongoDBContainer.getReplicaSetUrl("quiz"));
+        registry.add("spring.data.mongodb.host", mongoDBContainer::getHost);
+        registry.add("spring.data.mongodb.port", mongoDBContainer::getFirstMappedPort);
+        registry.add("spring.data.mongodb.username", () -> "admin");
+        registry.add("spring.data.mongodb.password", () -> "password");
+        registry.add("spring.data.mongodb.database", () -> "quiz");
+    }
 
 
     @Autowired
@@ -45,10 +45,10 @@ public class QuizServiceTest {
 
     private Long userId = 1L;
 
-//    @AfterEach
-//    void clear() {
-//        quizService.deleteAll();
-//    }
+    @AfterEach
+    void clear() {
+        quizService.deleteAll();
+    }
 
     @Test
     void saveQuizTest() {
