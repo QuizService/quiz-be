@@ -57,20 +57,6 @@ public class QuizServiceTest {
                 .isNotNull();
     }
 
-    @Test
-    void createDummyQuiz() {
-        for(int i = 0; i<50; i++) {
-            QuizRequestDto quizRequestDto = QuizRequestDto.builder()
-                    .title("title" + i)
-                    .capacity(100)
-                    .startDate("2025-02-01 12:00:00")
-                    .dueDate("2025-02-02 12:00:00")
-                    .build();
-            quizService.saveQuiz(quizRequestDto, userId);
-        }
-    }
-
-
     Long save() {
         QuizRequestDto quizRequestDto = QuizRequestDto.builder()
                 .title("test")
