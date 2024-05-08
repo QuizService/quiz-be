@@ -98,13 +98,6 @@ public class ParticipantInfoServiceTest {
         }
 
         int participantCnt = participantInfoService.countParticipantInfoByQuizId(quizId);
-        List<ParticipantInfo> participantInfoList = participantInfoService.findParticipantInfoByQuizId(quizId);
-        for (ParticipantInfo participantInfo : participantInfoList) {
-            log.info("_id : {}", participantInfo.getId());
-            log.info("userId : {}", participantInfo.getUserId());
-        }
-
-        log.info("participantCnt = {}", participantCnt);
         assertThat(participantCnt)
                 .isEqualTo(90);
         assertThat(cnt.get())
