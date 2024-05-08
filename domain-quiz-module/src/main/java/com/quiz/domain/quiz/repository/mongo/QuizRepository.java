@@ -12,5 +12,4 @@ public interface QuizRepository extends MongoRepository<Quiz, String> {
 
     Optional<Quiz> findByEndpoint(String endpoint);
 
-    List<Quiz> findByUserId(Long userId);
 }

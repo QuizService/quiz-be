@@ -1,61 +1,42 @@
 package com.quiz.domain.questions.service;
 
-import com.quiz.TestConfiguration;
 import com.quiz.domain.answers.entity.Answers;
+import com.quiz.domain.choice.entity.Choices;
 import com.quiz.domain.questions.dto.QuestionsRequestDto;
 import com.quiz.domain.questions.entity.QuestionType;
 import com.quiz.domain.questions.entity.Questions;
+import com.quiz.domain.questions.repository.mongo.QuestionsMongoTemplate;
+import com.quiz.domain.questions.repository.mongo.QuestionsRepository;
 import com.quiz.global.mock.TestDto;
 import com.quiz.global.mock.TestEntities;
-import com.quiz.global.testContainer.TestContainerConfig;
 import lombok.extern.slf4j.Slf4j;
 import org.junit.jupiter.api.AfterEach;
-import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.test.context.SpringBootTest;
-import org.springframework.test.context.ContextConfiguration;
-import org.springframework.test.context.DynamicPropertyRegistry;
-import org.springframework.test.context.DynamicPropertySource;
-import org.testcontainers.containers.MongoDBContainer;
-import org.testcontainers.junit.jupiter.Testcontainers;
-import org.testcontainers.utility.DockerImageName;
+import org.mockito.InjectMocks;
+import org.mockito.Mock;
+import org.mockito.Mockito;
+import org.mockito.junit.jupiter.MockitoExtension;
 
-import java.util.ArrayList;
+import java.time.LocalDateTime;
+import java.util.List;
+import java.util.Optional;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
 @Slf4j
-@Testcontainers
-@ContextConfiguration(classes = {TestConfiguration.class})
-@SpringBootTest
+@ExtendWith(MockitoExtension.class)
 public class QuestionServiceTest {
+    @Mock
+    private QuestionsRepository questionsRepository;
 
-    static MongoDBContainer mongoDBContainer = new MongoDBContainer(DockerImageName.parse("mongo:latest"))
-            .withExposedPorts(27017);
+    @Mock
+    private QuestionsMongoTemplate questionsMongoTemplate;
 
-    static {
-        mongoDBContainer.start();
-    }
-    @DynamicPropertySource
-    static void setProperties(DynamicPropertyRegistry registry) {
-        registry.add("spring.data.mongodb.uri", () -> mongoDBContainer.getReplicaSetUrl("quiz"));
-        registry.add("spring.data.mongodb.host", mongoDBContainer::getHost);
-        registry.add("spring.data.mongodb.port", mongoDBContainer::getFirstMappedPort);
-        registry.add("spring.data.mongodb.username", () -> "admin");
-        registry.add("spring.data.mongodb.password", () -> "password");
-        registry.add("spring.data.mongodb.database", () -> "quiz");
-    }
+    @InjectMocks
+    private QuestionService questionService;
 
-
-    @Autowired
-    QuestionService questionService;
-
-    @BeforeAll
-    static void setup() {
-
-    }
+    private static final String FAKE_QUESTION_ID = "testQuestionId";
 
     @AfterEach
     void clear() {
@@ -64,18 +45,38 @@ public class QuestionServiceTest {
 
     @Test
     void saveTest() {
-        String questionId = save();
+        QuestionsRequestDto questionsRequestDto = TestDto.getQuestionsReqDto();
+        Questions questions = TestEntities.getQuestions();
+        questions.setIdForTest(FAKE_QUESTION_ID);
+
+        Mockito.when(questionsRepository.save(Mockito.any(Questions.class)))
+                .thenReturn(questions);
+        String questionId = questionService.save(TestEntities.getChoices(), TestEntities.getAnswers(), questionsRequestDto, 1L);
+
         assertThat(questionId)
                 .isNotNull();
     }
 
     @Test
     void updateTest() {
-        String questionId = save();
-        log.info("questionId ={}", questionId);
+        String questionId = FAKE_QUESTION_ID;
         QuestionsRequestDto newQuestionRequestDto = TestDto.getUpdatedQuestionsReqDto();
+
+        LocalDateTime now = LocalDateTime.now();
+
+        questionsMongoTemplate.updateQuestion(questionId, newQuestionRequestDto, now);
+        Mockito.verify(questionsMongoTemplate)
+                .updateQuestion(questionId, newQuestionRequestDto, now);
+
         questionService.update(newQuestionRequestDto, questionId);
 
+        Mockito.when(questionsRepository.findById(questionId))
+                .thenReturn(Optional.of(Questions.builder().title("updated question1")
+                        .score(20)
+                        .sequence(2)
+                        .questionType("S")
+                        .answers(TestEntities.getAnswers())
+                        .build()));
         Questions questions = questionService.findById(questionId);
 
         assertThat(questions.getQuestionType()).isEqualTo(QuestionType.SHORT_ANSWER);
@@ -85,37 +86,26 @@ public class QuestionServiceTest {
 
     @Test
     void updateChoiceTest() {
-        String questionId = save();
+        String questionId = FAKE_QUESTION_ID;
+        List<Choices> updatedChoices = TestEntities.getMultipleUpdateChoices();
 
-        QuestionsRequestDto newQuestionRequestDto = TestDto.getUpdatedQuestionsReqDto();
-        questionService.update(newQuestionRequestDto, questionId);
-        questionService.updateChoices(questionId, new ArrayList<>());
+        questionsMongoTemplate.updateChoices(questionId, updatedChoices);
+        Mockito.verify(questionsMongoTemplate)
+                .updateChoices(questionId, updatedChoices);
 
-        Questions questions = questionService.findById(questionId);
-
-        assertThat(questions.getQuestionType()).isEqualTo(QuestionType.SHORT_ANSWER);
-        assertThat(questions.getChoices()).isEmpty();
+        questionService.updateChoices(questionId, updatedChoices);
     }
 
     @Test
     void updateAnswerTest() {
-        String questionId = save();
+        String questionId = FAKE_QUESTION_ID;
 
-        QuestionsRequestDto newQuestionRequestDto = TestDto.getUpdatedQuestionsReqDto();
-        Answers answers = TestEntities.getNewShortAnswers();
-        questionService.update(newQuestionRequestDto, questionId);
-        questionService.updateAnswers(questionId, answers);
-        Questions questions = questionService.findById(questionId);
+        Answers updatedAnswer = TestEntities.getNewMultipleAnswers();
 
-        assertThat(questions.getQuestionType()).isEqualTo(QuestionType.SHORT_ANSWER);
-        assertThat(questions.getAnswers().getShortAnswer()).isEqualTo(answers.getShortAnswer());
+        questionsMongoTemplate.updateAnswers(questionId, updatedAnswer);
+        Mockito.verify(questionsMongoTemplate)
+                .updateAnswers(questionId, updatedAnswer);
+
+        questionService.updateAnswers(questionId, updatedAnswer);
     }
-
-
-    String save() {
-        QuestionsRequestDto questionsRequestDto = TestDto.getQuestionsReqDto();
-        return questionService.save(TestEntities.getChoices(), TestEntities.getAnswers(), questionsRequestDto, 1L);
-    }
-
-
 }

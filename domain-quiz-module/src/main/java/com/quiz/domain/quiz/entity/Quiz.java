@@ -124,4 +124,12 @@ public class Quiz {
             throw new QuizException(START_DATE_CANNOT_BE_AFTER_DUE_DATE);
         }
     }
+
+    public void setIdForTest(String id) {
+        this.id = id;
+    }
+
+    public void setIdxForTest(Long idx) {
+        this.idx = idx;
+    }
 }

@@ -46,11 +46,6 @@ public class QuizService {
         return quizRepository.save(quiz).getIdx();
     }
 
-    public void testTx(QuizRequestDto request, Long userId) {
-        saveQuiz(request, userId);
-        throw new RuntimeException("test tx throw err");
-    }
-
     public Long update(QuizRequestDto request, Long quizId) {
         Quiz quiz = quizRepository.findByIdx(quizId)
                 .orElseThrow(() -> new QuizException(QUIZ_NOT_FOUND));
@@ -83,7 +78,6 @@ public class QuizService {
     public Quiz findByEndpoint(String endpoint) {
         return quizRepository.findByEndpoint(endpoint)
                 .orElseThrow(() -> new QuizException(QUIZ_NOT_FOUND));
-
     }
 
     public boolean isUserIsQuizOwner(Long userId, Long quizId) {
@@ -109,7 +103,4 @@ public class QuizService {
         quizRepository.deleteAll();
     }
 
-    public int findByUserId(Long userId) {
-        return quizRepository.findByUserId(userId).size();
-    }
 }

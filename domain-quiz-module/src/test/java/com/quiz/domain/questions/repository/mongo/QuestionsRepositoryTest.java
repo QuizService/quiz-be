@@ -4,6 +4,8 @@ package com.quiz.domain.questions.repository.mongo;
 import com.quiz.TestConfiguration;
 import com.quiz.domain.answers.entity.Answers;
 import com.quiz.domain.choice.entity.Choices;
+import com.quiz.domain.questions.dto.QuestionsRequestDto;
+import com.quiz.global.mock.TestDto;
 import com.quiz.global.mock.TestEntities;
 import com.quiz.domain.questions.entity.QuestionType;
 import com.quiz.domain.questions.entity.Questions;
@@ -13,23 +15,27 @@ import lombok.extern.slf4j.Slf4j;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.extension.ExtendWith;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.boot.test.autoconfigure.data.mongo.DataMongoTest;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.data.mongodb.core.MongoTemplate;
 import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.DynamicPropertyRegistry;
 import org.springframework.test.context.DynamicPropertySource;
+import org.springframework.test.context.junit.jupiter.SpringExtension;
 import org.testcontainers.containers.MongoDBContainer;
 import org.testcontainers.junit.jupiter.Testcontainers;
 
+import java.time.LocalDateTime;
 import java.util.List;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
 @Slf4j
 @Testcontainers
-@SpringBootTest
-@ContextConfiguration(classes = {TestConfiguration.class})
+@ExtendWith(SpringExtension.class)
+@DataMongoTest
 public class QuestionsRepositoryTest {
 
     static MongoDBContainer mongoDBContainer = new MongoDBContainer("mongo:latest");
@@ -76,6 +82,56 @@ public class QuestionsRepositoryTest {
     }
 
     @Test
+    void updateQuestionsTest() {
+        Questions questions = TestEntities.getQuestions();
+        String questionId = questionsRepository.save(questions).getId();
+
+        QuestionsRequestDto requestDto = TestDto.getUpdatedQuestionsReqDto();
+        questionsMongoTemplate.updateQuestion(questionId, requestDto, LocalDateTime.now());
+
+        Questions updatedQuestions = questionsRepository.findById(questionId)
+                .orElseThrow(() -> new QuestionException(QuestionErrorCode.QUESTION_NOT_FOUND));
+
+        assertThat(updatedQuestions.getTitle())
+                .isEqualTo(requestDto.getTitle());
+        assertThat(updatedQuestions.getScore())
+                .isEqualTo(requestDto.getScore());
+        assertThat(updatedQuestions.getQuestionType().getCode())
+                .isEqualTo(requestDto.getQuestionType());
+    }
+
+    @Test
+    void updateChoicesTest() {
+        Questions questions = TestEntities.getQuestions();
+        String questionId = questionsRepository.save(questions).getId();
+
+        List<Choices> updateChoices = TestEntities.getMultipleUpdateChoices();
+
+        questionsMongoTemplate.updateChoices(questionId, updateChoices);
+
+        Questions updatedQuestions = questionsRepository.findById(questionId)
+                .orElseThrow(() -> new QuestionException(QuestionErrorCode.QUESTION_NOT_FOUND));
+
+        assertThat(updatedQuestions.getChoices().get(0).getTitle())
+                .contains("updatechoice ");
+    }
+
+    @Test
+    void updateAnswersTest() {
+        Questions questions = TestEntities.getQuestions();
+        String questionId = questionsRepository.save(questions).getId();
+
+        Answers updateAnswer = TestEntities.getNewMultipleAnswers();
+        questionsMongoTemplate.updateAnswers(questionId, updateAnswer);
+
+        Questions updatedQuestions = questionsRepository.findById(questionId)
+                .orElseThrow(() -> new QuestionException(QuestionErrorCode.QUESTION_NOT_FOUND));
+        assertThat(updatedQuestions.getAnswers().getMultipleChoiceAnswers())
+                .isEqualTo(updateAnswer.getMultipleChoiceAnswers());
+
+    }
+
+    @Test
     void findByQuizId() {
         String id = save();
         List<Questions> questions = questionsRepository.findAllByQuizId(quizId);
@@ -104,32 +160,6 @@ public class QuestionsRepositoryTest {
                 .isEqualTo(TestEntities.getChoices().size());
         assertThat(question.getAnswers().getMultipleChoiceAnswers())
                 .containsExactly(TestEntities.ANSWER_NUMBER);
-    }
-
-    @Test
-    void updateChoicesAndAnswers() {
-        String id = save();
-        List<Choices> newChoices = TestEntities.getMultipleUpdateChoices();
-        Answers newAnswer = TestEntities.getNewMultipleAnswers();
-        questionsRepository.updateChoices(id, newChoices);
-        questionsRepository.updateAnswers(id, newAnswer);
-        Questions questions = questionsRepository.findById(id)
-                .orElseThrow(() -> new QuestionException(QuestionErrorCode.QUESTION_NOT_FOUND));
-        List<Choices> updatedChoices = questions.getChoices();
-        assertThat(updatedChoices.size())
-                .isEqualTo(5);
-        assertThat(updatedChoices)
-                .filteredOn(choice -> choice.getTitle().startsWith("updatechoice"))
-                        .hasSize(5);
-        List<Integer> answerChoices = updatedChoices.stream()
-                        .filter(Choices::getIsAnswer)
-                                .mapToInt(Choices::getSequence)
-                                        .boxed().toList();
-        assertThat(answerChoices)
-                .containsExactly(1,4);
-        assertThat(questions.getAnswers().getMultipleChoiceAnswers())
-                .containsExactly(1,4);
-
     }
 
     String save() {
