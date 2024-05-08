@@ -35,6 +35,9 @@ jobs:
       - name: test with Gradle Wrapper
         run: ./gradlew test -i
 
+      - name: build with Gradle Wrapper
+        run: ./gradlew build
+
       - name: Configure AWS credentials
         uses: aws-actions/configure-aws-credentials@v4
         with:

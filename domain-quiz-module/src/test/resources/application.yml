@@ -20,15 +20,6 @@ spring:
 
 
   data:
-    mongodb:
-      uri: mongodb://admin:password1@localhost:27017/quiz?authSource=admin
-      host: localhost
-      port: 27017
-      database: quiz
-      username: admin
-      password: password1
-      authentication-database: admin
-      replica-set-name: rs0
     redis:
       host1: localhost
       port1: 6379
