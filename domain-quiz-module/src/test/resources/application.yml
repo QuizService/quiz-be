@@ -1,0 +1,36 @@
+spring:
+  main:
+    allow-bean-definition-overriding: true
+  # H2 데이터베이스 설정
+  datasource:
+    url: jdbc:h2:mem:testdb
+    driver-class-name: org.h2.Driver
+    username: sa
+    password:
+
+  # JPA 설정
+  jpa:
+    database-platform: org.hibernate.dialect.H2Dialect
+    hibernate:
+      ddl-auto: create
+    properties:
+      hibernate:
+        format_sql: true
+        show_sql: true
+
+
+  data:
+    mongodb:
+      uri: mongodb://admin:password1@localhost:27017/quiz?authSource=admin
+      host: localhost
+      port: 27017
+      database: quiz
+      username: admin
+      password: password1
+      authentication-database: admin
+      replica-set-name: rs0
+    redis:
+      host1: localhost
+      port1: 6379
+      host2: localhost
+      port2: 6380
