@@ -1,4 +1,4 @@
-package com.quiz.global;
+package com.quiz.global.sequence;
 
 import lombok.Getter;
 import lombok.Setter;

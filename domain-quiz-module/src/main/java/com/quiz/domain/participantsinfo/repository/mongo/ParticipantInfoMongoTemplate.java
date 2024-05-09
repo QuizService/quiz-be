@@ -30,6 +30,7 @@ public class ParticipantInfoMongoTemplate {
         return (int) cnt;
     }
 
+    // for test
     public int countParticipantsByQuizId(Long quizId) {
         Query query = new Query();
 
@@ -49,7 +50,6 @@ public class ParticipantInfoMongoTemplate {
         return (int) cnt;
     }
 
-    @Transactional
     public ParticipantInfo save(ParticipantInfo participantInfo) {
         participantInfo = mongoTemplate.save(participantInfo, "participant_info");
         return participantInfo;
@@ -98,18 +98,7 @@ public class ParticipantInfoMongoTemplate {
         return mongoTemplate.find(query, ParticipantInfo.class, "participant_info");
     }
 
-    public List<ParticipantsRankResponseDto> findParticipantsRankResponsesByQuizIdOrderByNumber(Long quizId) {
-        Query query = new Query();
-        query.fields().include("id").include("userId").include("number").include("totalScore");
-        query.addCriteria(Criteria.where("quiz_id").is(quizId));
-        query.with(Sort.by(Sort.Direction.ASC, "number"));
-
-        return mongoTemplate.find(query, ParticipantsRankResponseDto.class, "participant_info");
-    }
-
     public List<ParticipantInfo> findAll() {
-        Query query = new Query();
-
         List<ParticipantInfo> participantInfos = mongoTemplate.findAll(ParticipantInfo.class);
 
         return participantInfos;

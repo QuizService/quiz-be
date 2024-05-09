@@ -18,9 +18,6 @@ public class ParticipantInfo {
     @Field(value = "_id", targetType = FieldType.OBJECT_ID)
     private String id;
 
-    // 보조 키
-    private Long idx;
-
     @Field(name = "quiz_id")
     private Long quizId;
 
@@ -46,9 +43,8 @@ public class ParticipantInfo {
     }
 
     @Builder(builderMethodName = "testBuilder", buildMethodName = "testBuild")
-    public ParticipantInfo(String id, Long idx, Long quizId, Long userId, Integer totalScore, Integer number, Boolean submitResponses) {
+    public ParticipantInfo(String id, Long quizId, Long userId, Integer totalScore, Integer number, Boolean submitResponses) {
         this.id = id;
-        this.idx = idx;
         this.quizId = quizId;
         this.userId = userId;
         this.totalScore = totalScore;

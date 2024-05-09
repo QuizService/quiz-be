@@ -68,6 +68,18 @@ public class TestEntities {
                 .build();
     }
 
+    public static Questions getQuestions(Long quizId) {
+        return Questions.builder()
+                .quizId(quizId)
+                .sequence(1)
+                .title("question 1")
+                .score(10)
+                .questionType("M")
+                .choices(getChoices())
+                .answers(getAnswers())
+                .build();
+    }
+
     public static Questions getUpdatedQuestions() {
         return Questions.builder()
                 .quizId(QUIZ_ID)
@@ -84,12 +96,11 @@ public class TestEntities {
         List<ParticipantInfo> participantInfos = new ArrayList<>();
         for(int i = 0; i< 5; i++) {
             ParticipantInfo participantInfo = ParticipantInfo.testBuilder()
-                    .id(String.valueOf(i))
-                    .idx((long)i)
                     .quizId(1L)
                     .userId((long)i)
-                    .totalScore(i * 10)
+                    .totalScore(i)
                     .number(i)
+                    .submitResponses(true)
                     .testBuild();
             participantInfos.add(participantInfo);
         }

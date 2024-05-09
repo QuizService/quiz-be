@@ -106,11 +106,6 @@ public class ParticipantInfoService {
         return participantInfoMongoTemplate.findAllByQuizIdOrderByNumber(quizId);
     }
 
-    @Transactional(value = "mongoTx")
-    public List<ParticipantsRankResponseDto> findRanksByQuizId(Long quizId) {
-        return participantInfoMongoTemplate.findParticipantsRankResponsesByQuizIdOrderByNumber(quizId);
-    }
-
     public List<ParticipantInfo> getParticipantInfos() {
         return participantInfoMongoTemplate.findAll();
     }

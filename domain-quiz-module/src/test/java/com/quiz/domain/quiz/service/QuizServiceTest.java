@@ -1,11 +1,10 @@
 package com.quiz.domain.quiz.service;
 
-import com.quiz.TestConfiguration;
 import com.quiz.domain.quiz.entity.Quiz;
 import com.quiz.domain.quiz.dto.QuizRequestDto;
 import com.quiz.domain.quiz.repository.mongo.QuizMongoTemplate;
 import com.quiz.domain.quiz.repository.mongo.QuizRepository;
-import com.quiz.global.SequenceGenerator;
+import com.quiz.global.sequence.SequenceGenerator;
 import com.quiz.global.mock.TestEntities;
 import lombok.extern.slf4j.Slf4j;
 import org.junit.jupiter.api.AfterEach;
@@ -15,17 +14,6 @@ import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.Mockito;
 import org.mockito.junit.jupiter.MockitoExtension;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.test.context.SpringBootTest;
-import org.springframework.test.context.ContextConfiguration;
-import org.springframework.test.context.DynamicPropertyRegistry;
-import org.springframework.test.context.DynamicPropertySource;
-import org.springframework.transaction.annotation.Propagation;
-import org.springframework.transaction.annotation.Transactional;
-import org.testcontainers.containers.MongoDBContainer;
-import org.testcontainers.junit.jupiter.Container;
-import org.testcontainers.junit.jupiter.Testcontainers;
-import org.testcontainers.utility.DockerImageName;
 
 import java.util.Optional;
 

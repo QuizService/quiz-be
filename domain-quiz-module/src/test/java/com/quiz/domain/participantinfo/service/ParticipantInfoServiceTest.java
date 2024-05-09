@@ -3,19 +3,18 @@ package com.quiz.domain.participantinfo.service;
 import com.quiz.TestConfiguration;
 import com.quiz.domain.participantsinfo.service.ParticipantInfoQueueService;
 import com.quiz.domain.participantsinfo.service.ParticipantInfoService;
-import com.quiz.global.testContainer.TestContainerConfig;
 import lombok.extern.slf4j.Slf4j;
 import org.junit.jupiter.api.AfterEach;
-import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
-import org.junit.jupiter.api.extension.ExtendWith;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.DynamicPropertyRegistry;
 import org.springframework.test.context.DynamicPropertySource;
+import org.testcontainers.containers.GenericContainer;
 import org.testcontainers.containers.MongoDBContainer;
+import org.testcontainers.containers.MySQLContainer;
 import org.testcontainers.junit.jupiter.Testcontainers;
 import org.testcontainers.utility.DockerImageName;
 
@@ -27,18 +26,27 @@ import java.util.stream.IntStream;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
+// Integration Test
 @Slf4j
 @Testcontainers
 @ContextConfiguration(classes = {TestConfiguration.class})
 @SpringBootTest
 public class ParticipantInfoServiceTest {
-
     static MongoDBContainer mongoDBContainer = new MongoDBContainer(DockerImageName.parse("mongo:latest"))
             .withExposedPorts(27017);
+    static GenericContainer redisContainer = new GenericContainer(DockerImageName.parse("redis:latest"))
+            .withExposedPorts(6379);
+    static MySQLContainer mysqlContainer = new MySQLContainer(DockerImageName.parse("mysql:8.0"))
+            .withDatabaseName("quiz")
+            .withUsername("user")
+            .withPassword("password");
 
     static {
         mongoDBContainer.start();
+        redisContainer.start();
+        mysqlContainer.start();
     }
+
     @DynamicPropertySource
     static void setProperties(DynamicPropertyRegistry registry) {
         registry.add("spring.data.mongodb.uri", () -> mongoDBContainer.getReplicaSetUrl("quiz"));
@@ -47,7 +55,20 @@ public class ParticipantInfoServiceTest {
         registry.add("spring.data.mongodb.username", () -> "admin");
         registry.add("spring.data.mongodb.password", () -> "password");
         registry.add("spring.data.mongodb.database", () -> "quiz");
+
+        registry.add("spring.data.redis.host1", redisContainer::getHost);
+        registry.add("spring.data.redis.port1", redisContainer::getFirstMappedPort);
+        registry.add("spring.data.redis.host2", redisContainer::getHost);
+        registry.add("spring.data.redis.port2", redisContainer::getFirstMappedPort);
+
+        registry.add("spring.datasource.url",mysqlContainer::getJdbcUrl);
+        registry.add("spring.datasource.username",mysqlContainer::getUsername);
+        registry.add("spring.datasource.password",mysqlContainer::getPassword);
+        registry.add("spring.datasource.driver-class-name",mysqlContainer::getDriverClassName);
+        registry.add("spring.jpa.database-platform", () -> "org.hibernate.dialect.MySQLDialect");
+        registry.add("spring.jpa.hibernate.ddl-auto",() -> "create");
     }
+
     @Autowired
     ParticipantInfoService participantInfoService;
 
@@ -56,11 +77,6 @@ public class ParticipantInfoServiceTest {
 
     Long quizId = 1L;
     int capacity = 90;
-
-    @BeforeAll
-    static void start() {
-        log.info("start test");
-    }
 
     @BeforeEach
     void setUp() {
@@ -99,5 +115,6 @@ public class ParticipantInfoServiceTest {
                 .isEqualTo(10);
 
     }
+
 
 }

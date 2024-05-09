@@ -18,14 +18,15 @@ import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.DynamicPropertyRegistry;
 import org.springframework.test.context.DynamicPropertySource;
 import org.springframework.test.context.event.RecordApplicationEvents;
+import org.testcontainers.containers.GenericContainer;
 import org.testcontainers.containers.MongoDBContainer;
-import org.testcontainers.junit.jupiter.Container;
+import org.testcontainers.containers.MySQLContainer;
 import org.testcontainers.junit.jupiter.Testcontainers;
 import org.testcontainers.utility.DockerImageName;
 
 import java.util.List;
 
-import static org.assertj.core.api.Assertions.assertThat;
+// Integration Test
 
 @Slf4j
 @RecordApplicationEvents
@@ -33,9 +34,20 @@ import static org.assertj.core.api.Assertions.assertThat;
 @ContextConfiguration(classes = {TestConfiguration.class})
 @SpringBootTest
 public class ResponseFacadeTest {
-    @Container
     static MongoDBContainer mongoDBContainer = new MongoDBContainer(DockerImageName.parse("mongo:latest"))
             .withExposedPorts(27017);
+    static GenericContainer redisContainer = new GenericContainer(DockerImageName.parse("redis:latest"))
+            .withExposedPorts(6379);
+    static MySQLContainer mysqlContainer = new MySQLContainer(DockerImageName.parse("mysql:8.0"))
+            .withDatabaseName("quiz")
+            .withUsername("user")
+            .withPassword("password");
+
+    static {
+        mongoDBContainer.start();
+        redisContainer.start();
+        mysqlContainer.start();
+    }
 
     @DynamicPropertySource
     static void setProperties(DynamicPropertyRegistry registry) {
@@ -45,6 +57,18 @@ public class ResponseFacadeTest {
         registry.add("spring.data.mongodb.username", () -> "admin");
         registry.add("spring.data.mongodb.password", () -> "password");
         registry.add("spring.data.mongodb.database", () -> "quiz");
+
+        registry.add("spring.data.redis.host1", redisContainer::getHost);
+        registry.add("spring.data.redis.port1", redisContainer::getFirstMappedPort);
+        registry.add("spring.data.redis.host2", redisContainer::getHost);
+        registry.add("spring.data.redis.port2", redisContainer::getFirstMappedPort);
+
+        registry.add("spring.datasource.url",mysqlContainer::getJdbcUrl);
+        registry.add("spring.datasource.username",mysqlContainer::getUsername);
+        registry.add("spring.datasource.password",mysqlContainer::getPassword);
+        registry.add("spring.datasource.driver-class-name",mysqlContainer::getDriverClassName);
+        registry.add("spring.jpa.database-platform", () -> "org.hibernate.dialect.MySQLDialect");
+        registry.add("spring.jpa.hibernate.ddl-auto",() -> "create");
     }
 
     @Autowired

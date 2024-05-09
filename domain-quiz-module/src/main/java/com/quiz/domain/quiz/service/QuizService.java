@@ -2,13 +2,11 @@ package com.quiz.domain.quiz.service;
 
 
 import com.quiz.domain.quiz.dto.QuizRequestDto;
-import com.quiz.domain.quiz.dto.QuizResponseDto;
 import com.quiz.domain.quiz.entity.Quiz;
 import com.quiz.domain.quiz.repository.mongo.QuizMongoTemplate;
 import com.quiz.domain.quiz.repository.mongo.QuizRepository;
-import com.quiz.global.SequenceGenerator;
+import com.quiz.global.sequence.SequenceGenerator;
 import com.quiz.global.exception.quiz.QuizException;
-import com.quiz.utils.TimeConverter;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.data.domain.Page;
