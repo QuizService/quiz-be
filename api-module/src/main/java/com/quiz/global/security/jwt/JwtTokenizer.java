@@ -68,17 +68,28 @@ public class JwtTokenizer {
                 .sign(jwtAlgorithm); //algorithm
     }
 
-    public String createRefreshToken(Long userId) {
+    public String createRefreshToken(Long userId, String rt) {
         Date now = new Date();
 
         // 기존 refresh token 삭제
-        redisUtils.deleteObject(userId);
+        redisUtils.deleteObject(rt);
+        String refreshToken = JWT.create()
+                .withSubject(REFRESH_TOKEN_SUBJECT)
+                .withExpiresAt(new Date(now.getTime() + refreshTokenExpirationPeriod))
+                .sign(jwtAlgorithm);
+        redisUtils.addObject(refreshToken, userId.toString(), refreshTokenExpirationPeriod);
+
+        return refreshToken;
+    }
+
+    public String createRefreshTokenWhenLogin(Long userId) {
+        Date now = new Date();
 
         String refreshToken = JWT.create()
                 .withSubject(REFRESH_TOKEN_SUBJECT)
                 .withExpiresAt(new Date(now.getTime() + refreshTokenExpirationPeriod))
                 .sign(jwtAlgorithm);
-        redisUtils.addObject(userId, refreshToken, refreshTokenExpirationPeriod);
+        redisUtils.addObject(refreshToken, userId.toString(), refreshTokenExpirationPeriod);
 
         return refreshToken;
     }

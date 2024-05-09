@@ -85,4 +85,8 @@ public class Questions {
     public void updateAnswers(Answers answers) {
         this.answers = answers;
     }
+
+    public void setIdForTest(String id) {
+        this.id = id;
+    }
 }

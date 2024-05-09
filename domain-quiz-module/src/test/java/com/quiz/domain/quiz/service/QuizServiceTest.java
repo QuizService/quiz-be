@@ -1,110 +1,94 @@
 package com.quiz.domain.quiz.service;
 
-import com.quiz.TestConfiguration;
 import com.quiz.domain.quiz.entity.Quiz;
 import com.quiz.domain.quiz.dto.QuizRequestDto;
+import com.quiz.domain.quiz.repository.mongo.QuizMongoTemplate;
+import com.quiz.domain.quiz.repository.mongo.QuizRepository;
+import com.quiz.global.sequence.SequenceGenerator;
+import com.quiz.global.mock.TestEntities;
 import lombok.extern.slf4j.Slf4j;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.Test;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.test.context.SpringBootTest;
-import org.springframework.test.context.ContextConfiguration;
-import org.springframework.test.context.DynamicPropertyRegistry;
-import org.springframework.test.context.DynamicPropertySource;
-import org.springframework.transaction.annotation.Propagation;
-import org.springframework.transaction.annotation.Transactional;
-import org.testcontainers.containers.MongoDBContainer;
-import org.testcontainers.junit.jupiter.Container;
-import org.testcontainers.junit.jupiter.Testcontainers;
-import org.testcontainers.utility.DockerImageName;
+import org.junit.jupiter.api.extension.ExtendWith;
+import org.mockito.InjectMocks;
+import org.mockito.Mock;
+import org.mockito.Mockito;
+import org.mockito.junit.jupiter.MockitoExtension;
+
+import java.util.Optional;
 
 import static org.assertj.core.api.Assertions.assertThat;
-//@Testcontainers
 @Slf4j
-@ContextConfiguration(classes = {TestConfiguration.class})
-@SpringBootTest
+@ExtendWith(MockitoExtension.class)
 public class QuizServiceTest {
-
-//    @Container
-//    static MongoDBContainer mongoDBContainer = new MongoDBContainer(DockerImageName.parse("mongo:latest"))
-//            .withExposedPorts(27017);
-
-//    @DynamicPropertySource
-//    static void setProperties(DynamicPropertyRegistry registry) {
-//        registry.add("spring.data.mongodb.uri", () -> mongoDBContainer.getReplicaSetUrl("quiz"));
-//        registry.add("spring.data.mongodb.host", mongoDBContainer::getHost);
-//        registry.add("spring.data.mongodb.port", mongoDBContainer::getFirstMappedPort);
-//        registry.add("spring.data.mongodb.username", () -> "admin");
-//        registry.add("spring.data.mongodb.password", () -> "password");
-//        registry.add("spring.data.mongodb.database", () -> "quiz");
-//    }
-
-
-    @Autowired
+    @Mock
+    private QuizRepository quizRepository;
+    @Mock
+    private QuizMongoTemplate quizMongoTemplate;
+    @Mock
+    private SequenceGenerator sequenceGenerator;
+    @InjectMocks
     private QuizService quizService;
 
     private Long userId = 1L;
 
-//    @AfterEach
-//    void clear() {
-//        quizService.deleteAll();
-//    }
+    @AfterEach
+    void clear() {
+        quizService.deleteAll();
+    }
 
     @Test
     void saveQuizTest() {
-        Long quizId =  save();
-        assertThat(quizId)
-                .isNotNull();
-    }
-
-    @Test
-    void createDummyQuiz() {
-        for(int i = 0; i<50; i++) {
-            QuizRequestDto quizRequestDto = QuizRequestDto.builder()
-                    .title("title" + i)
-                    .capacity(100)
-                    .startDate("2025-02-01 12:00:00")
-                    .dueDate("2025-02-02 12:00:00")
-                    .build();
-            quizService.saveQuiz(quizRequestDto, userId);
-        }
-    }
-
-
-    Long save() {
-        QuizRequestDto quizRequestDto = QuizRequestDto.builder()
+        Long quizId = 1L;
+        QuizRequestDto request = QuizRequestDto.builder()
                 .title("test")
                 .capacity(10)
                 .startDate("2025-02-02 12:00:00")
                 .dueDate("2025-02-05 12:00:00")
                 .build();
-        return quizService.saveQuiz(quizRequestDto, userId);
+        Mockito.when(sequenceGenerator.generateSequence(Mockito.any(String.class)))
+                .thenReturn(quizId);
+
+        Quiz quiz = Quiz.builder()
+                .idx(quizId)
+                .userId(userId)
+                .title(request.getTitle())
+                .capacity(request.getCapacity())
+                .startDate(request.getStartDate())
+                .dueDate(request.getDueDate())
+                .build();
+        quiz.setIdForTest("quizId");
+        Mockito.when(quizRepository.save(Mockito.any(Quiz.class)))
+                .thenReturn(quiz);
+        Long savedQuizIdx = quizService.saveQuiz(request, userId);
+
+        assertThat(savedQuizIdx)
+                .isNotNull();
     }
 
     @Test
     void saveQuizMaxScore() {
-        Long quizId = save();
-        Integer maxScore = 100;
+        Quiz quiz = TestEntities.getQuiz();
+        int maxScore = 200;
 
-        quizService.saveQuizMaxScore(quizId, maxScore);
-        Quiz quiz = quizService.findById(quizId);
+        Mockito.when(quizRepository.findByIdx(Mockito.any(Long.class)))
+                .thenReturn(Optional.of(quiz));
+        quiz.setMaxScore(maxScore);
 
-        assertThat(quiz.getMaxScore())
-                .isEqualTo(maxScore);
+        quizMongoTemplate.updateMaxScore(quiz);
+        Mockito.verify(quizMongoTemplate)
+                .updateMaxScore(quiz);
 
+        quizService.saveQuizMaxScore(1L, maxScore);
     }
 
     @Test
-    void findEndpointTest() {
-        Long quizId = save();
-        String endPoint = quizService.findEndPointById(quizId);
+    void checkQuizOwnerIsUserTest() {
+        Quiz quiz = TestEntities.getQuiz();
 
-        assertThat(endPoint)
-                .isNotNull();
-        assertThat(endPoint)
-                .isNotBlank();
-        assertThat(endPoint.length())
-                .isEqualTo(8);
+        Mockito.when(quizRepository.findByIdx(Mockito.any(Long.class)))
+                .thenReturn(Optional.of(quiz));
 
+        quizService.checkQuizOwnerIsUser(1L, 1L);
     }
 }

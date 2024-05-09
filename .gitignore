@@ -37,6 +37,8 @@ out/
 .vscode/
 
 application.yml
+!domain-quiz-module/src/test/resources/application.yml
+
 application-*.yml
 data
 

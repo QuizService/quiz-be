@@ -1,5 +1,6 @@
-package com.quiz.global;
+package com.quiz.global.sequence;
 
+import com.quiz.global.sequence.DBSequence;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.mongodb.core.FindAndModifyOptions;
 import org.springframework.data.mongodb.core.MongoOperations;

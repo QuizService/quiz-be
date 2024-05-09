@@ -58,49 +58,38 @@ public class JwtAuthorizationProcessingFilter extends OncePerRequestFilter {
             if (isAccessTokenValid) {
                 log.info("accessToken valid");
                 setAuthentication(accessToken.get());
-            } else {
-                if(jwtTokenizer.isTokenExpired(accessToken.get())) {
-                    log.info("access token expired");
-                    Optional<String> refreshToken = jwtTokenizer.extractRefreshToken(request);
-                    //refresh token 존재시 accessToken reissue 후 return;
-                    if (refreshToken.isPresent()) {
-                        //refreshToken valid check
-                        checkRefreshToken(response, refreshToken, accessToken);
-                    } else {
-                        log.info("refresh token not exist");
-                        throw new AuthException(REFRESH_TOKEN_NOT_EXIST);
-                    }
-                } else {
-                    log.info("access token not valid");
-                    throw new AuthException(JWT_NOT_VALID);
-                }
             }
         } else {
-            throw new AuthException(ACCESS_TOKEN_NOT_EXIST);
+            log.info("accessToken not valid");
+            Optional<String> refreshToken = jwtTokenizer.extractRefreshToken(request);
+            //refresh token 존재시 accessToken reissue 후 return;
+            if (refreshToken.isPresent()) {
+                //refreshToken valid check
+                checkRefreshToken(response, refreshToken.get());
+            } else {
+                log.info("refresh token not exist");
+                throw new AuthException(REFRESH_TOKEN_NOT_EXIST);
+            }
         }
         filterChain.doFilter(request, response);
     }
 
-    private void checkRefreshToken(HttpServletResponse response, Optional<String> refreshToken, Optional<String> accessToken) {
-        if (!jwtTokenizer.isTokenValid(refreshToken.get())) {
+    private void checkRefreshToken(HttpServletResponse response, String refreshToken) {
+        if (!jwtTokenizer.isTokenValid(refreshToken)) {
             log.info("refresh token not valid");
             throw new AuthException(JWT_NOT_VALID);
         }
-        Users users = getUsers(accessToken.get());
-        Optional<String> optionalRt = redisUtils.getObject(users.getId());
-        if(optionalRt.isPresent()) {
-            String rt = optionalRt.get();
-            if(!rt.equals(refreshToken.get())) {
-                throw new AuthException(JWT_NOT_VALID);
-            }
-        }
-        reIssueToken(users, response);
+        Long userId = redisUtils.getObject(refreshToken)
+                .orElseThrow(() -> new AuthException(JWT_NOT_VALID));
+        Users users = usersRepository.findById(userId)
+                .orElseThrow(() -> new UserException(USER_NOT_FOUND));
+        reIssueToken(users, response, refreshToken);
     }
 
-    private void reIssueToken(Users users, HttpServletResponse response) {
+    private void reIssueToken(Users users, HttpServletResponse response, String refreshToken) {
         log.info("checkRefreshTokenAndReIssueAccessToken start");
 
-        String token = jwtTokenizer.createRefreshToken(users.getId());
+        String token = jwtTokenizer.createRefreshToken(users.getId(), refreshToken);
         String accessToken = jwtTokenizer.createAccessToken(users.getEmail());
 
         //securityContext에 저장

@@ -5,12 +5,15 @@ services:
     image: mongo
     hostname: mongodb1
     container_name: mongodb1
-    restart: always
+    healthcheck:
+      test: test $$(mongosh --port 27018 --quiet --eval "rs.initiate({_id:\"rs0\",members:[{_id:0,host:\"mongo1:27018\"},{_id:1,host:\"mongo2:27019\"},{_id:2,host:\"mongo3:27020\"}]}).ok || rs.status().ok") -eq 1
+      interval: 10s
+      timeout: 10s
+      retries: 4
     environment:
       MONGO_INITDB_ROOT_USERNAME: root
       MONGO_INITDB_ROOT_PASSWORD: password1!
     volumes:
-      - ./mongod.conf:/etc/mongod.conf
       - ./key/mongodb.key:/etc/mongodb.key
       - ./data/mongodb1:/data/db
     command: mongod --replSet rs0 --port 27018 --keyFile /etc/mongodb.key --bind_ip_all
@@ -22,12 +25,10 @@ services:
     image: mongo
     hostname: mongodb2
     container_name: mongodb2
-    restart: always
     environment:
       MONGO_INITDB_ROOT_USERNAME: root
       MONGO_INITDB_ROOT_PASSWORD: password1!
     volumes:
-      - ./mongod.conf:/etc/mongod.conf
       - ./key/mongodb.key:/etc/mongodb.key
       - ./data/mongodb2:/data/db
     command: mongod --replSet rs0 --port 27019 --keyFile /etc/mongodb.key --bind_ip_all
@@ -36,17 +37,16 @@ services:
     networks:
       - mongoCluster
     depends_on:
-      - mongodb1
+      mongodb1:
+        condition: service_healthy
   mongodb3:
     image: mongo
     hostname: mongodb3
     container_name: mongodb3
-    restart: always
     environment:
       MONGO_INITDB_ROOT_USERNAME: root
       MONGO_INITDB_ROOT_PASSWORD: password1!
     volumes:
-      - ./mongod.conf:/etc/mongod.conf
       - ./key/mongodb.key:/etc/mongodb.key
       - ./data/mongodb3:/data/db
     command: mongod --replSet rs0  --port 27020 --keyFile /etc/mongodb.key --bind_ip_all
@@ -55,7 +55,37 @@ services:
     networks:
       - mongoCluster
     depends_on:
+      mongodb1:
+        condition: service_healthy
+  redis1:
+    image: redis
+    container_name: redis1
+    ports:
+      - 6379:6379
+  redis2:
+    image: redis
+    container_name: redis2
+    ports:
+      - 6380:6379
+
+  be:
+    build:
+      context: .
+      dockerfile: ./Dockerfile
+    ports:
+      - 8080:8080
+    depends_on:
+      - mysql
       - mongodb1
+
+  mysql:
+    image: mysql:8.0
+    container_name: mysql
+    ports:
+      - 3306:3306
+    volumes:
+      - ./db/mysql/data:/var/lib/mysql
+      - ./db/mysql/init:/docker-entrypoint-initdb.d
 
 
 networks:

@@ -21,6 +21,4 @@ public class ResponsesService {
     public void saveResponses(List<Responses> responses) {
         responsesMongoRepository.saveAll(responses);
     }
-
-
 }
