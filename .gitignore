@@ -38,6 +38,7 @@ out/
 
 application.yml
 !domain-quiz-module/src/test/resources/application.yml
+!api-module/src/main/resources/application.yml
 
 application-*.yml
 data

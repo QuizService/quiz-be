@@ -1,0 +1,19 @@
+spring:
+  profiles:
+    active: local
+    include:
+      - db
+      - security
+
+
+---
+spring:
+  config:
+    activate:
+      on-profile: local
+
+#logging:
+#  level:
+#    org:
+#      springframework:
+#        transaction.interceptor: TRACE

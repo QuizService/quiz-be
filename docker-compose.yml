@@ -68,15 +68,6 @@ services:
     ports:
       - 6380:6379
 
-  be:
-    build:
-      context: .
-      dockerfile: ./Dockerfile
-    ports:
-      - 8080:8080
-    depends_on:
-      - mysql
-      - mongodb1
 
   mysql:
     image: mysql:8.0
