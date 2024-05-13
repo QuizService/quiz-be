@@ -26,6 +26,14 @@ jobs:
           distribution: 'oracle'
           cache: 'gradle'
 
+      - name: set security-yml
+        run: |
+          echo "${{ secrets.APPLICATION_SECURITY_YML }}" | base64 --decode > api-module/src/main/resources/application-security.yml
+
+      - name: set db-yml
+        run: |
+          echo "${{ secrets.APPLICATION_DB_YML }}" | base64 --decode > domain-quiz-module/src/main/resources/application-db.yml
+
       - name: Setup Gradle
         uses: gradle/gradle-build-action@v2
 
@@ -52,3 +60,4 @@ jobs:
         run: |
           docker build -t $REGISTRY/$REPOSITORY:latest . 
           docker push $REGISTRY/$REPOSITORY:latest
+

@@ -3,6 +3,7 @@ package com.quiz.domain.users.service;
 import com.quiz.domain.users.dto.UserInfoDto;
 import com.quiz.domain.users.dto.UserNameDto;
 import com.quiz.domain.users.entity.Users;
+import com.quiz.domain.users.enums.Role;
 import com.quiz.domain.users.repository.UsersRepository;
 import com.quiz.domain.users.dto.UsersRequestDto;
 import com.quiz.global.exception.user.UserException;
@@ -39,6 +40,7 @@ public class UsersService {
                         .email(request.getEmail())
                         .name(request.getName())
                         .provider(request.getProvider())
+                        .role(Role.USER)
                         .build()));
     }
 
@@ -49,7 +51,7 @@ public class UsersService {
 
     public UserInfoDto getUserInfo(String email) {
         Optional<Users> optionalUsers = usersRepository.findByEmail(email);
-        if(optionalUsers.isPresent()) {
+        if (optionalUsers.isPresent()) {
             Users users = optionalUsers.get();
             return UserInfoDto.builder()
                     .name(users.getName())

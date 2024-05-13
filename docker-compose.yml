@@ -11,8 +11,8 @@ services:
       timeout: 10s
       retries: 4
     environment:
-      MONGO_INITDB_ROOT_USERNAME: root
-      MONGO_INITDB_ROOT_PASSWORD: password1!
+      MONGO_INITDB_ROOT_USERNAME: ${username}
+      MONGO_INITDB_ROOT_PASSWORD: ${password}
     volumes:
       - ./key/mongodb.key:/etc/mongodb.key
       - ./data/mongodb1:/data/db
@@ -26,8 +26,8 @@ services:
     hostname: mongodb2
     container_name: mongodb2
     environment:
-      MONGO_INITDB_ROOT_USERNAME: root
-      MONGO_INITDB_ROOT_PASSWORD: password1!
+      MONGO_INITDB_ROOT_USERNAME: ${username}
+      MONGO_INITDB_ROOT_PASSWORD: ${password}
     volumes:
       - ./key/mongodb.key:/etc/mongodb.key
       - ./data/mongodb2:/data/db
@@ -44,8 +44,8 @@ services:
     hostname: mongodb3
     container_name: mongodb3
     environment:
-      MONGO_INITDB_ROOT_USERNAME: root
-      MONGO_INITDB_ROOT_PASSWORD: password1!
+      MONGO_INITDB_ROOT_USERNAME: ${username}
+      MONGO_INITDB_ROOT_PASSWORD: ${password}
     volumes:
       - ./key/mongodb.key:/etc/mongodb.key
       - ./data/mongodb3:/data/db
@@ -68,15 +68,6 @@ services:
     ports:
       - 6380:6379
 
-  be:
-    build:
-      context: .
-      dockerfile: ./Dockerfile
-    ports:
-      - 8080:8080
-    depends_on:
-      - mysql
-      - mongodb1
 
   mysql:
     image: mysql:8.0
