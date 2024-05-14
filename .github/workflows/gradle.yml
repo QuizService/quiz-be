@@ -44,7 +44,6 @@ jobs:
 
       - name: set task-def.json
         run: |
-          git update-index --chmod=+x hsj-task-def.json
           echo "${{ secrets.TASK_DEF_JSON }}" | base64 --decode > aws/hsj-task-def.json
 
       - name: Setup Gradle
