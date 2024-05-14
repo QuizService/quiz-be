@@ -70,6 +70,7 @@ jobs:
         run: |
           docker build -t ${{ env.REGISTRY }}/${{ env.REPOSITORY }}:latest . 
           docker push ${{ env.REGISTRY }}/${{ env.REPOSITORY }}:latest
+          echo "::set-output name=image::${{ env.REGISTRY }}/${{ env.REPOSITORY }}:latest"
 
       - name: Render Amazon ECS task definition
         id: task-def
