@@ -44,7 +44,7 @@ jobs:
 
       - name: set task-def.json
         run: |
-          echo "${{ secrets.TASK_DEF_JSON }}" | base64 --decode >> aws/hsj-task-def.json
+          echo "${{ secrets.TASK_DEF_JSON }}" | base64 --decode > aws/hsj-task-def.json
 
       - name: Setup Gradle
         uses: gradle/gradle-build-action@v2
