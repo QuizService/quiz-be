@@ -43,6 +43,6 @@ application.yml
 
 application-*.yml
 data
-hsj-task-def.json
+aws/hsj-task-def.json
 
 /key/mongodb.key

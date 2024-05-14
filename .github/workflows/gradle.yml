@@ -44,7 +44,8 @@ jobs:
 
       - name: set task-def.json
         run: |
-          echo "${{ secrets.TASK_DEF_JSON }}" | base64 --decode > /hsj-task-def.json
+          git update-index --chmod=+x hsj-task-def.json
+          echo "${{ secrets.TASK_DEF_JSON }}" | base64 --decode > aws/hsj-task-def.json
 
       - name: Setup Gradle
         uses: gradle/gradle-build-action@v2
@@ -66,17 +67,18 @@ jobs:
         uses: aws-actions/amazon-ecr-login@v2
 
       - name: build, push to ecr
+        id: build-image
         run: |
           docker build -t ${{ env.REGISTRY }}/${{ env.REPOSITORY }}:latest . 
           docker push ${{ env.REGISTRY }}/${{ env.REPOSITORY }}:latest
 
       - name: Render Amazon ECS task definition
-        id: render-web-container
+        id: task-def
         uses: aws-actions/amazon-ecs-render-task-definition@v1
         with:
-          task-definition: ${{ env.TASK_DEFINITION_NAME }}
+          task-definition: aws/hsj-task-def.json
           container-name: ${{ env.ECS_CONTAINER_NAME }}
-          image: ${{ env.REGISTRY }}/${{ env.REPOSITORY }}:latest
+          image: ${{ steps.build-image.outputs.image }}
           environment-variables: "LOG_LEVEL=info"
 
       - name: Deploy to Amazon ECS service
