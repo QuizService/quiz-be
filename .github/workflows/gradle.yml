@@ -42,6 +42,10 @@ jobs:
         run: |
           echo "${{ secrets.APPLICATION_DB_YML }}" | base64 --decode > domain-quiz-module/src/main/resources/application-db.yml
 
+      - name: set task-def.json
+        run: |
+          echo "${{ secrets.TASK_DEF_JSON }}" | base64 --decode > /"${{ env.TASK_DEFINITION_NAME }}"
+
       - name: Setup Gradle
         uses: gradle/gradle-build-action@v2
 
@@ -78,7 +82,7 @@ jobs:
       - name: Deploy to Amazon ECS service
         uses: aws-actions/amazon-ecs-deploy-task-definition@v1
         with:
-          task-definition: ${{ env.TASK_DEFINITION_NAME }}
+          task-definition: ${{ steps.task-def.outputs.task-definition }}
           service: ${{ env.ECS_SERVICE_NAME }}
           cluster: ${{ env.ECS_CLUSTER_NAME }}
 
