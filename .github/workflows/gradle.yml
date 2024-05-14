@@ -72,13 +72,13 @@ jobs:
         with:
           task-definition: ${{ env.TASK_DEFINITION_NAME }}
           container-name: ${{ env.ECS_CONTAINER_NAME }}
-          image: ${{ steps.build-image.outputs.image }}
+          image: ${{ env.REGISTRY }}/${{ env.REPOSITORY }}:latest
           environment-variables: "LOG_LEVEL=info"
 
       - name: Deploy to Amazon ECS service
         uses: aws-actions/amazon-ecs-deploy-task-definition@v1
         with:
-          task-definition: ${{ steps.render-web-container.outputs.task-definition }}
+          task-definition: ${{ env.TASK_DEFINITION_NAME }}
           service: ${{ env.ECS_SERVICE_NAME }}
           cluster: ${{ env.ECS_CLUSTER_NAME }}
 
