@@ -8,9 +8,7 @@ import com.quiz.global.mock.TestDto;
 import com.quiz.global.mock.TestEntities;
 import com.quiz.utils.TimeConverter;
 import lombok.extern.slf4j.Slf4j;
-import org.assertj.core.api.Assertions;
 import org.jetbrains.annotations.NotNull;
-import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
@@ -33,7 +31,6 @@ import java.util.List;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
-@Slf4j
 @Testcontainers
 @ExtendWith(SpringExtension.class)
 @DataMongoTest

@@ -8,7 +8,6 @@ import com.quiz.domain.response.dto.ResponsesRequestDto;
 import com.quiz.domain.response.service.ResponsesFacade;
 import com.quiz.global.mock.TestDto;
 import com.quiz.global.mock.TestEntities;
-import lombok.extern.slf4j.Slf4j;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -28,7 +27,6 @@ import java.util.List;
 
 // Integration Test
 
-@Slf4j
 @RecordApplicationEvents
 @Testcontainers
 @ContextConfiguration(classes = {TestConfiguration.class})
@@ -109,7 +107,6 @@ public class ResponseFacadeTest {
     @Test
     void saveResponseTest() {
         List<ResponsesRequestDto> requestDtos = List.of(TestDto.getResponseRequestDto(questionId));
-        log.info(participantInfoId);
         responsesFacade.calculateScoreAndSaveResponse(quizId, requestDtos, participantInfoId);
     }
 

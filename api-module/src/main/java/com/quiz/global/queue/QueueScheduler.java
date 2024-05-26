@@ -2,8 +2,6 @@ package com.quiz.global.queue;
 
 import com.quiz.domain.participantsinfo.dto.ParticipantQueueDto;
 import com.quiz.domain.participantsinfo.repository.redis.ParticipantInfoQueueRepository;
-import com.quiz.domain.participantsinfo.service.ParticipantInfoFacade;
-import com.quiz.domain.response.service.ResponsesFacade;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.context.ApplicationEventPublisher;
@@ -29,7 +27,7 @@ public class QueueScheduler {
     @Transactional(value = "redisTx1")
     @Scheduled(fixedDelay = 2000)
     public void queue() {
-        Set<ParticipantQueueDto> queue = participantInfoQueueRepository.get10Users();
+        Set<ParticipantQueueDto> queue = participantInfoQueueRepository.getTenUsers();
 
         for (ParticipantQueueDto participantQueueDto : queue) {
             Long quizId = participantQueueDto.quizId();
@@ -39,9 +37,8 @@ public class QueueScheduler {
             Long rank = participantInfoQueueRepository.getRank(quizId, userId);
             rank = rank == null ? 0 : rank;
 
-            // 아직 자리 다 안찬 경우
             Integer capacity = participantInfoQueueRepository.getParticipantNumber(quizId);
-            if (capacity > 0) {
+            if (capacity > 0) { // 아직 자리 다 안찬 경우
                 log.info("capacity = {}", capacity);
                 boolean isUserTurn = rank < 10L;
                 eventPublisher.publishEvent(new ParticipantQueueInfoDto(quizId, userId, rank,true, isUserTurn));

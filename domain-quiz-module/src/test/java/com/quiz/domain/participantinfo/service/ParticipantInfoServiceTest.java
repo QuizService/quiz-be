@@ -3,7 +3,6 @@ package com.quiz.domain.participantinfo.service;
 import com.quiz.TestConfiguration;
 import com.quiz.domain.participantsinfo.service.ParticipantInfoQueueService;
 import com.quiz.domain.participantsinfo.service.ParticipantInfoService;
-import lombok.extern.slf4j.Slf4j;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -27,7 +26,6 @@ import java.util.stream.IntStream;
 import static org.assertj.core.api.Assertions.assertThat;
 
 // Integration Test
-@Slf4j
 @Testcontainers
 @ContextConfiguration(classes = {TestConfiguration.class})
 @SpringBootTest

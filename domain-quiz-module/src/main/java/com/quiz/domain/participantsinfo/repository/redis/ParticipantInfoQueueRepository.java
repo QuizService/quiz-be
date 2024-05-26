@@ -45,7 +45,7 @@ public class ParticipantInfoQueueRepository {
                 .toList();
     }
 
-    public Set<ParticipantQueueDto> get10Users() {
+    public Set<ParticipantQueueDto> getTenUsers() {
         Long size = redis1Utils.getZSetSize(WAITING_QUEUE_KEY_PREFIX);
         Set<Object> usersSet = redis1Utils.zRange(WAITING_QUEUE_KEY_PREFIX, START_IDX, size < 10L ? size : 10L);
         return usersSet.stream()
