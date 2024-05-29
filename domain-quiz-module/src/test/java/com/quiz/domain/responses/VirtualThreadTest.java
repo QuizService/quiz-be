@@ -1,20 +1,17 @@
 package com.quiz.domain.responses;
 
-import lombok.extern.slf4j.Slf4j;
 import org.junit.jupiter.api.Test;
 
 import java.util.concurrent.CountDownLatch;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
-import java.util.concurrent.TimeUnit;
 
-@Slf4j
 public class VirtualThreadTest {
     int numberOfTask = 10000;
 
     void work(int taskNum, ExecutorService executor) throws InterruptedException {
         CountDownLatch countDownLatch = new CountDownLatch(taskNum);
-        for(int i = 0; i<taskNum; i++) {
+        for (int i = 0; i < taskNum; i++) {
             int num = i;
             executor.execute(() -> {
                 try {
@@ -26,21 +23,20 @@ public class VirtualThreadTest {
                 }
             });
         }
-        countDownLatch.await();;
+        countDownLatch.await();
+        ;
     }
 
     @Test
     void testThread() throws InterruptedException {
 
-        long  startTime;
+        long startTime;
 
-        log.info("thread start");
         ExecutorService executor = Executors.newFixedThreadPool(32);
         startTime = System.nanoTime();
         work(numberOfTask, executor);
         long duration = System.nanoTime() - startTime;
         executor.shutdown();
-        log.info("duration = {}",duration);
         //taskNum = 100 -> 75795200
         //taskNum = 1000 -> 446492700
         //taskNum = 10000 -> 4393024000
@@ -48,15 +44,13 @@ public class VirtualThreadTest {
 
     @Test
     void testVirtualThread() throws InterruptedException {
-        long  startTime;
+        long startTime;
 
-        log.info("thread start");
         ExecutorService executor = Executors.newVirtualThreadPerTaskExecutor();
         startTime = System.nanoTime();
         work(numberOfTask, executor);
         long duration = System.nanoTime() - startTime;
         executor.shutdown();
-        log.info("duration = {}",duration);
         //taskNum = 100 -> 31272000
         //taskNum = 1000 -> 219035200
         //taskNum = 10000 -> 1363350400

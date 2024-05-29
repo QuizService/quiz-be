@@ -9,12 +9,9 @@ on:
       - 'main'
 
 env:
-  ECS_CLUSTER_NAME: hsj-cluster
-  ECS_CONTAINER_NAME: hsj-container
-  ECS_SERVICE_NAME: hsj-service
-  TASK_DEFINITION_NAME: hsj-task-def.json
-  REGISTRY: ${{ secrets.REGISTRY }}
-  REPOSITORY: ${{ secrets.REPOSITORY }}
+  BUCKET_NAME: ${{secrets.bucket_name}}
+  CD_APPLICATION_NAME: ${{secrets.cd_application_name}}
+  CD_GROUP_NAME: ${{secrets.cd_group_name}}
 
 jobs:
   build:
@@ -42,9 +39,8 @@ jobs:
         run: |
           echo "${{ secrets.APPLICATION_DB_YML }}" | base64 --decode > domain-quiz-module/src/main/resources/application-db.yml
 
-      - name: set task-def.json
-        run: |
-          echo "${{ secrets.TASK_DEF_JSON }}" | base64 --decode > aws/hsj-task-def.json
+      - name: mkdir deploy folder
+        run: mkdir -p deploy
 
       - name: Setup Gradle
         uses: gradle/gradle-build-action@v2
@@ -55,36 +51,38 @@ jobs:
       - name: build with Gradle Wrapper
         run: ./gradlew build
 
+      - name: show location
+        run: pwd
+
+      - name: copy jar
+        run: cp ./api-module/build/libs/*.jar ./deploy
+
+      - name: copy appspec.yml&deploy.sh
+        run: cp ./scripts ./deploy
+
+      - name: copy docker-compose.yml
+        run: | 
+          cp ./docker/docker-compose.blue.yml ./deploy
+          cp ./docker/docker-compose.green.yml ./deploy
+
+      - name: zip files
+        run: zip -r app.zip ./deploy
+
       - name: Configure AWS credentials
         uses: aws-actions/configure-aws-credentials@v4
         with:
           aws-region: ${{ secrets.REGION }}
           role-to-assume: ${{ secrets.ROLE }}
 
-      - name: Login to Amazon ECR
-        id: login-ecr
-        uses: aws-actions/amazon-ecr-login@v2
-
-      - name: build, push to ecr
-        id: build-image
+      - name: sync bucket
         run: |
-          docker build -t ${{ env.REGISTRY }}/${{ env.REPOSITORY }}:latest . 
-          docker push ${{ env.REGISTRY }}/${{ env.REPOSITORY }}:latest
-          echo "::set-output name=image::${{ env.REGISTRY }}/${{ env.REPOSITORY }}:latest"
+          aws s3 sync --region ap-northeast-2 app.zip s3://$BUCKET_NAME/app.zip --delete
 
-      - name: Render Amazon ECS task definition
-        id: task-def
-        uses: aws-actions/amazon-ecs-render-task-definition@v1
-        with:
-          task-definition: aws/hsj-task-def.json
-          container-name: ${{ env.ECS_CONTAINER_NAME }}
-          image: ${{ steps.build-image.outputs.image }}
-          environment-variables: "LOG_LEVEL=info"
-
-      - name: Deploy to Amazon ECS service
-        uses: aws-actions/amazon-ecs-deploy-task-definition@v1
-        with:
-          task-definition: ${{ steps.task-def.outputs.task-definition }}
-          service: ${{ env.ECS_SERVICE_NAME }}
-          cluster: ${{ env.ECS_CLUSTER_NAME }}
-
+      - name: start codedeploy
+        run: |
+          aws deploy create-deployment \
+          --application-name $CD_APPLICATION_NAME \
+          --deployment-config-name CodeDeployDefault.AllAtOnce \
+          --deployment-group-name $CD_GROUP_NAME \
+          --file-exists-behavior OVERWRITE \
+          --s3-location bucket=$BUCKET_NAME
