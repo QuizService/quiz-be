@@ -58,7 +58,9 @@ jobs:
         run: cp ./api-module/build/libs/*.jar ./deploy
 
       - name: copy appspec.yml&deploy.sh
-        run: cp ./scripts ./deploy
+        run: |
+          cp ./scripts/*.sh ./deploy
+          cp ./scripts/*.yml ./deploy
 
       - name: copy docker-compose.yml
         run: | 
