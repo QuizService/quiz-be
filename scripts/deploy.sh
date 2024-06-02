@@ -8,7 +8,7 @@ DOCKER_REPO=/home/ec2-user/be/deploy/docker
 unzip "$JAR" -d /home/ec2-user/be/deploy
 
 # check current running app
-cd /home/ec2-user/be/deploy/docker
+cd /home/ec2-user/be
 BLUE_APP=$(sudo docker-compose -p blue-app -f docker-compose.blue.yml ps | grep Up);
 
 FIND=""
@@ -37,7 +37,8 @@ if [ -z "$BLUE_APP" ]; then
     echo "start blue success"
     sudo docker-compose -p green-app -f docker-compose.green.yml down
   fi
-else
+
+  else
   echo "run green"
     echo "sudo docker-compose -p green-app -f docker-compose.green.yml up -d"
     sudo docker-compose -p green-app -f docker-compose.green.yml up -d
@@ -59,7 +60,7 @@ else
     else
       echo "start green success"
       sudo docker-compose -p blue-app -f docker-compose.blue.yml down
+    fi
 fi
 
-sudo rm -rf /home/ec2-user/be/deploy/app.zip
-sudo rm -rf /home/ec2-user/be/deploy/docker
+sudo rm -rf /home/ec2-user/be/app.zip
