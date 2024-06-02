@@ -77,9 +77,7 @@ jobs:
           role-to-assume: ${{ secrets.ROLE }}
 
       - name: sync bucket
-        run: |
-          ls -al
-          aws s3 cp ./app.zip s3://$BUCKET_NAME/be/ 
+        run: aws s3 cp ./app.zip s3://$BUCKET_NAME/be/
 
       - name: start codedeploy
         run: |
@@ -88,4 +86,4 @@ jobs:
           --deployment-config-name CodeDeployDefault.AllAtOnce \
           --deployment-group-name $CD_GROUP_NAME \
           --file-exists-behavior OVERWRITE \
-          --s3-location bucket=$BUCKET_NAME
+          --s3-location bucket=$BUCKET_NAME,bundleType=zip,key=be/app.zip
