@@ -79,7 +79,7 @@ jobs:
       - name: sync bucket
         run: |
           ls -al
-          aws s3 sync app.zip s3://$BUCKET_NAME/be/ --delete
+          aws s3 cp ./app.zip s3://$BUCKET_NAME/be/ 
 
       - name: start codedeploy
         run: |
