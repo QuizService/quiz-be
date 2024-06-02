@@ -68,7 +68,7 @@ jobs:
           cp ./docker/docker-compose.green.yml ./deploy
 
       - name: copy Dockerfile
-        run: cp ./docker/Dockerfile
+        run: cp ./docker/Dockerfile ./deploy
 
       - name: zip files
         run: zip -r ./app.zip ./deploy
