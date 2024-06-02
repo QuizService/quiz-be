@@ -9,9 +9,9 @@ on:
       - 'main'
 
 env:
-  BUCKET_NAME: ${{secrets.bucket_name}}
-  CD_APPLICATION_NAME: ${{secrets.cd_application_name}}
-  CD_GROUP_NAME: ${{secrets.cd_group_name}}
+  BUCKET_NAME: ${{secrets.BUCKET_NAME}}
+  CD_APPLICATION_NAME: ${{secrets.CD_APPLICATION_NAME}}
+  CD_GROUP_NAME: ${{secrets.CD_GROUP_NAME}}
 
 jobs:
   build:
@@ -58,7 +58,9 @@ jobs:
         run: cp ./api-module/build/libs/*.jar ./deploy
 
       - name: copy appspec.yml&deploy.sh
-        run: cp ./scripts ./deploy
+        run: |
+          cp ./scripts/*.sh ./deploy
+          cp ./scripts/*.yml ./deploy
 
       - name: copy docker-compose.yml
         run: | 
