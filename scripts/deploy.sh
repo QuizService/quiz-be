@@ -58,4 +58,4 @@ if [ -z "$BLUE_APP" ]; then
     fi
 fi
 
-sudo rm -rf /home/ec2-user/be/app.zip
+sudo rm -rf /home/ec2-user/be
