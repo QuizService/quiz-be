@@ -78,7 +78,7 @@ jobs:
 
       - name: sync bucket
         run: |
-          aws s3 sync --region ap-northeast-2 app.zip s3://$BUCKET_NAME/app.zip --delete
+          aws s3 sync --region ap-northeast-2 app.zip s3://$BUCKET_NAME/be --delete
 
       - name: start codedeploy
         run: |
