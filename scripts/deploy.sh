@@ -1,11 +1,10 @@
 #!/bin/bash
 
 # env
-JAR=/home/ec2-user/be/deploy/app.zip
-DOCKER_REPO=/home/ec2-user/be/deploy/docker
+JAR=/home/ec2-user/be/app.zip
 
 # unzip files
-unzip "$JAR" -d /home/ec2-user/be/deploy
+unzip "$JAR" -d /home/ec2-user/be
 
 # check current running app
 cd /home/ec2-user/be
