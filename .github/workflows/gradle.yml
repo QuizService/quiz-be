@@ -49,7 +49,9 @@ jobs:
         run: chmod +x gradlew
 
       - name: build with Gradle Wrapper
-        run: ./gradlew build -x test
+        run: |
+          ./gradlew clean
+          ./gradlew build -x test
 
       - name: show location
         run: pwd
