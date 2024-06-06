@@ -20,7 +20,7 @@ if [ -z "$BLUE_APP" ]; then
     CHECK_BLUE=$(curl -s "$CHECK_BLUE_URL" | grep blue)
     UP_COUNT=$(echo ${CHECK_BLUE} | grep 'UP' | wc -l)
 
-    if [ ${UP_COUNT} -ge 1 ] then;
+    if [ ${UP_COUNT} -ge 1 ]; then
       echo "start blue success"
       FIND="FIND"
     else
@@ -45,7 +45,7 @@ if [ -z "$BLUE_APP" ]; then
     do
       CHECK_GREEN=$(curl -s "$CHECK_GREEN_URL" | grep green)
       UP_COUNT=$(echo ${CHECK_GREEN} | grep 'UP' | wc -l)
-      if [ ${UP_COUNT} -ge 1 ] then;
+      if [ ${UP_COUNT} -ge 1 ]; then
         echo "start green success"
         FIND="FIND"
       else
