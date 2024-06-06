@@ -7,7 +7,8 @@ cd /home/ec2-user/be
 BLUE_APP=$(sudo docker compose -p blue-app -f docker-compose.blue.yml ps | grep Up);
 
 FIND=""
-CHECK_URL=""
+CHECK_BLUE_URL="http://localhost:8080/health-check"
+CHECK_GREEN_URL="http://localhost:8081/health-check"
 
 if [ -z "$BLUE_APP" ]; then
   echo "run blue"
@@ -16,12 +17,14 @@ if [ -z "$BLUE_APP" ]; then
   sleep 20
   for count in {1..5}
   do
-    CHECK_BLUE=$(curl -s "$CHECK_URL" | grep blue)
-    if [ -z "$CHECK_BLUE" ]; then
-      echo "loading... $count"
-    else
+    CHECK_BLUE=$(curl -s "$CHECK_BLUE_URL" | grep blue)
+    UP_COUNT=$(echo ${CHECK_BLUE} | grep 'UP' | wc -l)
+
+    if [ ${UP_COUNT} -ge 1 ] then;
       echo "start blue success"
       FIND="FIND"
+    else
+      echo "loading... $count"
     fi
     sleep 5
   done
@@ -40,12 +43,13 @@ if [ -z "$BLUE_APP" ]; then
     sleep 20
     for count in {1..5}
     do
-      CHECK_GREEN=$(curl -s "$CHECK_URL" | grep green)
-      if [ -z "$CHECK_GREEN" ]; then
-        echo "loading... $count"
-      else
+      CHECK_GREEN=$(curl -s "$CHECK_GREEN_URL" | grep green)
+      UP_COUNT=$(echo ${CHECK_GREEN} | grep 'UP' | wc -l)
+      if [ ${UP_COUNT} -ge 1 ] then;
         echo "start green success"
         FIND="FIND"
+      else
+        echo "loading... $count"
       fi
       sleep 5
     done
