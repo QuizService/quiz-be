@@ -35,11 +35,11 @@ subprojects {
 		implementation 'org.springframework.boot:spring-boot-starter-web'
 		implementation 'org.springframework.boot:spring-boot-starter-validation'
 
+		implementation platform("io.awspring.cloud:spring-cloud-aws-dependencies:3.0.4")
+		implementation 'io.awspring.cloud:spring-cloud-aws-starter-parameter-store'
+
 		compileOnly 'org.projectlombok:lombok'
 		annotationProcessor 'org.projectlombok:lombok'
-
-		testCompileOnly 'org.projectlombok:lombok'
-		testAnnotationProcessor 'org.projectlombok:lombok'
 
 		testImplementation 'org.springframework.boot:spring-boot-starter-test'
 	}

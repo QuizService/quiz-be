@@ -2,7 +2,9 @@ spring:
   profiles:
     active: local
     include:
-      - db
+      - mysql
+      - mongo
+      - redis
 
 
 ---
