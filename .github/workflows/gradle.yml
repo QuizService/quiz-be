@@ -7,8 +7,6 @@ on:
   pull_request:
     branches:
       - 'main'
-    types:
-      [closed]
 
 env:
   BUCKET_NAME: ${{secrets.BUCKET_NAME}}
@@ -16,8 +14,7 @@ env:
   CD_GROUP_NAME: ${{secrets.CD_GROUP_NAME}}
 
 jobs:
-  if_merged:
-    if: github.event.pull_request.merged == true
+  build:
     runs-on: ubuntu-latest
     permissions:
       id-token: write
@@ -84,8 +81,8 @@ jobs:
           aws-region: ${{ secrets.REGION }}
           role-to-assume: ${{ secrets.ROLE }}
 
-      - name: sync bucket
-        run: aws s3 cp ./app.zip s3://$BUCKET_NAME/be/
+      - name: cp bucket
+        run: aws s3 cp --region ap-northeast-2 ./app.zip s3://$BUCKET_NAME/be/
 
       - name: start codedeploy
         run: |
