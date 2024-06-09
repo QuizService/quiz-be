@@ -39,8 +39,8 @@ jobs:
         run: |
           echo "${{ secrets.APPLICATION_DB_YML }}" | base64 --decode > domain-quiz-module/src/main/resources/application-db.yml
 
-      - name: mkdir deploy folder
-        run: mkdir -p deploy
+#      - name: mkdir deploy folder
+#        run: mkdir -p deploy
 
       - name: Setup Gradle
         uses: gradle/gradle-build-action@v2
@@ -53,13 +53,10 @@ jobs:
           ./gradlew clean
           ./gradlew build -x test
 
-      - name: show location
-        run: pwd
-
       - name: copy jar
-        run: | 
-          cp ./api-module/build/libs/*.jar ./deploy
+        run: |
           cp -r . ./deploy
+          cp ./api-module/build/libs/*.jar ./deploy
 
       - name: copy appspec.yml&deploy.sh
         run: |
