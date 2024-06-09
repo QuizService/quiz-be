@@ -59,7 +59,7 @@ jobs:
       - name: copy jar
         run: | 
           cp ./api-module/build/libs/*.jar ./deploy
-          cp -r ./api-module ./deploy
+          cp -r . ./deploy
 
       - name: copy appspec.yml&deploy.sh
         run: |
