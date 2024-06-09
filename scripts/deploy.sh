@@ -55,11 +55,11 @@ if [ -z "$BLUE_APP" ]; then
     done
     if [ -z "$FIND" ]; then
       echo "start green failed"
-#      sudo docker compose -p green-app -f docker-compose.green.yml down
+      sudo docker compose -p green-app -f docker-compose.green.yml down
     else
       echo "start green success"
       sudo docker compose -p blue-app -f docker-compose.blue.yml down
     fi
 fi
 
-#sudo rm -rf /home/ec2-user/be
+sudo rm -rf /home/ec2-user/be

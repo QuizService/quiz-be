@@ -7,7 +7,6 @@ import com.quiz.global.exception.quiz.code.QuizErrorCode;
 import com.quiz.global.mock.TestDto;
 import com.quiz.global.mock.TestEntities;
 import com.quiz.utils.TimeConverter;
-import lombok.extern.slf4j.Slf4j;
 import org.jetbrains.annotations.NotNull;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;

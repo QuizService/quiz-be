@@ -55,8 +55,6 @@ jobs:
 
       - name: copy jar
         run: |
-          cp -r ./api-module ./deploy
-          cp -r ./domain-quiz-module ./deploy
           cp ./api-module/build/libs/*.jar ./deploy
 
       - name: copy appspec.yml&deploy.sh
