@@ -30,7 +30,7 @@ if [ -z "$BLUE_APP" ]; then
   done
   if [ -z "$FIND" ]; then
     echo "start blue failed"
-    sudo docker compose -p blue-app -f docker-compose.blue.yml down
+#    sudo docker compose -p blue-app -f docker-compose.blue.yml down
   else
     echo "start blue success"
     sudo docker compose -p green-app -f docker-compose.green.yml down
