@@ -2,10 +2,10 @@ spring:
   profiles:
     active: local
     include:
-#      - db
-      - mongo
-      - mysql
-      - redis
+      - db
+#      - mongo
+#      - mysql
+#      - redis
       - security
 
 
