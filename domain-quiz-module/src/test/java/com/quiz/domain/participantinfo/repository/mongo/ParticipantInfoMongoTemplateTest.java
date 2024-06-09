@@ -1,31 +1,27 @@
 package com.quiz.domain.participantinfo.repository.mongo;
 
-import com.quiz.TestConfiguration;
 import com.quiz.domain.participantsinfo.entity.ParticipantInfo;
 import com.quiz.domain.participantsinfo.repository.mongo.ParticipantInfoMongoTemplate;
 import com.quiz.domain.participantsinfo.repository.mongo.ParticipantInfoRepository;
-import com.quiz.domain.questions.entity.Questions;
 import com.quiz.domain.questions.repository.mongo.QuestionsRepository;
 import com.quiz.domain.quiz.entity.Quiz;
 import com.quiz.domain.quiz.repository.mongo.QuizRepository;
 import com.quiz.global.exception.participantinfo.ParticipantInfoException;
-import com.quiz.global.exception.participantinfo.code.ParticipantInfoErrorCode;
 import com.quiz.global.mock.TestEntities;
-import lombok.extern.slf4j.Slf4j;
 import org.assertj.core.api.Assertions;
 import org.junit.jupiter.api.AfterEach;
+import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.data.mongo.DataMongoTest;
-import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.data.mongodb.core.MongoTemplate;
-import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.DynamicPropertyRegistry;
 import org.springframework.test.context.DynamicPropertySource;
 import org.testcontainers.containers.MongoDBContainer;
+import org.testcontainers.junit.jupiter.Container;
 import org.testcontainers.junit.jupiter.Testcontainers;
-import org.testcontainers.shaded.org.checkerframework.checker.units.qual.A;
+import org.testcontainers.utility.DockerImageName;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -33,15 +29,13 @@ import java.util.List;
 import static com.quiz.global.exception.participantinfo.code.ParticipantInfoErrorCode.PARTICIPANT_NOT_FOUND;
 import static org.assertj.core.api.AssertionsForClassTypes.assertThat;
 
-@Slf4j
 @Testcontainers
 @DataMongoTest
 public class ParticipantInfoMongoTemplateTest {
-    static MongoDBContainer mongoDBContainer = new MongoDBContainer("mongo:latest");
+    @Container
+    static MongoDBContainer mongoDBContainer = new MongoDBContainer(DockerImageName.parse("mongo:4.0.10")
+            .asCompatibleSubstituteFor("mongo"));
 
-    static {
-        mongoDBContainer.start();
-    }
 
     @DynamicPropertySource
     static void setProperties(DynamicPropertyRegistry registry) {

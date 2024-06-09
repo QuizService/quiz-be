@@ -9,7 +9,6 @@ import com.quiz.domain.questions.repository.mongo.QuestionsMongoTemplate;
 import com.quiz.domain.questions.repository.mongo.QuestionsRepository;
 import com.quiz.global.mock.TestDto;
 import com.quiz.global.mock.TestEntities;
-import lombok.extern.slf4j.Slf4j;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -24,7 +23,6 @@ import java.util.Optional;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
-@Slf4j
 @ExtendWith(MockitoExtension.class)
 public class QuestionServiceTest {
     @Mock

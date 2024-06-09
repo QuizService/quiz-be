@@ -1,12 +1,11 @@
 package com.quiz.domain.quiz.service;
 
-import com.quiz.domain.quiz.entity.Quiz;
 import com.quiz.domain.quiz.dto.QuizRequestDto;
+import com.quiz.domain.quiz.entity.Quiz;
 import com.quiz.domain.quiz.repository.mongo.QuizMongoTemplate;
 import com.quiz.domain.quiz.repository.mongo.QuizRepository;
-import com.quiz.global.sequence.SequenceGenerator;
 import com.quiz.global.mock.TestEntities;
-import lombok.extern.slf4j.Slf4j;
+import com.quiz.global.sequence.SequenceGenerator;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -18,7 +17,7 @@ import org.mockito.junit.jupiter.MockitoExtension;
 import java.util.Optional;
 
 import static org.assertj.core.api.Assertions.assertThat;
-@Slf4j
+
 @ExtendWith(MockitoExtension.class)
 public class QuizServiceTest {
     @Mock
@@ -30,7 +29,8 @@ public class QuizServiceTest {
     @InjectMocks
     private QuizService quizService;
 
-    private Long userId = 1L;
+    private final Long userId = 1L;
+    private final Long quizId = 1L;
 
     @AfterEach
     void clear() {
@@ -39,7 +39,6 @@ public class QuizServiceTest {
 
     @Test
     void saveQuizTest() {
-        Long quizId = 1L;
         QuizRequestDto request = QuizRequestDto.builder()
                 .title("test")
                 .capacity(10)
@@ -79,7 +78,7 @@ public class QuizServiceTest {
         Mockito.verify(quizMongoTemplate)
                 .updateMaxScore(quiz);
 
-        quizService.saveQuizMaxScore(1L, maxScore);
+        quizService.saveQuizMaxScore(quizId, maxScore);
     }
 
     @Test
@@ -89,6 +88,6 @@ public class QuizServiceTest {
         Mockito.when(quizRepository.findByIdx(Mockito.any(Long.class)))
                 .thenReturn(Optional.of(quiz));
 
-        quizService.checkQuizOwnerIsUser(1L, 1L);
+        quizService.checkQuizOwnerIsUser(userId, quizId);
     }
 }

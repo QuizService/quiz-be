@@ -3,6 +3,9 @@ spring:
     active: local
     include:
       - db
+#      - mysql
+#      - mongo
+#      - redis
 
 
 ---
