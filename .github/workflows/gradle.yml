@@ -7,6 +7,8 @@ on:
   pull_request:
     branches:
       - 'main'
+    types:
+      - closed
 
 env:
   BUCKET_NAME: ${{secrets.BUCKET_NAME}}
@@ -14,7 +16,8 @@ env:
   CD_GROUP_NAME: ${{secrets.CD_GROUP_NAME}}
 
 jobs:
-  build:
+  if_merged:
+    if: github.event.pull_request.merge == true
     runs-on: ubuntu-latest
     permissions:
       id-token: write
