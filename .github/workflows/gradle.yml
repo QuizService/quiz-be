@@ -55,24 +55,24 @@ jobs:
 
       - name: copy jar
         run: |
-          cp -r . ./deploy
-          cp ./api-module/build/libs/*.jar ./deploy
+          cp -r . /deploy
+          cp ./api-module/build/libs/*.jar /deploy
 
       - name: copy appspec.yml&deploy.sh
         run: |
-          cp ./scripts/*.sh ./deploy
-          cp ./scripts/*.yml ./deploy
+          cp ./scripts/*.sh /deploy
+          cp ./scripts/*.yml /deploy
 
       - name: copy docker-compose.yml
         run: | 
-          cp ./docker/docker-compose.blue.yml ./deploy
-          cp ./docker/docker-compose.green.yml ./deploy
+          cp ./docker/docker-compose.blue.yml /deploy
+          cp ./docker/docker-compose.green.yml /deploy
 
       - name: copy Dockerfile
-        run: cp ./docker/Dockerfile ./deploy
+        run: cp ./docker/Dockerfile /deploy
 
       - name: zip files
-        run: zip -r ./app.zip ./deploy
+        run: zip -r ./app.zip /deploy
 
       - name: Configure AWS credentials
         uses: aws-actions/configure-aws-credentials@v4
