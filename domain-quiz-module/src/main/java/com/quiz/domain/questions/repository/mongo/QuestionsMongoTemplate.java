@@ -3,6 +3,7 @@ package com.quiz.domain.questions.repository.mongo;
 import com.quiz.domain.answers.entity.Answers;
 import com.quiz.domain.choice.entity.Choices;
 import com.quiz.domain.questions.dto.QuestionCountDto;
+import com.quiz.domain.questions.dto.QuestionsRequestDto;
 import com.quiz.domain.questions.entity.QuestionType;
 import com.quiz.domain.questions.entity.Questions;
 import lombok.RequiredArgsConstructor;
@@ -29,10 +30,7 @@ public class QuestionsMongoTemplate {
     private final MongoTemplate mongoTemplate;
 
     public void updateQuestion(String id,
-                               Integer sequence,
-                               String title,
-                               Integer score,
-                               String questionType,
+                               QuestionsRequestDto questionsDto,
                                LocalDateTime updated) {
 
         Query query = new Query();
@@ -40,10 +38,10 @@ public class QuestionsMongoTemplate {
 
         query.addCriteria(Criteria.where("_id").is(id));
 
-        update.set("sequence", sequence);
-        update.set("title", title);
-        update.set("score", score);
-        update.set("questionType", QuestionType.findByInitial(questionType));
+        update.set("sequence", questionsDto.getSequence());
+        update.set("title", questionsDto.getTitle());
+        update.set("score", questionsDto.getScore());
+        update.set("questionType", QuestionType.findByInitial(questionsDto.getQuestionType()));
         update.set("updated", updated);
 
         mongoTemplate.updateFirst(query, update, Questions.class);

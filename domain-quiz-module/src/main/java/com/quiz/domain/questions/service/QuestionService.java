@@ -63,7 +63,7 @@ public class QuestionService {
     }
 
     public void update(QuestionsRequestDto questionsDto, String questionId) {
-        questionsMongoTemplate.updateQuestion(questionId, questionsDto.getSequence(), questionsDto.getTitle(), questionsDto.getScore(), questionsDto.getQuestionType(), LocalDateTime.now());
+        questionsMongoTemplate.updateQuestion(questionId, questionsDto, LocalDateTime.now());
     }
 
     public Questions findById(String questionId) {

@@ -1,0 +1,12 @@
+spring:
+  profiles:
+    active: local
+    include:
+      - db
+
+
+---
+spring:
+  config:
+    activate:
+      on-profile: local

@@ -84,7 +84,6 @@ public class ParticipantInfoQueueRepository {
     }
 
 
-
     public void setParticipantNumber(Long quizId, int leftCapacity) {
         String key = PARTICIPANT_NUMBER_KEY_PREFIX + quizId;
         redis1Utils.setValue(key, (long) leftCapacity);

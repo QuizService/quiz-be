@@ -1,0 +1,8 @@
+services:
+  green-app:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    container_name: green-app
+    ports:
+      - 8081:8080

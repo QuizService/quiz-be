@@ -41,7 +41,7 @@ public class QueueScheduler {
 
                 messagingTemplate.convertAndSend("/topic/rank" + endpoint, rank);
 
-                if(tenUsersInQuiz.contains(userId)) {
+                if (tenUsersInQuiz.contains(userId)) {
                     Integer capacity = participantInfoQueueRepository.getParticipantNumber(quizId);
                     if (capacity > 0) {
                         log.info("capacity = {}", capacity);
@@ -51,9 +51,9 @@ public class QueueScheduler {
                         eventPublisher.publishEvent(new ParticipantQueueInfoDto(quizId, userId, rank, false, false));
                     }
                 }
+                participantInfoQueueRepository.delete10Users(quizId, (long) tenUsersInQuiz.size());
             }
-            participantInfoQueueRepository.delete10Users(quizId, (long) tenUsersInQuiz.size());
-        }
 
+        }
     }
 }

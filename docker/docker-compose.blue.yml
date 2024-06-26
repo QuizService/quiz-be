@@ -1,0 +1,8 @@
+services:
+  blue-app:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    container_name: blue-app
+    ports:
+      - 8080:8080

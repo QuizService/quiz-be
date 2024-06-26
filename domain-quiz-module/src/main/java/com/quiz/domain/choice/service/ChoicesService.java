@@ -4,7 +4,7 @@ import com.quiz.domain.choice.entity.Choices;
 import com.quiz.domain.questions.entity.QuestionType;
 import com.quiz.domain.choice.dto.ChoicesRequestDto;
 import com.quiz.domain.questions.dto.QuestionsRequestDto;
-import com.quiz.global.SequenceGenerator;
+import com.quiz.global.sequence.SequenceGenerator;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;

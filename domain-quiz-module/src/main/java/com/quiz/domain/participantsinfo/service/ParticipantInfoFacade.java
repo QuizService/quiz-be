@@ -81,6 +81,19 @@ public class ParticipantInfoFacade {
         return quiz.getIdx();
     }
 
+    public ParticipantsRankResponseDto showRank(Long quizId, Long userId, String username) {
+        ParticipantInfo participant = participantInfoService.findByQuizIdAndUserId(quizId, userId);
+
+        return ParticipantsRankResponseDto
+                .builder()
+                .id(participant.getId())
+                .userId(participant.getUserId())
+                .username(username)
+                .number(participant.getNumber())
+                .totalScore(participant.getTotalScore())
+                .build();
+    }
+
     public List<ParticipantsRankResponseDto> showRanks(Long quizId) {
         List<ParticipantInfo> result = participantInfoService.findParticipantInfoByQuizId(quizId);
 
