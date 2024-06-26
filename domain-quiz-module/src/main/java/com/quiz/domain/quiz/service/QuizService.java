@@ -16,6 +16,7 @@ import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.util.List;
 import java.util.NoSuchElementException;
 
 import static com.quiz.global.exception.quiz.code.QuizErrorCode.QUIZ_NOT_FOUND;
@@ -94,6 +95,10 @@ public class QuizService {
         Pageable pageable = PageRequest.of(page, size, Sort.Direction.DESC, "created");
         return quizMongoTemplate.findQuizByUserId(userId, pageable);
 
+    }
+
+    public List<Quiz> findAllExpiredQuiz() {
+        return quizMongoTemplate.findAllAfterDueDateQuiz();
     }
 
     // for test

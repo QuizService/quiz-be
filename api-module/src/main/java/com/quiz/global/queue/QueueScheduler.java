@@ -2,6 +2,9 @@ package com.quiz.global.queue;
 
 import com.quiz.domain.participantsinfo.dto.ParticipantQueueDto;
 import com.quiz.domain.participantsinfo.repository.redis.ParticipantInfoQueueRepository;
+import com.quiz.domain.quiz.entity.Quiz;
+import com.quiz.domain.quiz.repository.mongo.QuizMongoTemplate;
+import com.quiz.domain.quiz.service.QuizService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.context.ApplicationEventPublisher;
@@ -12,6 +15,7 @@ import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Component;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.util.List;
 import java.util.Set;
 
 @Slf4j
@@ -19,6 +23,7 @@ import java.util.Set;
 @Component
 @RequiredArgsConstructor
 public class QueueScheduler {
+    private final QuizService quizService;
     private final ParticipantInfoQueueRepository participantInfoQueueRepository;
     private final ApplicationEventPublisher eventPublisher;
     private final SimpMessagingTemplate messagingTemplate;
@@ -54,6 +59,18 @@ public class QueueScheduler {
                 participantInfoQueueRepository.delete10Users(quizId, (long) tenUsersInQuiz.size());
             }
 
+        }
+    }
+
+    @Async
+    @Scheduled(cron = "55 23 * * *")
+    public void deleteExpiredQuizFromQueue() {
+        List<Quiz> expiredQuizList = quizService.findAllExpiredQuiz();
+        List<Long> expiredQuizIds = expiredQuizList.stream()
+                .map(Quiz::getIdx)
+                .toList();
+        for (Long expiredQuizId : expiredQuizIds) {
+            participantInfoQueueRepository.deleteQuizIdInQueue(expiredQuizId);
         }
     }
 }
