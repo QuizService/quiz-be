@@ -12,6 +12,8 @@ public class ParticipantInfoQueueService {
     private final ParticipantInfoQueueRepository participantInfoQueueRepository;
 
     public Long addQueue(Long quizId, Long userId) {
+        // 대기열에 QuizId 있으면 대기열 사용하는 목록에 추가
+        participantInfoQueueRepository.addQuizInfo(quizId);
         return participantInfoQueueRepository.addQueue(quizId, userId);
 
     }
