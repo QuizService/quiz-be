@@ -1,8 +1,6 @@
-package com.quiz.global.exception.quiz.code;
+package com.quiz.exception.code;
 
-import com.quiz.exception.enums.ErrorType;
-
-public enum QuizErrorCode implements ErrorType {
+public enum QuizErrorCode implements ErrorCode {
     QUIZ_TYPE_NOT_FOUND("quiz type not found", 400)
     ,MAXSCORE_CANNOT_BE_MINUS("maxScore cannot be minus", 400)
     ,QUIZ_NOT_FOUND("quiz not found", 404)

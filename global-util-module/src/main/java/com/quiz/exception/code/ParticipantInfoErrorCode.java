@@ -1,8 +1,6 @@
-package com.quiz.global.exception.participantinfo.code;
+package com.quiz.exception.code;
 
-import com.quiz.exception.enums.ErrorType;
-
-public enum ParticipantInfoErrorCode implements ErrorType {
+public enum ParticipantInfoErrorCode implements ErrorCode {
     PARTICIPANT_IS_NOT_IN_QUIZ("participant not in quiz", 400)
     ,ALREADY_PARTICIPATED("already participated", 400)
     ,FIRST_COME_FIRST_SERVED_END("first come first served end", 400)

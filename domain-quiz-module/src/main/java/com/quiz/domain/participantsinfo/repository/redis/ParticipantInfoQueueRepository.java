@@ -44,6 +44,10 @@ public class ParticipantInfoQueueRepository {
                 .collect(Collectors.toSet());
     }
 
+    public void deleteQuizIdInQueue(Long quizId) {
+        redis1Utils.delete(QUIZ_ID_KEY, quizId);
+    }
+
     // 대기열 큐에 추가
     public Long addQueue(Long quizId, Long userId) {
         Long time = System.currentTimeMillis();

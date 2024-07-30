@@ -1,8 +1,8 @@
 package com.quiz.domain.users.enums;
 
 import com.quiz.enums.CodeValue;
-import com.quiz.global.exception.user.code.UserErrorCode;
-import com.quiz.global.exception.user.UserException;
+import com.quiz.exception.code.UserErrorCode;
+import com.quiz.exception.UserException;
 
 import java.util.Arrays;
 

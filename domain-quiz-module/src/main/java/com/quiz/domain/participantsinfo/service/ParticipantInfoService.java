@@ -1,11 +1,10 @@
 package com.quiz.domain.participantsinfo.service;
 
-import com.quiz.domain.participantsinfo.dto.ParticipantsRankResponseDto;
 import com.quiz.domain.participantsinfo.entity.ParticipantInfo;
 import com.quiz.domain.participantsinfo.repository.mongo.ParticipantInfoMongoTemplate;
 import com.quiz.domain.participantsinfo.repository.mongo.ParticipantInfoRepository;
 import com.quiz.domain.participantsinfo.repository.redis.ParticipantInfoQueueRepository;
-import com.quiz.global.exception.participantinfo.ParticipantInfoException;
+import com.quiz.exception.ParticipantInfoException;
 import com.quiz.global.lock.DistributedLock;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -15,7 +14,7 @@ import org.springframework.transaction.annotation.Transactional;
 import java.util.List;
 import java.util.concurrent.atomic.AtomicInteger;
 
-import static com.quiz.global.exception.participantinfo.code.ParticipantInfoErrorCode.*;
+import static com.quiz.exception.code.ParticipantInfoErrorCode.*;
 
 @Slf4j
 @RequiredArgsConstructor

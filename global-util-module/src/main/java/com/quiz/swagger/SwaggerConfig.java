@@ -16,9 +16,6 @@ import org.springframework.context.annotation.Configuration;
 
 
 @OpenAPIDefinition(servers = @Server(url = "http://localhost:8080"))
-@SecurityScheme(type = SecuritySchemeType.OAUTH2, name = "security auth",
-        flows = @OAuthFlows(clientCredentials =
-        @OAuthFlow(tokenUrl = "https://accounts.google.com/o/oauth2/token")))
 @Configuration
 public class SwaggerConfig {
     @Bean

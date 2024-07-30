@@ -2,6 +2,7 @@ package com.quiz.domain.quiz.repository.mongo;
 
 import com.quiz.domain.quiz.dto.QuizResponseDto;
 import com.quiz.domain.quiz.entity.Quiz;
+import com.quiz.utils.TimeConverter;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
@@ -15,6 +16,7 @@ import org.springframework.data.mongodb.core.query.Update;
 import org.springframework.data.support.PageableExecutionUtils;
 import org.springframework.stereotype.Repository;
 
+import java.time.LocalDateTime;
 import java.util.List;
 
 @RequiredArgsConstructor
@@ -71,6 +73,15 @@ public class QuizMongoTemplate {
                         .count(Query.query(Criteria.where("user_id")
                 .is(userId)), Quiz.class));
 
+    }
+
+    public List<Quiz> findAllAfterDueDateQuiz() {
+        Query query = new Query();
+        LocalDateTime now = LocalDateTime.now();
+        String dueDate = TimeConverter.localDateTimeToString(now);
+        query.addCriteria(Criteria.where("due_date").lt(dueDate));
+
+        return mongoTemplate.find(query, Quiz.class, "quiz");
     }
 
 }

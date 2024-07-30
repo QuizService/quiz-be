@@ -1,8 +1,6 @@
-package com.quiz.global.exception.answers.code;
+package com.quiz.exception.code;
 
-import com.quiz.exception.enums.ErrorType;
-
-public enum AnswersErrorCode implements ErrorType {
+public enum AnswersErrorCode implements ErrorCode {
     ANSWERS_NOT_FOUND("answers not found",404)
     ;
 

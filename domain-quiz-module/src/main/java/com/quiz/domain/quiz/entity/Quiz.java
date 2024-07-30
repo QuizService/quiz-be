@@ -1,7 +1,7 @@
 package com.quiz.domain.quiz.entity;
 
 import com.quiz.domain.quiz.dto.QuizRequestDto;
-import com.quiz.global.exception.quiz.QuizException;
+import com.quiz.exception.QuizException;
 import com.quiz.utils.TimeConverter;
 import jakarta.persistence.*;
 import lombok.*;
@@ -13,7 +13,7 @@ import org.springframework.data.mongodb.core.mapping.FieldType;
 import java.time.LocalDateTime;
 import java.util.UUID;
 
-import static com.quiz.global.exception.quiz.code.QuizErrorCode.*;
+import static com.quiz.exception.code.QuizErrorCode.*;
 
 @ToString
 @Getter
