@@ -1,8 +1,6 @@
-package com.quiz.global.exception.user.code;
+package com.quiz.exception.code;
 
-import com.quiz.exception.enums.ErrorType;
-
-public enum UserErrorCode implements ErrorType {
+public enum UserErrorCode implements ErrorCode {
     INVALID_AUTH_TYPE("유효하지 않은 Auth type", 400)
     , USER_NOT_FOUND("user not found", 404)
     ;

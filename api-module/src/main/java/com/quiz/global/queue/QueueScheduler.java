@@ -1,9 +1,7 @@
 package com.quiz.global.queue;
 
-import com.quiz.domain.participantsinfo.dto.ParticipantQueueDto;
 import com.quiz.domain.participantsinfo.repository.redis.ParticipantInfoQueueRepository;
 import com.quiz.domain.quiz.entity.Quiz;
-import com.quiz.domain.quiz.repository.mongo.QuizMongoTemplate;
 import com.quiz.domain.quiz.service.QuizService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;

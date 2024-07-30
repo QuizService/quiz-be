@@ -6,7 +6,7 @@ import com.quiz.domain.users.entity.Users;
 import com.quiz.domain.users.enums.Role;
 import com.quiz.domain.users.repository.UsersRepository;
 import com.quiz.domain.users.dto.UsersRequestDto;
-import com.quiz.global.exception.user.UserException;
+import com.quiz.exception.UserException;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
@@ -16,7 +16,7 @@ import org.springframework.transaction.annotation.Transactional;
 import java.util.List;
 import java.util.Optional;
 
-import static com.quiz.global.exception.user.code.UserErrorCode.USER_NOT_FOUND;
+import static com.quiz.exception.code.UserErrorCode.USER_NOT_FOUND;
 
 @Slf4j
 @RequiredArgsConstructor

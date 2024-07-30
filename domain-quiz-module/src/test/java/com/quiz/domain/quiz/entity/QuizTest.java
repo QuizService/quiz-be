@@ -2,13 +2,13 @@ package com.quiz.domain.quiz.entity;
 
 
 import com.quiz.domain.quiz.dto.QuizRequestDto;
-import com.quiz.global.exception.quiz.QuizException;
+import com.quiz.exception.QuizException;
 import org.assertj.core.api.Assertions;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 
-import static com.quiz.global.exception.quiz.code.QuizErrorCode.CANNOT_CREATE_AFTER_START_DATE;
-import static com.quiz.global.exception.quiz.code.QuizErrorCode.START_DATE_CANNOT_BE_AFTER_DUE_DATE;
+import static com.quiz.exception.code.QuizErrorCode.CANNOT_CREATE_AFTER_START_DATE;
+import static com.quiz.exception.code.QuizErrorCode.START_DATE_CANNOT_BE_AFTER_DUE_DATE;
 
 public class QuizTest {
 

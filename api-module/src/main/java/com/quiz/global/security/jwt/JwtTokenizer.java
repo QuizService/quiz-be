@@ -11,52 +11,36 @@ import jakarta.servlet.http.HttpServletResponse;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Value;
-import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
-import org.springframework.security.core.Authentication;
-import org.springframework.security.core.GrantedAuthority;
-import org.springframework.security.core.authority.SimpleGrantedAuthority;
-import org.springframework.security.core.context.SecurityContextHolder;
-import org.springframework.security.core.userdetails.User;
-import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.stereotype.Component;
 
-import java.util.ArrayList;
 import java.util.Date;
-import java.util.List;
 import java.util.Optional;
 
 @Slf4j
 @Component
 @RequiredArgsConstructor
 public class JwtTokenizer {
+    private static final String ACCESS_TOKEN_SUBJECT = "AccessToken";
+    private static final String REFRESH_TOKEN_SUBJECT = "RefreshToken";
+    private static final String EMAIL_CLAIM = "email";
+    private static final String BEARER = "Bearer ";
+    private final Redis2Utils redisUtils;
     @Value("${jwt.secretKey}")
     private String secretKey;
-
     @Value("${jwt.access.expiration}")
     private Long accessTokenExpirationPeriod;
-
     @Value("${jwt.refresh.expiration}")
     private Long refreshTokenExpirationPeriod;
-
     @Value("${jwt.access.header}")
     private String accessHeader;
-
     @Value("${jwt.refresh.header}")
     private String refreshHeader;
-
     private Algorithm jwtAlgorithm;
-
-    private final Redis2Utils redisUtils;
 
     @PostConstruct
     public void setJwtAlgorithm() {
         this.jwtAlgorithm = Algorithm.HMAC512(secretKey);
     }
-
-    private static final String ACCESS_TOKEN_SUBJECT = "AccessToken";
-    private static final String REFRESH_TOKEN_SUBJECT = "RefreshToken";
-    private static final String EMAIL_CLAIM = "email";
-    private static final String BEARER = "Bearer ";
 
     public String createAccessToken(String email) {
         Date now = new Date();

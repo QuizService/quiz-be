@@ -6,7 +6,7 @@ import com.quiz.domain.quiz.entity.Quiz;
 import com.quiz.domain.quiz.repository.mongo.QuizMongoTemplate;
 import com.quiz.domain.quiz.repository.mongo.QuizRepository;
 import com.quiz.global.sequence.SequenceGenerator;
-import com.quiz.global.exception.quiz.QuizException;
+import com.quiz.exception.QuizException;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.data.domain.Page;
@@ -19,8 +19,8 @@ import org.springframework.transaction.annotation.Transactional;
 import java.util.List;
 import java.util.NoSuchElementException;
 
-import static com.quiz.global.exception.quiz.code.QuizErrorCode.QUIZ_NOT_FOUND;
-import static com.quiz.global.exception.quiz.code.QuizErrorCode.QUIZ_OWNER_NOT_MATCH;
+import static com.quiz.exception.code.QuizErrorCode.QUIZ_NOT_FOUND;
+import static com.quiz.exception.code.QuizErrorCode.QUIZ_OWNER_NOT_MATCH;
 
 @Slf4j
 @Transactional(value = "mongoTx")

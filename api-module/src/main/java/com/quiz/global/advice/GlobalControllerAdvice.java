@@ -13,24 +13,17 @@ public class GlobalControllerAdvice {
 
     @ExceptionHandler(CustomRuntimeException.class)
     public ResponseEntity<ResponseDto<?>> customExceptionHandler(CustomRuntimeException ex) {
-        ResponseDto<?> res = ResponseDto.builder()
-                .message(ex.getErrorType().getMessage())
-                .code(String.valueOf(ex.getErrorType().getCode()))
-                .status(ex.getErrorType().getCode())
-                .build();
+        ResponseDto<?> res = ResponseDto.failed(String.valueOf(ex.getErrorCode().getCode()), ex.getErrorCode().getMessage());
+
         return ResponseEntity
-                .status(ex.getErrorType().getCode())
+                .status(ex.getErrorCode().getCode())
                 .body(res);
     }
 
     @ExceptionHandler(Exception.class)
     public ResponseEntity<ResponseDto<?>> exceptionHandler(Exception ex) {
-        log.error("internal server err : {}",ex.getMessage());
-        ResponseDto<?> res = ResponseDto.builder()
-                .message("internal server error")
-                .code("500")
-                .status(500)
-                .build();
+        log.error("internal server err : {}", ex.getMessage());
+        ResponseDto<?> res = ResponseDto.failed("500", "Internal Server Error");
 
         return ResponseEntity
                 .status(500)
