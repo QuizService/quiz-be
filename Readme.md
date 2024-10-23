@@ -29,7 +29,7 @@
 ### 담당한 기능
 
  * Spring Boot 기반 RestAPI 구현
- * 다양한 퀴즈 유형을 위한 MongoDB 도입
+ * 다양한 퀴즈 유형(객관식, 주관식, 단답형...) 저장에 대비하기 위해 유연한 스키마를 가진 MongoDB 도입
    * [MongoDB Replication을 활용한 트랜잭션이 적용되지 않는 이슈 해결](https://velog.io/@penrose_15/Docker-MongoDB-replicaSet-설정)
  * [분산락(Redisson)을 활용하여 퀴즈 선착순 참여시 발생할 수 있는 동시성 이슈 해결](https://velog.io/@penrose_15/Redisson을-활용한-분산락으로-동시성-이슈-해결하기)
  * [Redis Sorted Set + WebSocket를 활용한 대기열 구현으로 트래픽 급증 대비](https://velog.io/@penrose_15/Redis-Websocket-활용한-대기열-서비스-구현Spring-Boot)
