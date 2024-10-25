@@ -35,4 +35,4 @@
  * [Redis Sorted Set + WebSocket를 활용한 대기열 구현으로 트래픽 급증 대비](https://velog.io/@penrose_15/Redis-Websocket-활용한-대기열-서비스-구현Spring-Boot)
  * [Google OAuth2 적용](https://velog.io/@penrose_15/SpringBoot-React-환경에서-Google-Oauth2-적용기)
  * Refresh Token Rotation기법으로 Refresh Token 로 토큰 탈취 대응
- * Github actions + AWS S3 + AWS CodeDeploy기반 Blue/Green 배포 구현
+ * Github actions기반 CI/CD 배포 구현
