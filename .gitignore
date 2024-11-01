@@ -4,6 +4,8 @@ build/
 !gradle/wrapper/gradle-wrapper.jar
 !**/src/main/**/build/
 !**/src/test/**/build/
+gradlew
+gradlew.bat
 
 ### STS ###
 .apt_generated
@@ -36,12 +38,9 @@ out/
 ### VS Code ###
 .vscode/
 
-application.yml
-!domain-quiz-module/src/test/resources/application.yml
-!api-module/src/main/resources/application.yml
-!domain-quiz-module/src/main/resources/application.yml
-
-application-*.yml
 data
 
 /key/mongodb.key
+/aws/**
+
+ApiApplication.run.xml

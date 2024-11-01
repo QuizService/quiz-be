@@ -1,17 +1,18 @@
 package com.quiz.api.questions;
 
-import com.quiz.domain.questions.dto.*;
+import com.quiz.domain.questions.dto.QuestionIntegratedDto;
+import com.quiz.domain.questions.dto.QuestionsResponseAdminDto;
+import com.quiz.domain.questions.dto.QuestionsResponseDto;
+import com.quiz.domain.questions.dto.QuestionsUpdateDto;
 import com.quiz.domain.questions.service.QuestionFacade;
 import com.quiz.domain.users.entity.Users;
 import com.quiz.domain.users.service.UsersService;
-import com.quiz.dto.MultiResponseDto;
 import com.quiz.dto.ResponseDto;
 import com.quiz.global.security.userdetails.UserAccount;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.Parameter;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.data.domain.Page;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.*;

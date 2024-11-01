@@ -1,6 +1,5 @@
 package com.quiz.global.socket;
 
-import com.quiz.global.exception.user.UserException;
 import com.quiz.global.security.exception.AuthException;
 import com.quiz.global.security.jwt.JwtTokenizer;
 import lombok.RequiredArgsConstructor;
@@ -25,10 +24,10 @@ public class WebSocketInterceptor implements ChannelInterceptor {
     public Message<?> preSend(Message<?> message, MessageChannel channel) {
         log.info("websocket interceptor start");
         StompHeaderAccessor accessor = StompHeaderAccessor.wrap(message);
-        if(accessor.getCommand() == StompCommand.CONNECT) {
+        if (accessor.getCommand() == StompCommand.CONNECT) {
             String jwt = accessor.getFirstNativeHeader("Authorization");
 
-            if(jwt == null || !jwtTokenizer.isTokenValid(jwt)) {
+            if (jwt == null || !jwtTokenizer.isTokenValid(jwt)) {
                 throw new AuthException(JWT_NOT_VALID);
             }
         }

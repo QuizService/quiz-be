@@ -34,11 +34,22 @@ import static org.assertj.core.api.Assertions.assertThat;
 @ExtendWith(SpringExtension.class)
 @DataMongoTest
 public class QuizRepositoryTest {
+    private static final Long USER_ID = 1L;
+    private static final String QUIZ_TITLE_PREFIX = "quiz ";
+    private static final Integer QUIZ_CAPACITY = 10;
+    private static final String QUIZ_START_DATE = "2024-10-10 00:00:00";
+    private static final String QUIZ_DUE_DATE = "2024-10-11 00:00:00";
     static MongoDBContainer mongoDBContainer = new MongoDBContainer("mongo:latest");
 
     static {
         mongoDBContainer.start();
     }
+
+    @Autowired
+    private MongoTemplate mongoTemplate;
+    @Autowired
+    private QuizRepository quizRepository;
+    private QuizMongoTemplate quizMongoTemplate;
 
     @DynamicPropertySource
     static void setProperties(DynamicPropertyRegistry registry) {
@@ -50,19 +61,6 @@ public class QuizRepositoryTest {
         registry.add("spring.data.mongodb.database", () -> "quiz");
         registry.add("spring.data.mongodb.authentication-database", () -> "admin");
     }
-    private static final Long USER_ID = 1L;
-    private static final String QUIZ_TITLE_PREFIX = "quiz ";
-    private static final Integer QUIZ_CAPACITY = 10;
-    private static final String QUIZ_START_DATE = "2024-10-10 00:00:00";
-    private static final String QUIZ_DUE_DATE = "2024-10-11 00:00:00";
-
-    @Autowired
-    private MongoTemplate mongoTemplate;
-
-    @Autowired
-    private QuizRepository quizRepository;
-
-    private QuizMongoTemplate quizMongoTemplate;
 
     @BeforeEach
     void setUp() {
@@ -129,7 +127,7 @@ public class QuizRepositoryTest {
 
         assertThat(quizList.size())
                 .isEqualTo(pageSize);
-        for(int i = 0; i<10; i++) {
+        for (int i = 0; i < 10; i++) {
             assertThat(quizList.get(i).getTitle())
                     .contains(QUIZ_TITLE_PREFIX);
             assertThat(quizList.get(i).getCapacity())
@@ -143,9 +141,9 @@ public class QuizRepositoryTest {
 
     void saveMultiQuizzes() {
         List<Quiz> quizList = new ArrayList<>();
-        for(int i = 0; i<15; i++) {
+        for (int i = 0; i < 15; i++) {
             Quiz quiz = Quiz.builder()
-                    .idx((long)(i + 1))
+                    .idx((long) (i + 1))
                     .userId(USER_ID)
                     .title(QUIZ_TITLE_PREFIX + i)
                     .capacity(QUIZ_CAPACITY)

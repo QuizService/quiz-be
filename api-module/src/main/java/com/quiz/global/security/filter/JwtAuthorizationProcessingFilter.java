@@ -29,13 +29,14 @@ import java.util.List;
 import java.util.Optional;
 
 import static com.quiz.global.exception.user.code.UserErrorCode.USER_NOT_FOUND;
-import static com.quiz.global.security.exception.code.AuthErrorCode.*;
+import static com.quiz.global.security.exception.code.AuthErrorCode.JWT_NOT_VALID;
+import static com.quiz.global.security.exception.code.AuthErrorCode.REFRESH_TOKEN_NOT_EXIST;
 
 @Slf4j
 @Component
 @RequiredArgsConstructor
 public class JwtAuthorizationProcessingFilter extends OncePerRequestFilter {
-    private static final String[] AUTHORIZATION_NOT_REQUIRED = new String[]{"/login", "/favicon.ico", "/h2", "/favicon.ico", "/index.html", "/web-socket-connection","/swagger-ui","/v3/api-docs","/topic/participant","/api/login","/api/googleLogin", "/health-check"};
+    private static final String[] AUTHORIZATION_NOT_REQUIRED = new String[]{"/login", "/favicon.ico", "/h2", "/favicon.ico", "/index.html", "/web-socket-connection", "/swagger-ui", "/v3/api-docs", "/topic/participant", "/api/login", "/api/googleLogin", "/health-check"};
     private final JwtTokenizer jwtTokenizer;
     private final UsersRepository usersRepository;
     private final Redis2Utils redisUtils;
@@ -126,7 +127,7 @@ public class JwtAuthorizationProcessingFilter extends OncePerRequestFilter {
     @Override
     protected boolean shouldNotFilter(HttpServletRequest request) throws ServletException {
         log.info("should not filter = {}", request.getRequestURI());
-        boolean result =  StringUtils.startsWithAny(request.getRequestURI(), AUTHORIZATION_NOT_REQUIRED);
+        boolean result = StringUtils.startsWithAny(request.getRequestURI(), AUTHORIZATION_NOT_REQUIRED);
         log.info("should not filter = {}", result);
 
         return result;

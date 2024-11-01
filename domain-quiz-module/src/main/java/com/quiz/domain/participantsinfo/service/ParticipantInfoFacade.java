@@ -1,9 +1,9 @@
 package com.quiz.domain.participantsinfo.service;
 
+import com.quiz.domain.participantsinfo.dto.ParticipantsRankResponseDto;
 import com.quiz.domain.participantsinfo.entity.ParticipantInfo;
 import com.quiz.domain.quiz.entity.Quiz;
 import com.quiz.domain.quiz.service.QuizService;
-import com.quiz.domain.participantsinfo.dto.ParticipantsRankResponseDto;
 import com.quiz.domain.response.dto.ResponsesRequestDto;
 import com.quiz.domain.response.dto.ResponsesSaveDto;
 import com.quiz.domain.users.dto.UserNameDto;
@@ -38,7 +38,7 @@ public class ParticipantInfoFacade {
 //            throw new ParticipantInfoException(START_DATE_IS_NOT_NOW);
 //        }
         int capacity = quiz.getCapacity();
-        if(capacity > 0) {
+        if (capacity > 0) {
             participantInfoService.saveFcfs(quizId, userId, capacity);
             return;
         }
@@ -73,7 +73,7 @@ public class ParticipantInfoFacade {
         boolean userIsParticipant = participantInfoService.isUserParticipated(quizId, userId);
         boolean userIsQuizOwner = quizService.isUserIsQuizOwner(userId, quizId);
 
-        if(!(userIsParticipant || userIsQuizOwner)) throw new ParticipantInfoException(PARTICIPANT_IS_NOT_IN_QUIZ);
+        if (!(userIsParticipant || userIsQuizOwner)) throw new ParticipantInfoException(PARTICIPANT_IS_NOT_IN_QUIZ);
     }
 
     public Long getQuizIdByEndpoint(String endpoint) {
@@ -105,11 +105,11 @@ public class ParticipantInfoFacade {
                 .stream()
                 .collect(Collectors.toMap(UserNameDto::getId, i2 -> i2));
 
-       return result.stream()
+        return result.stream()
                 .map(p -> {
                     String username;
                     UserNameDto userNameDto = userDtoMap.getOrDefault(p.getUserId(), null);
-                    if(userNameDto == null) {
+                    if (userNameDto == null) {
                         username = "not found";
                     } else {
                         username = userNameDto.getName();

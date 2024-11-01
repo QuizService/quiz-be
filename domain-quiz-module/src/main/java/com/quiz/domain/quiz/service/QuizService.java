@@ -5,8 +5,8 @@ import com.quiz.domain.quiz.dto.QuizRequestDto;
 import com.quiz.domain.quiz.entity.Quiz;
 import com.quiz.domain.quiz.repository.mongo.QuizMongoTemplate;
 import com.quiz.domain.quiz.repository.mongo.QuizRepository;
-import com.quiz.global.sequence.SequenceGenerator;
 import com.quiz.global.exception.quiz.QuizException;
+import com.quiz.global.sequence.SequenceGenerator;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.data.domain.Page;
@@ -85,7 +85,7 @@ public class QuizService {
 
     public void checkQuizOwnerIsUser(Long userId, Long quizId) {
         Quiz quiz = findById(quizId);
-        if(!quiz.getUserId().equals(userId)) {
+        if (!quiz.getUserId().equals(userId)) {
             throw new QuizException(QUIZ_OWNER_NOT_MATCH);
         }
     }

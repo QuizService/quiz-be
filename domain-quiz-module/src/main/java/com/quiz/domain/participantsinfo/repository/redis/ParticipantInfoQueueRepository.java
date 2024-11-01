@@ -14,13 +14,18 @@ import java.util.stream.Collectors;
 @Service
 @RequiredArgsConstructor
 public class ParticipantInfoQueueRepository {
-    private final Redis1Utils redis1Utils;
-
     private static final String WAITING_QUEUE_KEY_PREFIX = "WAITING_QUIZ_ID";
     private static final String PARTICIPANT_NUMBER_KEY_PREFIX = "PARTICIPANT_IN_QUIZ_ID";
     private static final Long START_IDX = 0L;
     private static final Long END_IDX = 10L;
+    private final Redis1Utils redis1Utils;
 
+    private static ParticipantQueueDto toValue(Long userId, Long quizId) {
+        return ParticipantQueueDto.builder()
+                .quizId(quizId)
+                .userId(userId)
+                .build();
+    }
 
     // 대기열 큐에 추가
     public Long addQueue(Long quizId, Long userId) {
@@ -63,7 +68,7 @@ public class ParticipantInfoQueueRepository {
 
     public void delete(ParticipantQueueDto queue) {
 //        redis1Utils.deleteRange(WAITING_QUEUE_KEY_PREFIX, START_IDX, END_IDX);
-        redis1Utils.delete(WAITING_QUEUE_KEY_PREFIX,queue);
+        redis1Utils.delete(WAITING_QUEUE_KEY_PREFIX, queue);
     }
 
     public void setParticipantNumber(Long quizId, int leftCapacity) {
@@ -76,17 +81,9 @@ public class ParticipantInfoQueueRepository {
         return (Integer) redis1Utils.getValue(key);
     }
 
-    private static ParticipantQueueDto toValue(Long userId, Long quizId) {
-        return ParticipantQueueDto.builder()
-                .quizId(quizId)
-                .userId(userId)
-                .build();
-    }
-
     public Long getZSetSize() {
         return redis1Utils.getZSetSize(WAITING_QUEUE_KEY_PREFIX);
     }
-
 
 
 }

@@ -25,16 +25,13 @@ import static org.assertj.core.api.Assertions.assertThat;
 
 @ExtendWith(MockitoExtension.class)
 public class QuestionServiceTest {
+    private static final String FAKE_QUESTION_ID = "testQuestionId";
     @Mock
     private QuestionsRepository questionsRepository;
-
     @Mock
     private QuestionsMongoTemplate questionsMongoTemplate;
-
     @InjectMocks
     private QuestionService questionService;
-
-    private static final String FAKE_QUESTION_ID = "testQuestionId";
 
     @AfterEach
     void clear() {

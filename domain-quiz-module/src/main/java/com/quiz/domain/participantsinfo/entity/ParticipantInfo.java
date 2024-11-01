@@ -1,6 +1,6 @@
 package com.quiz.domain.participantsinfo.entity;
 
-import jakarta.persistence.*;
+import jakarta.persistence.Id;
 import lombok.*;
 import org.springframework.data.mongodb.core.mapping.Document;
 import org.springframework.data.mongodb.core.mapping.Field;

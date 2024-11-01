@@ -42,8 +42,8 @@ public class QuizController {
     @Operation(summary = "quiz 업데이트 (questions 제외)")
     @PatchMapping("/{quiz-id}")
     public ResponseEntity<ResponseDto<?>> updateQuiz(@PathVariable("quiz-id") Long quizId,
-                                        @RequestBody QuizRequestDto quizRequest,
-                                        @AuthenticationPrincipal UserAccount user) {
+                                                     @RequestBody QuizRequestDto quizRequest,
+                                                     @AuthenticationPrincipal UserAccount user) {
         Users users = findUsers(user);
         quizId = quizFacade.updateQuiz(quizRequest, quizId, users.getId());
 
@@ -65,7 +65,7 @@ public class QuizController {
                                                          @RequestParam("size") int size,
                                                          @AuthenticationPrincipal UserAccount user) {
         Users users = findUsers(user);
-        Page<QuizResponseDto> responsePage = quizFacade.findAllByUserId(users.getId(), page-1, size);
+        Page<QuizResponseDto> responsePage = quizFacade.findAllByUserId(users.getId(), page - 1, size);
         List<QuizResponseDto> responses = responsePage.getContent();
 
         return ResponseEntity.ok(ResponseDto.success(new MultiResponseDto<>(responses, responsePage)));

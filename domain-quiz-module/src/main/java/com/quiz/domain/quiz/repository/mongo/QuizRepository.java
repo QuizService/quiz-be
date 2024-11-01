@@ -3,7 +3,6 @@ package com.quiz.domain.quiz.repository.mongo;
 import com.quiz.domain.quiz.entity.Quiz;
 import org.springframework.data.mongodb.repository.MongoRepository;
 
-import java.util.List;
 import java.util.Optional;
 
 public interface QuizRepository extends MongoRepository<Quiz, String> {

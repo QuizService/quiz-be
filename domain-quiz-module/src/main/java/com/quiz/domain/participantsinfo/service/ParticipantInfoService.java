@@ -1,6 +1,5 @@
 package com.quiz.domain.participantsinfo.service;
 
-import com.quiz.domain.participantsinfo.dto.ParticipantsRankResponseDto;
 import com.quiz.domain.participantsinfo.entity.ParticipantInfo;
 import com.quiz.domain.participantsinfo.repository.mongo.ParticipantInfoMongoTemplate;
 import com.quiz.domain.participantsinfo.repository.mongo.ParticipantInfoRepository;
@@ -15,7 +14,8 @@ import org.springframework.transaction.annotation.Transactional;
 import java.util.List;
 import java.util.concurrent.atomic.AtomicInteger;
 
-import static com.quiz.global.exception.participantinfo.code.ParticipantInfoErrorCode.*;
+import static com.quiz.global.exception.participantinfo.code.ParticipantInfoErrorCode.FIRST_COME_FIRST_SERVED_END;
+import static com.quiz.global.exception.participantinfo.code.ParticipantInfoErrorCode.PARTICIPANT_NOT_FOUND;
 
 @Slf4j
 @RequiredArgsConstructor
@@ -33,7 +33,7 @@ public class ParticipantInfoService {
 //            throw new ParticipantInfoException(ALREADY_PARTICIPATED);
 //        }
         int participatedCnt = participantInfoMongoTemplate.countParticipantsByQuizIdAndSubmitResponses(quizId);
-        if(participatedCnt  >= capacity) {
+        if (participatedCnt >= capacity) {
             log.info("failed count = {}", cnt.incrementAndGet());
             throw new ParticipantInfoException(FIRST_COME_FIRST_SERVED_END);
         }
@@ -44,7 +44,7 @@ public class ParticipantInfoService {
     @DistributedLock(key = "'saveFcfs : quizId - ' + #quizId")
     public String saveFcfsTest(Long quizId, Long userId, int capacity) {
         int participatedCnt = participantInfoMongoTemplate.countParticipantsByQuizId(quizId);
-        if(participatedCnt  >= capacity) {
+        if (participatedCnt >= capacity) {
             log.info("failed count = {}", cnt.incrementAndGet());
             throw new ParticipantInfoException(FIRST_COME_FIRST_SERVED_END);
         }
@@ -58,7 +58,7 @@ public class ParticipantInfoService {
 
         int participatedCnt = participantInfoMongoTemplate.countParticipantsByQuizIdAndSubmitResponses(quizId);
         log.info("participantCnt = {}", participatedCnt);
-        if(participatedCnt + 1 > capacity) {
+        if (participatedCnt + 1 > capacity) {
             throw new ParticipantInfoException(FIRST_COME_FIRST_SERVED_END);
         }
         participantInfoMongoTemplate.update(quizId, userId, participatedCnt + 1);

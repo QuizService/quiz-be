@@ -20,6 +20,8 @@ import static org.assertj.core.api.Assertions.assertThat;
 
 @ExtendWith(MockitoExtension.class)
 public class QuizServiceTest {
+    private final Long userId = 1L;
+    private final Long quizId = 1L;
     @Mock
     private QuizRepository quizRepository;
     @Mock
@@ -28,9 +30,6 @@ public class QuizServiceTest {
     private SequenceGenerator sequenceGenerator;
     @InjectMocks
     private QuizService quizService;
-
-    private final Long userId = 1L;
-    private final Long quizId = 1L;
 
     @AfterEach
     void clear() {

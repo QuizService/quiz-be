@@ -1,15 +1,13 @@
 package com.quiz.domain.answers.entity;
 
 import lombok.*;
-import org.springframework.data.annotation.Id;
 import org.springframework.data.annotation.Transient;
-import org.springframework.data.mongodb.core.mapping.Document;
 import org.springframework.data.mongodb.core.mapping.Field;
-import org.springframework.data.mongodb.core.mapping.FieldType;
 
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
+
 @ToString
 @Getter
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
@@ -37,13 +35,13 @@ public class Answers {
     }
 
     public void update(String answers) {
-        if(answers != null) {
+        if (answers != null) {
             this.shortAnswer = answers;
         }
     }
 
     public boolean isEqualsToNew(Answers answers) {
-        if(answers.getShortAnswer() == null && this.shortAnswer == null) {
+        if (answers.getShortAnswer() == null && this.shortAnswer == null) {
             return answers.getMultipleChoiceAnswers().equals(this.multipleChoiceAnswers);
         }
 

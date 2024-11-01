@@ -12,7 +12,7 @@ import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Component;
 import org.springframework.transaction.annotation.Transactional;
 
-import java.util.*;
+import java.util.Set;
 
 @Slf4j
 @EnableScheduling // 추가
@@ -41,9 +41,9 @@ public class QueueScheduler {
             if (capacity > 0) { // 아직 자리 다 안찬 경우
                 log.info("capacity = {}", capacity);
                 boolean isUserTurn = rank < 10L;
-                eventPublisher.publishEvent(new ParticipantQueueInfoDto(quizId, userId, rank,true, isUserTurn));
+                eventPublisher.publishEvent(new ParticipantQueueInfoDto(quizId, userId, rank, true, isUserTurn));
             } else {
-                eventPublisher.publishEvent(new ParticipantQueueInfoDto(quizId, userId, rank,false, false));
+                eventPublisher.publishEvent(new ParticipantQueueInfoDto(quizId, userId, rank, false, false));
             }
             participantInfoQueueRepository.delete(participantQueueDto);
         }
@@ -63,7 +63,7 @@ public class QueueScheduler {
             rank = rank == null ? 0 : rank;
             log.info("userId = {}, rank = {}", userId, rank);
             //        String endpoint = String.format("?quiz-id=%d&user-id=%d",quizId, userId);
-            String endpoint = String.format("?quiz-id=%d",quizId);
+            String endpoint = String.format("?quiz-id=%d", quizId);
 
             messagingTemplate.convertAndSend("/topic/rank" + endpoint, rank);
         }

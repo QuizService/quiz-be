@@ -28,7 +28,7 @@ public class ResponseDto<D> {
         return ResponseDto.builder().code("200").message("SUCCESS").build();
     }
 
-    public static<D> ResponseDto<?> success(D data) {
+    public static <D> ResponseDto<?> success(D data) {
         return ResponseDto.builder().code("200").message("SUCCESS").data(data).build();
     }
 }

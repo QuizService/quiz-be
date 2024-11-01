@@ -25,7 +25,7 @@ public class GlobalControllerAdvice {
 
     @ExceptionHandler(Exception.class)
     public ResponseEntity<ResponseDto<?>> exceptionHandler(Exception ex) {
-        log.error("internal server err : {}",ex.getMessage());
+        log.error("internal server err : {}", ex.getMessage());
         ResponseDto<?> res = ResponseDto.builder()
                 .message("internal server error")
                 .code("500")

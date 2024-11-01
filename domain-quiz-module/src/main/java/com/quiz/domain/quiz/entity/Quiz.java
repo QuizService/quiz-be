@@ -3,7 +3,7 @@ package com.quiz.domain.quiz.entity;
 import com.quiz.domain.quiz.dto.QuizRequestDto;
 import com.quiz.global.exception.quiz.QuizException;
 import com.quiz.utils.TimeConverter;
-import jakarta.persistence.*;
+import jakarta.persistence.Transient;
 import lombok.*;
 import org.springframework.data.annotation.Id;
 import org.springframework.data.mongodb.core.mapping.Document;
@@ -72,20 +72,20 @@ public class Quiz {
     }
 
     public void update(QuizRequestDto request) {
-        if(startDate.isBefore(LocalDateTime.now())) {
+        if (startDate.isBefore(LocalDateTime.now())) {
             throw new QuizException(CANNOT_UPDATE_AFTER_START_DATE);
         }
 
-        if(title != null) {
+        if (title != null) {
             this.title = request.getTitle();
         }
-        if(capacity != null) {
+        if (capacity != null) {
             this.capacity = request.getCapacity();
         }
-        if(startDate != null) {
+        if (startDate != null) {
             this.startDate = TimeConverter.stringToLocalDateTime(request.getStartDate());
         }
-        if(dueDate != null) {
+        if (dueDate != null) {
             this.dueDate = TimeConverter.stringToLocalDateTime(request.getDueDate());
         }
 
@@ -96,10 +96,10 @@ public class Quiz {
     }
 
     public void setMaxScore(Integer maxScore) {
-        if(maxScore == null) {
+        if (maxScore == null) {
             return;
         }
-        if(maxScore < 0) {
+        if (maxScore < 0) {
             throw new QuizException(MAXSCORE_CANNOT_BE_MINUS);
         }
         this.maxScore = maxScore;
@@ -111,16 +111,16 @@ public class Quiz {
     }
 
     private void validateStartDate(LocalDateTime startDate) {
-        if(startDate == null) return;
+        if (startDate == null) return;
         LocalDateTime today = LocalDateTime.now();
-        if(today.isAfter(startDate)) {
+        if (today.isAfter(startDate)) {
             throw new QuizException(CANNOT_CREATE_AFTER_START_DATE);
         }
     }
 
     private void validateDueDateIsAfterStartDate(LocalDateTime startDate, LocalDateTime dueDate) {
-        if(startDate == null || dueDate == null) return;
-        if(startDate.isAfter(dueDate)) {
+        if (startDate == null || dueDate == null) return;
+        if (startDate.isAfter(dueDate)) {
             throw new QuizException(START_DATE_CANNOT_BE_AFTER_DUE_DATE);
         }
     }

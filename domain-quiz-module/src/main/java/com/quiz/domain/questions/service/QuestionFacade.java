@@ -13,15 +13,14 @@ import com.quiz.domain.questions.entity.Questions;
 import com.quiz.domain.quiz.entity.Quiz;
 import com.quiz.domain.quiz.service.QuizService;
 import lombok.RequiredArgsConstructor;
-import org.springframework.data.domain.Page;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
 
-@Transactional(value = "mongoTx")
-@RequiredArgsConstructor
 @Service
+@RequiredArgsConstructor
+@Transactional(value = "mongoTx")
 public class QuestionFacade {
     private final QuizService quizService;
     private final QuestionService questionService;

@@ -2,10 +2,10 @@ package com.quiz.domain.users.service;
 
 import com.quiz.domain.users.dto.UserInfoDto;
 import com.quiz.domain.users.dto.UserNameDto;
+import com.quiz.domain.users.dto.UsersRequestDto;
 import com.quiz.domain.users.entity.Users;
 import com.quiz.domain.users.enums.Role;
 import com.quiz.domain.users.repository.UsersRepository;
-import com.quiz.domain.users.dto.UsersRequestDto;
 import com.quiz.global.exception.user.UserException;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;

@@ -1,19 +1,17 @@
 package com.quiz.domain.answers.service;
 
 import com.quiz.domain.answers.entity.Answers;
-import com.quiz.domain.questions.entity.QuestionType;
 import com.quiz.domain.choice.dto.ChoicesRequestDto;
 import com.quiz.domain.questions.dto.QuestionsRequestDto;
+import com.quiz.domain.questions.entity.QuestionType;
 import com.quiz.global.sequence.SequenceGenerator;
 import lombok.RequiredArgsConstructor;
-import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.ArrayList;
 import java.util.List;
 
-@Slf4j
 @Transactional
 @RequiredArgsConstructor
 @Service
@@ -24,7 +22,7 @@ public class AnswersService {
         List<Integer> answerChoiceIdxs = new ArrayList<>();
         String answer = null;
 
-        if(questionType.equals(QuestionType.MULTIPLE_CHOICE)) {
+        if (questionType.equals(QuestionType.MULTIPLE_CHOICE)) {
             List<ChoicesRequestDto> choicesDtoList = questionDto.getChoices();
             answerChoiceIdxs = choicesDtoList.stream()
                     .filter(ChoicesRequestDto::getIsAnswer)
@@ -42,9 +40,6 @@ public class AnswersService {
     }
 
     public boolean isAnswersChanged(Answers answers, Answers newAnswers) {
-        log.info("answers={}", answers);
-        log.info("newAnswers={}", newAnswers);
-
         return !answers.isEqualsToNew(newAnswers);
     }
 }

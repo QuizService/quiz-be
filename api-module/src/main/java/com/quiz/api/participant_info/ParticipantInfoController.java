@@ -9,17 +9,13 @@ import com.quiz.domain.users.entity.Users;
 import com.quiz.domain.users.service.UsersService;
 import com.quiz.dto.ResponseDto;
 import com.quiz.global.security.userdetails.UserAccount;
-import jakarta.annotation.PostConstruct;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.*;
 
-import java.util.ArrayList;
-import java.util.LinkedList;
 import java.util.List;
-import java.util.Queue;
 import java.util.concurrent.atomic.AtomicLong;
 
 @Slf4j
@@ -44,7 +40,7 @@ public class ParticipantInfoController {
 
         Long quizId = participantInfoFacade.getQuizIdByEndpoint(endpoint);
         Long rank = participantInfoQueueService.addQueue(quizId, users.getId());
-        return ResponseEntity.ok(ResponseDto.success(new ParticipantQueueResponseDto(quizId, users.getId(),rank)));
+        return ResponseEntity.ok(ResponseDto.success(new ParticipantQueueResponseDto(quizId, users.getId(), rank)));
     }
 
     @PatchMapping("/{quiz-id}")
@@ -71,7 +67,7 @@ public class ParticipantInfoController {
 
     @GetMapping("/user/{quiz-id}")
     public ResponseEntity<ResponseDto<?>> showRank(@PathVariable("quiz-id") Long quizId,
-                                                    @AuthenticationPrincipal UserAccount user) {
+                                                   @AuthenticationPrincipal UserAccount user) {
         Users users = usersService.findByEmail(user.getUsername());
         participantInfoFacade.checkUserParticipatedOrOwner(quizId, users.getId());
 

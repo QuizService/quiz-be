@@ -1,6 +1,5 @@
 package com.quiz.domain.quiz.repository.mongo;
 
-import com.quiz.domain.quiz.dto.QuizResponseDto;
 import com.quiz.domain.quiz.entity.Quiz;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
@@ -69,7 +68,7 @@ public class QuizMongoTemplate {
         return PageableExecutionUtils.getPage(quizzes, pageable,
                 () -> mongoTemplate
                         .count(Query.query(Criteria.where("user_id")
-                .is(userId)), Quiz.class));
+                                .is(userId)), Quiz.class));
 
     }
 

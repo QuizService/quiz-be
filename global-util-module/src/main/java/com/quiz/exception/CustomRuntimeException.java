@@ -4,7 +4,7 @@ import com.quiz.exception.enums.ErrorType;
 import lombok.Getter;
 
 @Getter
-public class CustomRuntimeException extends RuntimeException{
+public class CustomRuntimeException extends RuntimeException {
     private final ErrorType errorType;
 
     public CustomRuntimeException(ErrorType errorType) {

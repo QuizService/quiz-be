@@ -5,10 +5,10 @@ import com.google.api.client.googleapis.auth.oauth2.GoogleIdTokenVerifier;
 import com.google.api.client.http.javanet.NetHttpTransport;
 import com.google.api.client.json.JsonFactory;
 import com.google.api.client.json.gson.GsonFactory;
-import com.quiz.global.security.dto.TokenDto;
 import com.quiz.domain.users.dto.UsersRequestDto;
 import com.quiz.domain.users.entity.Users;
 import com.quiz.domain.users.service.UsersService;
+import com.quiz.global.security.dto.TokenDto;
 import com.quiz.global.security.exception.AuthException;
 import com.quiz.global.security.exception.code.AuthErrorCode;
 import com.quiz.global.security.jwt.JwtTokenizer;
@@ -36,7 +36,7 @@ public class AuthService {
     private final JwtTokenizer jwtTokenizer;
     private final UsersService usersService;
 
-    public AuthService( @Value("${spring.security.oauth2.client.registration.google.client-id}")String clientId, JwtTokenizer jwtTokenizer, UsersService usersService) {
+    public AuthService(@Value("${spring.security.oauth2.client.registration.google.client-id}") String clientId, JwtTokenizer jwtTokenizer, UsersService usersService) {
         this.jwtTokenizer = jwtTokenizer;
         this.usersService = usersService;
         NetHttpTransport transport = new NetHttpTransport();
@@ -50,7 +50,7 @@ public class AuthService {
         try {
             GoogleIdToken idToken = verifier.verify(code);
 
-            if(idToken == null) {
+            if (idToken == null) {
                 log.info("idToken is null");
                 return null;
             }

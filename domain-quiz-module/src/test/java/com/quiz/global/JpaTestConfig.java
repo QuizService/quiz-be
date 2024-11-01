@@ -4,7 +4,6 @@ package com.quiz.global;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.test.context.TestConfiguration;
 import org.springframework.context.annotation.Bean;
-import org.springframework.context.annotation.Primary;
 import org.springframework.data.jpa.repository.config.EnableJpaRepositories;
 import org.springframework.jdbc.datasource.DriverManagerDataSource;
 import org.springframework.orm.jpa.JpaTransactionManager;
@@ -14,7 +13,6 @@ import org.springframework.transaction.PlatformTransactionManager;
 import org.springframework.transaction.annotation.EnableTransactionManagement;
 
 import javax.sql.DataSource;
-import java.util.HashMap;
 
 @TestConfiguration
 @EnableJpaRepositories(
@@ -68,7 +66,6 @@ public class JpaTestConfig {
         transactionManager.setEntityManagerFactory(h2EntityManagerFactory().getObject());
         return transactionManager;
     }
-
 
 
 }

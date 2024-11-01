@@ -1,11 +1,7 @@
 package com.quiz.global.security.userdetails;
 
 import com.quiz.domain.users.entity.Users;
-import lombok.AccessLevel;
-import lombok.Builder;
 import lombok.Getter;
-import lombok.NoArgsConstructor;
-import lombok.experimental.SuperBuilder;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.User;
 
@@ -22,6 +18,6 @@ public class UserAccount extends User {
 
 
     public UserAccount(String email, String role) {
-        super(email, "",List.of(new SimpleGrantedAuthority(role)));
+        super(email, "", List.of(new SimpleGrantedAuthority(role)));
     }
 }

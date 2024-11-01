@@ -1,14 +1,14 @@
 package com.quiz.domain.users.enums;
 
 import com.quiz.enums.CodeValue;
-import com.quiz.global.exception.user.code.UserErrorCode;
 import com.quiz.global.exception.user.UserException;
+import com.quiz.global.exception.user.code.UserErrorCode;
 
 import java.util.Arrays;
 
 public enum AuthType implements CodeValue {
-    GOOGLE("GOOGLE","google"),
-    KAKAO("KAKAO","kakao");
+    GOOGLE("GOOGLE", "google"),
+    KAKAO("KAKAO", "kakao");
 
     private final String code;
     private final String value;

@@ -11,6 +11,7 @@ import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
+
 @Slf4j
 @RequiredArgsConstructor
 @RequestMapping("/api/v1/user")
@@ -21,7 +22,7 @@ public class UsersController {
     @GetMapping
     public ResponseEntity<ResponseDto<?>> getUserInfo(@AuthenticationPrincipal UserAccount user) {
         UserInfoDto response;
-        if(user.getUsername() == null) {
+        if (user.getUsername() == null) {
             response = UserInfoDto.builder().build();
         } else {
             response = usersService.getUserInfo(user.getUsername());

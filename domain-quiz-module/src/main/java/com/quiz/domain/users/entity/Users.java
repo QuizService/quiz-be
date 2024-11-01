@@ -49,16 +49,16 @@ public class Users extends BaseEntity {
     }
 
     public void update(String name, String picture) {
-        if(name != null) {
+        if (name != null) {
             this.name = name;
         }
-        if(picture != null) {
+        if (picture != null) {
             this.picture = picture;
         }
     }
 
     public void setRefreshToken(String refreshToken) {
-        if(refreshToken != null) {
+        if (refreshToken != null) {
             this.refreshToken = refreshToken;
         }
     }

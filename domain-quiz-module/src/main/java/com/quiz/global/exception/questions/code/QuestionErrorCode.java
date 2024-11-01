@@ -3,10 +3,7 @@ package com.quiz.global.exception.questions.code;
 import com.quiz.exception.enums.ErrorType;
 
 public enum QuestionErrorCode implements ErrorType {
-    QUESTION_TYPE_NOT_FOUND("question type not found", 400)
-    ,SCORE_CANNOT_BE_MINUS("score cannot be minus", 400)
-    ,QUESTION_NOT_FOUND("question not found", 404)
-    ;
+    QUESTION_TYPE_NOT_FOUND("question type not found", 400), SCORE_CANNOT_BE_MINUS("score cannot be minus", 400), QUESTION_NOT_FOUND("question not found", 404);
 
     private final String message;
     private final int code;

@@ -10,7 +10,6 @@ import com.quiz.global.exception.participantinfo.ParticipantInfoException;
 import com.quiz.global.mock.TestEntities;
 import org.assertj.core.api.Assertions;
 import org.junit.jupiter.api.AfterEach;
-import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -35,7 +34,15 @@ public class ParticipantInfoMongoTemplateTest {
     @Container
     static MongoDBContainer mongoDBContainer = new MongoDBContainer(DockerImageName.parse("mongo:4.0.10")
             .asCompatibleSubstituteFor("mongo"));
-
+    private ParticipantInfoMongoTemplate participantInfoMongoTemplate;
+    @Autowired
+    private ParticipantInfoRepository participantInfoRepository;
+    @Autowired
+    private QuizRepository quizRepository;
+    @Autowired
+    private QuestionsRepository questionsRepository;
+    @Autowired
+    private MongoTemplate mongoTemplate;
 
     @DynamicPropertySource
     static void setProperties(DynamicPropertyRegistry registry) {
@@ -47,17 +54,6 @@ public class ParticipantInfoMongoTemplateTest {
         registry.add("spring.data.mongodb.database", () -> "quiz");
         registry.add("spring.data.mongodb.authentication-database", () -> "admin");
     }
-
-    private ParticipantInfoMongoTemplate participantInfoMongoTemplate;
-    @Autowired
-    private ParticipantInfoRepository participantInfoRepository;
-    @Autowired
-    private QuizRepository quizRepository;
-    @Autowired
-    private QuestionsRepository questionsRepository;
-
-    @Autowired
-    private MongoTemplate mongoTemplate;
 
     @BeforeEach
     void setUp() {
@@ -155,12 +151,12 @@ public class ParticipantInfoMongoTemplateTest {
     void findAllByQuizIdOrderByNumberTest() {
         List<ParticipantInfo> participantInfos = new ArrayList<>();
         Long quizId = 1L;
-        for(int i = 0; i< 5; i++) {
+        for (int i = 0; i < 5; i++) {
             ParticipantInfo participantInfo = ParticipantInfo.testBuilder()
                     .quizId(quizId)
-                    .userId((long)i)
+                    .userId((long) i)
                     .totalScore(i)
-                    .number(5-i)
+                    .number(5 - i)
                     .submitResponses(true)
                     .testBuild();
             participantInfos.add(participantInfo);
@@ -177,9 +173,9 @@ public class ParticipantInfoMongoTemplateTest {
         // 순서 순으로(asc) 정렬되었는지 확인
         assertThat(results.size())
                 .isEqualTo(5);
-        for(int i = 0; i<numberList.size(); i++) {
+        for (int i = 0; i < numberList.size(); i++) {
             assertThat(numberList.get(i))
-                    .isEqualTo(i+1);
+                    .isEqualTo(i + 1);
         }
 
     }
