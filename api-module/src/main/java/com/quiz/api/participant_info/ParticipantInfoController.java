@@ -9,7 +9,6 @@ import com.quiz.domain.users.entity.Users;
 import com.quiz.domain.users.service.UsersService;
 import com.quiz.dto.ResponseDto;
 import com.quiz.global.security.userdetails.UserAccount;
-import io.swagger.v3.oas.annotations.tags.Tag;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.ResponseEntity;
@@ -17,8 +16,8 @@ import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
+import java.util.concurrent.atomic.AtomicLong;
 
-@Tag(name = "Participant Info")
 @Slf4j
 @RequiredArgsConstructor
 @RequestMapping("/api/v1/participant_info")
@@ -28,12 +27,16 @@ public class ParticipantInfoController {
     private final ParticipantInfoQueueService participantInfoQueueService;
     private final UsersService usersService;
 
+    AtomicLong atomicLong = new AtomicLong(100);
+
+
     @GetMapping("/wait/{endpoint}")
     public ResponseEntity<ResponseDto<?>> saveParticipant(@PathVariable("endpoint") String endpoint,
                                                           @AuthenticationPrincipal UserAccount user) {
         // 대기열 로직 추가
-        // queue 에 참여자 추가
+        // queue 에 인간 추가
         Users users = usersService.findByEmail(user.getUsername());
+//        Long fakeUserId = atomicLong.incrementAndGet();
 
         Long quizId = participantInfoFacade.getQuizIdByEndpoint(endpoint);
         Long rank = participantInfoQueueService.addQueue(quizId, users.getId());
@@ -45,6 +48,7 @@ public class ParticipantInfoController {
                                                             @RequestBody ResponsesRequestsDto request,
                                                             @AuthenticationPrincipal UserAccount user) {
         Users users = usersService.findByEmail(user.getUsername());
+//        Long fakeUserId = atomicLong.getAndDecrement();
         participantInfoFacade.updateParticipantAndSaveResponse(quizId, users.getId(), request.getResponses());
 
         return ResponseEntity.ok(ResponseDto.success());

@@ -39,6 +39,15 @@ public class QuestionsRepositoryTest {
         mongoDBContainer.start();
     }
 
+    private final Long quizId = 1L;
+    @Autowired
+    private QuestionsRepository questionsRepository;
+
+    private QuestionsMongoTemplate questionsMongoTemplate;
+
+    @Autowired
+    private MongoTemplate mongoTemplate;
+
     @DynamicPropertySource
     static void setProperties(DynamicPropertyRegistry registry) {
         registry.add("spring.data.mongodb.uri", () -> mongoDBContainer.getReplicaSetUrl("quiz"));
@@ -50,14 +59,6 @@ public class QuestionsRepositoryTest {
         registry.add("spring.data.mongodb.authentication-database", () -> "admin");
     }
 
-    @Autowired
-    private QuestionsRepository questionsRepository;
-
-    private QuestionsMongoTemplate questionsMongoTemplate;
-
-    @Autowired
-    private MongoTemplate mongoTemplate;
-
     @BeforeEach
     void setUp() {
         questionsMongoTemplate = new QuestionsMongoTemplate(mongoTemplate);
@@ -67,8 +68,6 @@ public class QuestionsRepositoryTest {
     void clear() {
         questionsRepository.deleteAll();
     }
-
-    private final Long quizId = 1L;
 
     @Test
     void saveTest() {

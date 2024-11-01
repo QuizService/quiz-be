@@ -1,6 +1,6 @@
 package com.quiz.global.socket;
 
-import com.quiz.exception.AuthException;
+import com.quiz.global.security.exception.AuthException;
 import com.quiz.global.security.jwt.JwtTokenizer;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -11,7 +11,7 @@ import org.springframework.messaging.simp.stomp.StompHeaderAccessor;
 import org.springframework.messaging.support.ChannelInterceptor;
 import org.springframework.stereotype.Component;
 
-import static com.quiz.exception.code.AuthErrorCode.JWT_NOT_VALID;
+import static com.quiz.global.security.exception.code.AuthErrorCode.JWT_NOT_VALID;
 
 @Slf4j
 @Component

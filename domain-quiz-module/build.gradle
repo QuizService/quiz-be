@@ -1,5 +1,5 @@
-bootJar.enabled=false
-jar.enabled=true
+bootJar.enabled = false
+jar.enabled = true
 
 dependencies {
     runtimeOnly 'com.mysql:mysql-connector-j'
@@ -17,7 +17,6 @@ dependencies {
     testImplementation "org.testcontainers:mongodb:1.19.7"
     testImplementation "org.testcontainers:mysql:1.19.8"
     testImplementation 'org.mockito:mockito-core:5.11.0'
-
 
 
     implementation project(':global-util-module')

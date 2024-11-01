@@ -1,0 +1,21 @@
+spring:
+  data:
+    mongodb:
+      uri: ${MONGODB_URI}
+      database: ${MONGODB_DATABASE}
+      username: ${MONGODB_USERNAME}
+      password: ${MONGODB_PASSWORD}
+      replica-set: ${MONGODB_REPLICA_SET}
+      authentication-database: ${MONGODB_AUTHENTICATION_DATABASE}
+    # redis
+    redis:
+      host1: ${REDIS_HOST}
+      port1: ${REDIS1_PORT}
+      host2: ${REDIS_HOST}
+      port2: ${REDIS2_PORT}
+  # mysql
+  datasource:
+    url: ${MYSQL_URL}
+    username: ${MYSQL_USERNAME}
+    password: ${MYSQL_PASSWORD}
+    driver-class-name: com.mysql.cj.jdbc.Driver

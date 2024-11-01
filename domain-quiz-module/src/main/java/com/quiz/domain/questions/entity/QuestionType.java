@@ -8,8 +8,8 @@ import com.quiz.exception.code.QuizErrorCode;
 import java.util.Arrays;
 
 public enum QuestionType implements CodeValue {
-    MULTIPLE_CHOICE("M","선택형"),
-    SHORT_ANSWER("S","단답형");
+    MULTIPLE_CHOICE("M", "선택형"),
+    SHORT_ANSWER("S", "단답형");
 
     private final String code;
     private final String value;

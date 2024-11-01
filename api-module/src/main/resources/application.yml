@@ -1,13 +1,6 @@
 spring:
   profiles:
     active: local
-    include:
-      - db
-      - security
-
-
----
-spring:
-  config:
-    activate:
-      on-profile: local
+    group:
+      local: db, security
+      prod: prod-db, security

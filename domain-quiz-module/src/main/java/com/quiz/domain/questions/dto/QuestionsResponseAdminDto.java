@@ -1,7 +1,6 @@
 package com.quiz.domain.questions.dto;
 
 import com.quiz.domain.choice.dto.ChoicesResponseAdminDto;
-import com.quiz.domain.choice.dto.ChoicesResponseDto;
 import lombok.*;
 
 import java.util.List;

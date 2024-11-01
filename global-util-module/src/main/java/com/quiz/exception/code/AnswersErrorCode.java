@@ -1,8 +1,7 @@
 package com.quiz.exception.code;
 
 public enum AnswersErrorCode implements ErrorCode {
-    ANSWERS_NOT_FOUND("answers not found",404)
-    ;
+    ANSWERS_NOT_FOUND("answers not found", 404);
 
     private final String message;
     private final Integer code;

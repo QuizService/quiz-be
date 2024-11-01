@@ -38,8 +38,6 @@ public class CustomEventListener {
     }
 
     @Async
-    @Transactional(value = "mongoTx", propagation = Propagation.REQUIRES_NEW)
-//    @EventListener
     @TransactionalEventListener(phase = TransactionPhase.AFTER_COMMIT)
     public void sendMessage(ParticipantQueueInfoDto participantQueueInfoDto) {
         Long quizId = participantQueueInfoDto.quizId();

@@ -5,8 +5,8 @@ import com.quiz.domain.quiz.dto.QuizRequestDto;
 import com.quiz.domain.quiz.entity.Quiz;
 import com.quiz.domain.quiz.repository.mongo.QuizMongoTemplate;
 import com.quiz.domain.quiz.repository.mongo.QuizRepository;
+import com.quiz.global.exception.quiz.QuizException;
 import com.quiz.global.sequence.SequenceGenerator;
-import com.quiz.exception.QuizException;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.data.domain.Page;
@@ -16,11 +16,10 @@ import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import java.util.List;
 import java.util.NoSuchElementException;
 
-import static com.quiz.exception.code.QuizErrorCode.QUIZ_NOT_FOUND;
-import static com.quiz.exception.code.QuizErrorCode.QUIZ_OWNER_NOT_MATCH;
+import static com.quiz.global.exception.quiz.code.QuizErrorCode.QUIZ_NOT_FOUND;
+import static com.quiz.global.exception.quiz.code.QuizErrorCode.QUIZ_OWNER_NOT_MATCH;
 
 @Slf4j
 @Transactional(value = "mongoTx")
@@ -86,7 +85,7 @@ public class QuizService {
 
     public void checkQuizOwnerIsUser(Long userId, Long quizId) {
         Quiz quiz = findById(quizId);
-        if(!quiz.getUserId().equals(userId)) {
+        if (!quiz.getUserId().equals(userId)) {
             throw new QuizException(QUIZ_OWNER_NOT_MATCH);
         }
     }
@@ -95,10 +94,6 @@ public class QuizService {
         Pageable pageable = PageRequest.of(page, size, Sort.Direction.DESC, "created");
         return quizMongoTemplate.findQuizByUserId(userId, pageable);
 
-    }
-
-    public List<Quiz> findAllExpiredQuiz() {
-        return quizMongoTemplate.findAllAfterDueDateQuiz();
     }
 
     // for test

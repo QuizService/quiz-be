@@ -45,6 +45,13 @@ public class ParticipantInfoServiceTest {
         mysqlContainer.start();
     }
 
+    @Autowired
+    ParticipantInfoService participantInfoService;
+    @Autowired
+    ParticipantInfoQueueService participantInfoQueueService;
+    Long quizId = 1L;
+    int capacity = 90;
+
     @DynamicPropertySource
     static void setProperties(DynamicPropertyRegistry registry) {
         registry.add("spring.data.mongodb.uri", () -> mongoDBContainer.getReplicaSetUrl("quiz"));
@@ -59,22 +66,13 @@ public class ParticipantInfoServiceTest {
         registry.add("spring.data.redis.host2", redisContainer::getHost);
         registry.add("spring.data.redis.port2", redisContainer::getFirstMappedPort);
 
-        registry.add("spring.datasource.url",mysqlContainer::getJdbcUrl);
-        registry.add("spring.datasource.username",mysqlContainer::getUsername);
-        registry.add("spring.datasource.password",mysqlContainer::getPassword);
-        registry.add("spring.datasource.driver-class-name",mysqlContainer::getDriverClassName);
+        registry.add("spring.datasource.url", mysqlContainer::getJdbcUrl);
+        registry.add("spring.datasource.username", mysqlContainer::getUsername);
+        registry.add("spring.datasource.password", mysqlContainer::getPassword);
+        registry.add("spring.datasource.driver-class-name", mysqlContainer::getDriverClassName);
         registry.add("spring.jpa.database-platform", () -> "org.hibernate.dialect.MySQLDialect");
-        registry.add("spring.jpa.hibernate.ddl-auto",() -> "create");
+        registry.add("spring.jpa.hibernate.ddl-auto", () -> "create");
     }
-
-    @Autowired
-    ParticipantInfoService participantInfoService;
-
-    @Autowired
-    ParticipantInfoQueueService participantInfoQueueService;
-
-    Long quizId = 1L;
-    int capacity = 90;
 
     @BeforeEach
     void setUp() {

@@ -2,14 +2,14 @@ package com.quiz.domain.questions.service;
 
 import com.quiz.domain.answers.entity.Answers;
 import com.quiz.domain.choice.dto.ChoicesResponseAdminDto;
+import com.quiz.domain.choice.dto.ChoicesResponseDto;
 import com.quiz.domain.choice.entity.Choices;
 import com.quiz.domain.questions.dto.*;
 import com.quiz.domain.questions.entity.QuestionType;
 import com.quiz.domain.questions.entity.Questions;
 import com.quiz.domain.questions.repository.mongo.QuestionsMongoTemplate;
 import com.quiz.domain.questions.repository.mongo.QuestionsRepository;
-import com.quiz.domain.choice.dto.ChoicesResponseDto;
-import com.quiz.exception.QuestionException;
+import com.quiz.global.exception.questions.QuestionException;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.data.domain.Page;
@@ -21,7 +21,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.stream.Collectors;
 
-import static com.quiz.exception.code.QuestionErrorCode.QUESTION_NOT_FOUND;
+import static com.quiz.global.exception.questions.code.QuestionErrorCode.QUESTION_NOT_FOUND;
 
 @Slf4j
 @RequiredArgsConstructor
@@ -50,7 +50,7 @@ public class QuestionService {
         Questions questions = findById(questionDto.getQuestionId());
         QuestionType updatedQuestionType = QuestionType.findByInitial(questionDto.getQuestionType());
         boolean isQuestionTypeChanged = false;
-        if(questions.getQuestionType().equals(updatedQuestionType)) {
+        if (questions.getQuestionType().equals(updatedQuestionType)) {
             isQuestionTypeChanged = true;
         }
         updateQuestions(questionDto, questions);
@@ -80,7 +80,7 @@ public class QuestionService {
         questionsMongoTemplate.updateChoices(questionId, newChoices);
     }
 
-    public void updateAnswers(String questionId,Answers newAnswers) {
+    public void updateAnswers(String questionId, Answers newAnswers) {
         questionsMongoTemplate.updateAnswers(questionId, newAnswers);
     }
 
@@ -151,14 +151,14 @@ public class QuestionService {
     public List<QuestionsAnswerDto> findAnswersByQuestionsInQuiz(Long quizId) {
         List<Questions> questions = questionsMongoTemplate.findAllByQuizIdOrderBySequence(quizId);
         return questions.stream()
-            .map(q -> QuestionsAnswerDto.builder()
-                    .id(q.getId())
-                    .sequence(q.getSequence())
-                    .questionType(q.getQuestionType())
-                    .score(q.getScore())
-                    .choices(q.getAnswers().getMultipleChoiceAnswers())
-                    .answer(q.getAnswers().getShortAnswer())
-                    .build())
+                .map(q -> QuestionsAnswerDto.builder()
+                        .id(q.getId())
+                        .sequence(q.getSequence())
+                        .questionType(q.getQuestionType())
+                        .score(q.getScore())
+                        .choices(q.getAnswers().getMultipleChoiceAnswers())
+                        .answer(q.getAnswers().getShortAnswer())
+                        .build())
                 .toList();
     }
 
@@ -168,7 +168,7 @@ public class QuestionService {
     }
 
     public void deleteQuestionsByIds(List<String> questionIds) {
-        log.info("questionIds={}",questionIds);
+        log.info("questionIds={}", questionIds);
         questionsMongoTemplate.deleteQuestionsByQuestionIds(questionIds);
     }
 }

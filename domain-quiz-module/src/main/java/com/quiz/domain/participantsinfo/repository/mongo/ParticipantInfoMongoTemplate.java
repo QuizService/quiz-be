@@ -1,6 +1,5 @@
 package com.quiz.domain.participantsinfo.repository.mongo;
 
-import com.quiz.domain.participantsinfo.dto.ParticipantsRankResponseDto;
 import com.quiz.domain.participantsinfo.entity.ParticipantInfo;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Sort;
@@ -9,7 +8,6 @@ import org.springframework.data.mongodb.core.query.Criteria;
 import org.springframework.data.mongodb.core.query.Query;
 import org.springframework.data.mongodb.core.query.Update;
 import org.springframework.stereotype.Component;
-import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
 import java.util.Optional;

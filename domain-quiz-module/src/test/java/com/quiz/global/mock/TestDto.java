@@ -42,7 +42,7 @@ public class TestDto {
 
     public static List<ChoicesRequestDto> getChoices() {
         List<ChoicesRequestDto> choicesRequestDtos = new ArrayList<>();
-        for(int i = 1; i<=5; i++) {
+        for (int i = 1; i <= 5; i++) {
             ChoicesRequestDto choicesRequestDto = ChoicesRequestDto.builder()
                     .sequence(i)
                     .title("choice + " + i)

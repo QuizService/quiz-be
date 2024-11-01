@@ -3,8 +3,8 @@ package com.quiz.global.security.filter;
 import com.quiz.domain.users.entity.Users;
 import com.quiz.domain.users.repository.UsersRepository;
 import com.quiz.global.db.redis.Redis2Utils;
-import com.quiz.exception.UserException;
-import com.quiz.exception.AuthException;
+import com.quiz.global.exception.user.UserException;
+import com.quiz.global.security.exception.AuthException;
 import com.quiz.global.security.jwt.JwtTokenizer;
 import com.quiz.global.security.userdetails.UserAccount;
 import jakarta.servlet.FilterChain;
@@ -28,9 +28,9 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
-import static com.quiz.exception.code.UserErrorCode.USER_NOT_FOUND;
-import static com.quiz.exception.code.AuthErrorCode.JWT_NOT_VALID;
-import static com.quiz.exception.code.AuthErrorCode.REFRESH_TOKEN_NOT_EXIST;
+import static com.quiz.global.exception.user.code.UserErrorCode.USER_NOT_FOUND;
+import static com.quiz.global.security.exception.code.AuthErrorCode.JWT_NOT_VALID;
+import static com.quiz.global.security.exception.code.AuthErrorCode.REFRESH_TOKEN_NOT_EXIST;
 
 @Slf4j
 @Component
@@ -43,6 +43,8 @@ public class JwtAuthorizationProcessingFilter extends OncePerRequestFilter {
 
     @Override
     protected void doFilterInternal(HttpServletRequest request, HttpServletResponse response, FilterChain filterChain) throws ServletException, IOException {
+        log.info("JwtAuthorizationProcessingFilter start");
+        log.info("request.getRequestURI() = {}", request.getRequestURI());
         if (StringUtils.startsWithAny(request.getRequestURI(), AUTHORIZATION_NOT_REQUIRED)) {
             filterChain.doFilter(request, response);
             log.info("AUTHORIZATION_NOT_REQUIRED");
@@ -52,8 +54,10 @@ public class JwtAuthorizationProcessingFilter extends OncePerRequestFilter {
         Optional<String> accessToken = jwtTokenizer.extractAccessToken(request);
         if (accessToken.isPresent()) {
             // 만약 accessToken 존재시 return;
+            log.info("accessToken exist");
             boolean isAccessTokenValid = jwtTokenizer.isTokenValid(accessToken.get());
             if (isAccessTokenValid) {
+                log.info("accessToken valid");
                 setAuthentication(accessToken.get());
             }
         } else {
@@ -84,6 +88,8 @@ public class JwtAuthorizationProcessingFilter extends OncePerRequestFilter {
     }
 
     private void reIssueToken(Users users, HttpServletResponse response, String refreshToken) {
+        log.info("checkRefreshTokenAndReIssueAccessToken start");
+
         String token = jwtTokenizer.createRefreshToken(users.getId(), refreshToken);
         String accessToken = jwtTokenizer.createAccessToken(users.getEmail());
 
@@ -92,6 +98,7 @@ public class JwtAuthorizationProcessingFilter extends OncePerRequestFilter {
         //response에 저장
         jwtTokenizer.sendAccessToken(response, accessToken);
         jwtTokenizer.sendRefreshToken(response, token);
+        log.info("checkRefreshTokenAndReIssueAccessToken end");
     }
 
     private void setAuthentication(String accessToken) {
@@ -119,6 +126,10 @@ public class JwtAuthorizationProcessingFilter extends OncePerRequestFilter {
 
     @Override
     protected boolean shouldNotFilter(HttpServletRequest request) throws ServletException {
-        return StringUtils.startsWithAny(request.getRequestURI(), AUTHORIZATION_NOT_REQUIRED);
+        log.info("should not filter = {}", request.getRequestURI());
+        boolean result = StringUtils.startsWithAny(request.getRequestURI(), AUTHORIZATION_NOT_REQUIRED);
+        log.info("should not filter = {}", result);
+
+        return result;
     }
 }

@@ -25,23 +25,10 @@ public class ResponseDto<D> {
     }
 
     public static ResponseDto<?> success() {
-        return ResponseDto.builder().code("200")
-                .message("SUCCESS")
-                .build();
+        return ResponseDto.builder().code("200").message("SUCCESS").build();
     }
 
     public static <D> ResponseDto<?> success(D data) {
-        return ResponseDto.builder()
-                .code("200")
-                .message("SUCCESS")
-                .data(data)
-                .build();
-    }
-
-    public static <D> ResponseDto failed(String code, String message) {
-        return ResponseDto.builder()
-                .code(code)
-                .message(message)
-                .build();
+        return ResponseDto.builder().code("200").message("SUCCESS").data(data).build();
     }
 }

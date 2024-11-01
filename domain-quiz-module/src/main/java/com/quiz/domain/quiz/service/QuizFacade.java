@@ -16,7 +16,6 @@ import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
 import java.util.Map;
-import java.util.stream.Collectors;
 
 @Slf4j
 @Transactional(value = "mongoTx")
@@ -81,7 +80,7 @@ public class QuizFacade {
     }
 
     private QuizResponseDto toDto(Quiz quiz, Boolean isQuestionsCreated) {
-        if(isQuestionsCreated != null) {
+        if (isQuestionsCreated != null) {
             return QuizResponseDto.builder()
                     .quizId(quiz.getIdx())
                     .title(quiz.getTitle())
@@ -92,7 +91,8 @@ public class QuizFacade {
                     .isQuestionsCreated(isQuestionsCreated)
                     .created(TimeConverter.localDateTimeToString(quiz.getCreated()))
                     .build();
-        } return QuizResponseDto.builder()
+        }
+        return QuizResponseDto.builder()
                 .quizId(quiz.getIdx())
                 .title(quiz.getTitle())
                 .maxScore(quiz.getMaxScore())

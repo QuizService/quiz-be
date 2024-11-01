@@ -1,0 +1,27 @@
+spring:
+  security:
+    oauth2:
+      client:
+        registration:
+          google:
+            client-id: ${GOOGLE_CLIENT_ID}
+            client-secret: ${GOOGLE_CLIENT_SECRET}
+            redirect-url: ${GOOGLE_REDIRECT_URL}
+            scope: profile, email
+
+management:
+  endpoints:
+    web:
+      base-path: /
+      path-mapping:
+        health: health-check
+
+jwt:
+  secretKey: ${JWT_SECRET_KEY}
+  access:
+    expiration: ${JWT_ACCESS_EXP} # 1hour
+    header: Authorization
+
+  refresh:
+    expiration: ${JWT_REFRESH_EXP} # 2 week
+    header: Refresh

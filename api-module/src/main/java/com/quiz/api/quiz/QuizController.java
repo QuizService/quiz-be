@@ -3,16 +3,19 @@ package com.quiz.api.quiz;
 import com.quiz.domain.quiz.dto.QuizRequestDto;
 import com.quiz.domain.quiz.dto.QuizResponseDto;
 import com.quiz.domain.quiz.service.QuizFacade;
+import com.quiz.domain.users.entity.Users;
 import com.quiz.domain.users.service.UsersService;
 import com.quiz.dto.MultiResponseDto;
 import com.quiz.dto.ResponseDto;
-import com.quiz.global.security.annotation.LoginUser;
+import com.quiz.global.security.userdetails.UserAccount;
 import io.swagger.v3.oas.annotations.Operation;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.data.domain.Page;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.core.annotation.AuthenticationPrincipal;
+import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -28,8 +31,9 @@ public class QuizController {
     @Operation(summary = "quiz 생성 (questions 제외)")
     @PostMapping
     public ResponseEntity<ResponseDto<?>> saveQuiz(@RequestBody @Valid QuizRequestDto quizRequest,
-                                                   @LoginUser String email) {
-        Long quizId = quizFacade.saveQuiz(quizRequest, email);
+                                                   @AuthenticationPrincipal UserAccount user) {
+        Users users = findUsers(user);
+        Long quizId = quizFacade.saveQuiz(quizRequest, users.getId());
 
         return ResponseEntity.ok()
                 .body(ResponseDto.success(quizId));
@@ -39,8 +43,9 @@ public class QuizController {
     @PatchMapping("/{quiz-id}")
     public ResponseEntity<ResponseDto<?>> updateQuiz(@PathVariable("quiz-id") Long quizId,
                                                      @RequestBody QuizRequestDto quizRequest,
-                                                     @LoginUser String email) {
-        quizId = quizFacade.updateQuiz(quizRequest, quizId, email);
+                                                     @AuthenticationPrincipal UserAccount user) {
+        Users users = findUsers(user);
+        quizId = quizFacade.updateQuiz(quizRequest, quizId, users.getId());
 
         return ResponseEntity.ok()
                 .body(ResponseDto.success(quizId));
@@ -58,8 +63,9 @@ public class QuizController {
     @GetMapping
     public ResponseEntity<ResponseDto<?>> findQuizByUser(@RequestParam("page") int page,
                                                          @RequestParam("size") int size,
-                                                         @LoginUser String email) {
-        Page<QuizResponseDto> responsePage = quizFacade.findAllByUserId(email, page - 1, size);
+                                                         @AuthenticationPrincipal UserAccount user) {
+        Users users = findUsers(user);
+        Page<QuizResponseDto> responsePage = quizFacade.findAllByUserId(users.getId(), page - 1, size);
         List<QuizResponseDto> responses = responsePage.getContent();
 
         return ResponseEntity.ok(ResponseDto.success(new MultiResponseDto<>(responses, responsePage)));
@@ -80,5 +86,11 @@ public class QuizController {
         QuizResponseDto response = quizFacade.findByEndPoint(endpoint);
 
         return ResponseEntity.ok(ResponseDto.success(response));
+    }
+
+    private Users findUsers(UserDetails user) {
+        String email = user.getUsername();
+        Users users = usersService.findByEmail(email);
+        return users;
     }
 }

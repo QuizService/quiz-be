@@ -12,7 +12,10 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import java.util.*;
+import java.util.ArrayList;
+import java.util.Comparator;
+import java.util.List;
+import java.util.Map;
 import java.util.stream.Collectors;
 
 @Slf4j
@@ -31,7 +34,6 @@ public class ResponsesFacade {
      * 2. 답변을 모았다가 한번에 실행
      * 3. 정답을 다른 캐시 저장소에 저장하여 비교
      * */
-//    @Transactional(propagation = )
     public int calculateScoreAndSaveResponse(Long quizId, List<ResponsesRequestDto> responses, String participantInfoId) {
         List<QuestionsAnswerDto> answers = questionService.findAnswersByQuestionsInQuiz(quizId);
         Map<String, QuestionsAnswerDto> answerDtoMap = answers.stream()

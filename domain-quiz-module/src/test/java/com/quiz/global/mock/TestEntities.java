@@ -13,7 +13,7 @@ public class TestEntities {
 
     public static final Long QUIZ_ID = 1L;
     public static final int ANSWER_NUMBER = 4;
-    public static final List<Integer> UPDATE_ANSWER_NUMBER = List.of(1,4);
+    public static final List<Integer> UPDATE_ANSWER_NUMBER = List.of(1, 4);
 
     public static Quiz getQuiz() {
         return Quiz.builder()
@@ -39,7 +39,7 @@ public class TestEntities {
 
     public static List<Choices> getChoices() {
         List<Choices> choicesList = new ArrayList<>();
-        for(int i = 1; i<=5; i++) {
+        for (int i = 1; i <= 5; i++) {
             Choices choice = Choices.builder()
                     .sequence(i)
                     .title("choice " + i)
@@ -94,10 +94,10 @@ public class TestEntities {
 
     public static List<ParticipantInfo> getParticipantInfos() {
         List<ParticipantInfo> participantInfos = new ArrayList<>();
-        for(int i = 0; i< 5; i++) {
+        for (int i = 0; i < 5; i++) {
             ParticipantInfo participantInfo = ParticipantInfo.testBuilder()
                     .quizId(1L)
-                    .userId((long)i)
+                    .userId((long) i)
                     .totalScore(i)
                     .number(i)
                     .submitResponses(true)
@@ -110,7 +110,7 @@ public class TestEntities {
     // update entities
     public static List<Choices> getMultipleUpdateChoices() {
         List<Choices> choicesList = new ArrayList<>();
-        for(int i = 1; i<=5; i++) {
+        for (int i = 1; i <= 5; i++) {
             Choices choice = Choices.builder()
                     .sequence(i)
                     .title("updatechoice " + i)

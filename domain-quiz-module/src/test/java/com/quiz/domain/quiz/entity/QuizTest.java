@@ -16,13 +16,13 @@ public class QuizTest {
     @Test
     void createQuizConstructor() {
         Assertions.assertThatCode(() -> Quiz.builder()
-                .idx(1L)
-                .title("title")
-                .capacity(10)
-                .userId(1L)
-                .startDate("2024-10-01 00:00:00")
-                .dueDate("2024-10-02 00:00:00")
-                .build())
+                        .idx(1L)
+                        .title("title")
+                        .capacity(10)
+                        .userId(1L)
+                        .startDate("2024-10-01 00:00:00")
+                        .dueDate("2024-10-02 00:00:00")
+                        .build())
                 .doesNotThrowAnyException();
     }
 

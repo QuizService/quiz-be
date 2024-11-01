@@ -9,8 +9,8 @@ import com.quiz.domain.users.dto.UsersRequestDto;
 import com.quiz.domain.users.entity.Users;
 import com.quiz.domain.users.service.UsersService;
 import com.quiz.global.security.dto.TokenDto;
-import com.quiz.exception.AuthException;
-import com.quiz.exception.code.AuthErrorCode;
+import com.quiz.global.security.exception.AuthException;
+import com.quiz.global.security.exception.code.AuthErrorCode;
 import com.quiz.global.security.jwt.JwtTokenizer;
 import com.quiz.global.security.userdetails.UserAccount;
 import lombok.extern.slf4j.Slf4j;
@@ -68,6 +68,7 @@ public class AuthService {
 
             String accessToken = "Bearer " + jwtTokenizer.createAccessToken(email);
             String refreshToken = "Bearer " + jwtTokenizer.createRefreshTokenWhenLogin(users.getId());
+//            log.info("access token = {}", accessToken);
             saveAuthentication(users);
 
             return TokenDto.builder()

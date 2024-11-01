@@ -47,6 +47,20 @@ public class ResponseFacadeTest {
         mysqlContainer.start();
     }
 
+    @Autowired
+    QuizService quizService;
+    @Autowired
+    QuestionService questionService;
+    @Autowired
+    ParticipantInfoService participantInfoService;
+    @Autowired
+    ResponsesFacade responsesFacade;
+    Long userId = 1L;
+    Long participantId = 2L;
+    private Long quizId;
+    private String questionId;
+    private String participantInfoId;
+
     @DynamicPropertySource
     static void setProperties(DynamicPropertyRegistry registry) {
         registry.add("spring.data.mongodb.uri", () -> mongoDBContainer.getReplicaSetUrl("quiz"));
@@ -61,32 +75,13 @@ public class ResponseFacadeTest {
         registry.add("spring.data.redis.host2", redisContainer::getHost);
         registry.add("spring.data.redis.port2", redisContainer::getFirstMappedPort);
 
-        registry.add("spring.datasource.url",mysqlContainer::getJdbcUrl);
-        registry.add("spring.datasource.username",mysqlContainer::getUsername);
-        registry.add("spring.datasource.password",mysqlContainer::getPassword);
-        registry.add("spring.datasource.driver-class-name",mysqlContainer::getDriverClassName);
+        registry.add("spring.datasource.url", mysqlContainer::getJdbcUrl);
+        registry.add("spring.datasource.username", mysqlContainer::getUsername);
+        registry.add("spring.datasource.password", mysqlContainer::getPassword);
+        registry.add("spring.datasource.driver-class-name", mysqlContainer::getDriverClassName);
         registry.add("spring.jpa.database-platform", () -> "org.hibernate.dialect.MySQLDialect");
-        registry.add("spring.jpa.hibernate.ddl-auto",() -> "create");
+        registry.add("spring.jpa.hibernate.ddl-auto", () -> "create");
     }
-
-    @Autowired
-    QuizService quizService;
-
-    @Autowired
-    QuestionService questionService;
-
-    @Autowired
-    ParticipantInfoService participantInfoService;
-
-    @Autowired
-    ResponsesFacade responsesFacade;
-
-
-    Long userId = 1L;
-    Long participantId = 2L;
-    private Long quizId;
-    private String questionId;
-    private String participantInfoId;
 
     @BeforeEach
     void setUp() {

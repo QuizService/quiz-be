@@ -1,14 +1,14 @@
 package com.quiz.exception;
 
-import com.quiz.exception.code.ErrorCode;
+import com.quiz.exception.enums.ErrorType;
 import lombok.Getter;
 
 @Getter
-public class CustomRuntimeException extends RuntimeException{
-    private final ErrorCode errorCode;
+public class CustomRuntimeException extends RuntimeException {
+    private final ErrorType errorType;
 
-    public CustomRuntimeException(ErrorCode errorCode) {
-        super(errorCode.getMessage());
-        this.errorCode = errorCode;
+    public CustomRuntimeException(ErrorType errorType) {
+        super(errorType.getMessage());
+        this.errorType = errorType;
     }
 }

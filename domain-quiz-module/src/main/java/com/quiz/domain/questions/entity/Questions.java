@@ -12,6 +12,7 @@ import org.springframework.data.mongodb.core.mapping.FieldType;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
+
 @ToString
 @Getter
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
@@ -63,16 +64,16 @@ public class Questions {
     }
 
     public void update(QuestionsRequestDto questionDto) {
-        if(questionDto.getTitle() != null) {
+        if (questionDto.getTitle() != null) {
             this.title = questionDto.getTitle();
         }
-        if(questionDto.getScore() != null) {
+        if (questionDto.getScore() != null) {
             this.score = questionDto.getScore();
         }
-        if(questionDto.getSequence() != null) {
+        if (questionDto.getSequence() != null) {
             this.sequence = questionDto.getSequence();
         }
-        if(questionDto.getQuestionType() != null) {
+        if (questionDto.getQuestionType() != null) {
             this.questionType = QuestionType.findByInitial(questionDto.getQuestionType());
         }
         this.updated = LocalDateTime.now();

@@ -1,12 +1,9 @@
-package com.quiz.exception.code;
+package com.quiz.global.exception.participantinfo.code;
 
-public enum ParticipantInfoErrorCode implements ErrorCode {
-    PARTICIPANT_IS_NOT_IN_QUIZ("participant not in quiz", 400)
-    ,ALREADY_PARTICIPATED("already participated", 400)
-    ,FIRST_COME_FIRST_SERVED_END("first come first served end", 400)
-    ,PARTICIPANT_NOT_FOUND("participant not found", 404)
-    ,START_DATE_IS_NOT_NOW("startDate is not now", 400)
-    ;
+import com.quiz.exception.enums.ErrorType;
+
+public enum ParticipantInfoErrorCode implements ErrorType {
+    PARTICIPANT_IS_NOT_IN_QUIZ("participant not in quiz", 400), ALREADY_PARTICIPATED("already participated", 400), FIRST_COME_FIRST_SERVED_END("first come first served end", 400), PARTICIPANT_NOT_FOUND("participant not found", 404), START_DATE_IS_NOT_NOW("startDate is not now", 400);
 
     private final String message;
     private final int code;

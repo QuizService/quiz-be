@@ -10,14 +10,12 @@ import org.springframework.data.redis.connection.RedisStandaloneConfiguration;
 import org.springframework.data.redis.connection.lettuce.LettuceConnectionFactory;
 import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.data.redis.repository.configuration.EnableRedisRepositories;
-import org.springframework.data.redis.serializer.GenericJackson2JsonRedisSerializer;
-import org.springframework.data.redis.serializer.Jackson2JsonRedisSerializer;
 import org.springframework.data.redis.serializer.StringRedisSerializer;
 
 @Slf4j
 @Configuration
 @EnableRedisRepositories(basePackages = {"com.quiz.global.db.redis"},
-                        redisTemplateRef = "redisTemplate2")
+        redisTemplateRef = "redisTemplate2")
 public class Redis2Config {
     @Value("${spring.data.redis.host2}")
     private String host2;
