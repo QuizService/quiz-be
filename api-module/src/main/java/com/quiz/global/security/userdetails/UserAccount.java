@@ -16,7 +16,6 @@ public class UserAccount extends User {
         this.users = users;
     }
 
-
     public UserAccount(String email, String role) {
         super(email, "", List.of(new SimpleGrantedAuthority(role)));
     }

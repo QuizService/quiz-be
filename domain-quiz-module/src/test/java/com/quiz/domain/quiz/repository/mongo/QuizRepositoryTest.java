@@ -2,8 +2,8 @@ package com.quiz.domain.quiz.repository.mongo;
 
 import com.quiz.domain.quiz.dto.QuizRequestDto;
 import com.quiz.domain.quiz.entity.Quiz;
-import com.quiz.global.exception.quiz.QuizException;
-import com.quiz.global.exception.quiz.code.QuizErrorCode;
+import com.quiz.exception.QuizException;
+import com.quiz.exception.code.QuizErrorCode;
 import com.quiz.global.mock.TestDto;
 import com.quiz.global.mock.TestEntities;
 import com.quiz.utils.TimeConverter;

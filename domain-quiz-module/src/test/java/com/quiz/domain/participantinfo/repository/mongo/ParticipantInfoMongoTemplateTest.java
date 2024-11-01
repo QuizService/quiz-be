@@ -6,7 +6,7 @@ import com.quiz.domain.participantsinfo.repository.mongo.ParticipantInfoReposito
 import com.quiz.domain.questions.repository.mongo.QuestionsRepository;
 import com.quiz.domain.quiz.entity.Quiz;
 import com.quiz.domain.quiz.repository.mongo.QuizRepository;
-import com.quiz.global.exception.participantinfo.ParticipantInfoException;
+import com.quiz.exception.ParticipantInfoException;
 import com.quiz.global.mock.TestEntities;
 import org.assertj.core.api.Assertions;
 import org.junit.jupiter.api.AfterEach;
@@ -25,7 +25,7 @@ import org.testcontainers.utility.DockerImageName;
 import java.util.ArrayList;
 import java.util.List;
 
-import static com.quiz.global.exception.participantinfo.code.ParticipantInfoErrorCode.PARTICIPANT_NOT_FOUND;
+import static com.quiz.exception.code.ParticipantInfoErrorCode.PARTICIPANT_NOT_FOUND;
 import static org.assertj.core.api.AssertionsForClassTypes.assertThat;
 
 @Testcontainers

@@ -12,6 +12,8 @@ import com.quiz.domain.questions.entity.QuestionType;
 import com.quiz.domain.questions.entity.Questions;
 import com.quiz.domain.quiz.entity.Quiz;
 import com.quiz.domain.quiz.service.QuizService;
+import com.quiz.domain.users.entity.Users;
+import com.quiz.domain.users.service.UsersService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -26,8 +28,11 @@ public class QuestionFacade {
     private final QuestionService questionService;
     private final ChoicesService choicesService;
     private final AnswersService answersService;
+    private final UsersService usersService;
 
-    public void saveQuestions(List<QuestionsRequestDto> questionsDtos, Long quizId, Long userId) {
+    public void saveQuestions(List<QuestionsRequestDto> questionsDtos, Long quizId, String email) {
+        Long userId = getUserId(email);
+
         quizService.checkQuizOwnerIsUser(userId, quizId);
 
         for (QuestionsRequestDto questionDto : questionsDtos) {
@@ -40,7 +45,9 @@ public class QuestionFacade {
         }
     }
 
-    public void saveQuestion(QuestionsRequestDto questionDto, Long quizId, Long userId) {
+    public void saveQuestion(QuestionsRequestDto questionDto, Long quizId, String email) {
+        Long userId = getUserId(email);
+
         quizService.checkQuizOwnerIsUser(userId, quizId);
 
         QuestionType questionType = QuestionType.findByInitial(questionDto.getQuestionType());
@@ -50,7 +57,9 @@ public class QuestionFacade {
         questionService.save(choices, answers, questionDto, quizId);
     }
 
-    public void updateQuestions(QuestionsUpdateDto questionsDtos, Long quizId, Long userId) {
+    public void updateQuestions(QuestionsUpdateDto questionsDtos, Long quizId, String email) {
+        Long userId = getUserId(email);
+
         quizService.checkQuizOwnerIsUser(userId, quizId);
         for (QuestionsRequestDto questionsDto : questionsDtos.getQuestionRequestDtos()) {
             if (questionsDto.getQuestionId() != null) {
@@ -67,7 +76,7 @@ public class QuestionFacade {
                 questionService.update(questionsDto, questions.getId());
             } else {
                 //save
-                saveQuestion(questionsDto, quizId, userId);
+                saveQuestion(questionsDto, quizId, email);
             }
         }
         saveMaxScore(questionsDtos.getQuestionRequestDtos(), quizId);
@@ -103,7 +112,9 @@ public class QuestionFacade {
     }
 
     @Transactional(readOnly = true)
-    public List<QuestionsResponseAdminDto> findAllByQuizId(Long quizId, Long userId) {
+    public List<QuestionsResponseAdminDto> findAllByQuizId(Long quizId, String email) {
+        Long userId = getUserId(email);
+
         quizService.checkQuizOwnerIsUser(userId, quizId);
         return questionService.findResponseForAdminByQuizId(quizId);
     }
@@ -116,5 +127,10 @@ public class QuestionFacade {
 
     public void deleteQuestions(List<String> questionIds) {
         questionService.deleteQuestionsByIds(questionIds);
+    }
+
+    private Long getUserId(String email) {
+        Users user = usersService.findByEmail(email);
+        return user.getId();
     }
 }

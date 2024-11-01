@@ -2,8 +2,8 @@ package com.quiz.domain.questions.entity;
 
 
 import com.quiz.enums.CodeValue;
-import com.quiz.global.exception.quiz.QuizException;
-import com.quiz.global.exception.quiz.code.QuizErrorCode;
+import com.quiz.exception.QuizException;
+import com.quiz.exception.code.QuizErrorCode;
 
 import java.util.Arrays;
 

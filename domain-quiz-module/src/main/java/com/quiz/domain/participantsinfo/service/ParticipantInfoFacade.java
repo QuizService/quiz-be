@@ -8,7 +8,7 @@ import com.quiz.domain.response.dto.ResponsesRequestDto;
 import com.quiz.domain.response.dto.ResponsesSaveDto;
 import com.quiz.domain.users.dto.UserNameDto;
 import com.quiz.domain.users.service.UsersService;
-import com.quiz.global.exception.participantinfo.ParticipantInfoException;
+import com.quiz.exception.ParticipantInfoException;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.context.ApplicationEventPublisher;
@@ -19,7 +19,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.stream.Collectors;
 
-import static com.quiz.global.exception.participantinfo.code.ParticipantInfoErrorCode.PARTICIPANT_IS_NOT_IN_QUIZ;
+import static com.quiz.exception.code.ParticipantInfoErrorCode.PARTICIPANT_IS_NOT_IN_QUIZ;
 
 @Slf4j
 @Transactional(value = "mongoTx")
