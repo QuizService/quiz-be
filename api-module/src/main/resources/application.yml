@@ -1,0 +1,6 @@
+spring:
+  profiles:
+    active: local
+    group:
+      local: db, security
+      prod: prod-db, security
