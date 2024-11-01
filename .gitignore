@@ -44,3 +44,6 @@ data
 /aws/**
 
 ApiApplication.run.xml
+docker-compose.mongo.yml
+docker-compose.mysql.yml
+docker-compose.redis.yml
