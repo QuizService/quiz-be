@@ -1,6 +1,6 @@
 package com.quiz.global.socket;
 
-import com.quiz.global.security.exception.AuthException;
+import com.quiz.exception.AuthException;
 import com.quiz.global.security.jwt.JwtTokenizer;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;

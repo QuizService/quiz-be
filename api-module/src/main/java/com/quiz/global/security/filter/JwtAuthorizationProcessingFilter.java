@@ -2,9 +2,9 @@ package com.quiz.global.security.filter;
 
 import com.quiz.domain.users.entity.Users;
 import com.quiz.domain.users.repository.UsersRepository;
+import com.quiz.exception.AuthException;
+import com.quiz.exception.UserException;
 import com.quiz.global.db.redis.Redis2Utils;
-import com.quiz.global.exception.user.UserException;
-import com.quiz.global.security.exception.AuthException;
 import com.quiz.global.security.jwt.JwtTokenizer;
 import com.quiz.global.security.userdetails.UserAccount;
 import jakarta.servlet.FilterChain;
@@ -28,7 +28,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
-import static com.quiz.global.exception.user.code.UserErrorCode.USER_NOT_FOUND;
+import static com.quiz.exception.code.UserErrorCode.USER_NOT_FOUND;
 import static com.quiz.global.security.exception.code.AuthErrorCode.JWT_NOT_VALID;
 import static com.quiz.global.security.exception.code.AuthErrorCode.REFRESH_TOKEN_NOT_EXIST;
 
