@@ -14,12 +14,12 @@ public class GlobalControllerAdvice {
     @ExceptionHandler(CustomRuntimeException.class)
     public ResponseEntity<ResponseDto<?>> customExceptionHandler(CustomRuntimeException ex) {
         ResponseDto<?> res = ResponseDto.builder()
-                .message(ex.getErrorType().getMessage())
-                .code(String.valueOf(ex.getErrorType().getCode()))
-                .status(ex.getErrorType().getCode())
+                .message(ex.getErrorCode().getMessage())
+                .code(String.valueOf(ex.getErrorCode().getCode()))
+                .status(ex.getErrorCode().getCode())
                 .build();
         return ResponseEntity
-                .status(ex.getErrorType().getCode())
+                .status(ex.getErrorCode().getCode())
                 .body(res);
     }
 

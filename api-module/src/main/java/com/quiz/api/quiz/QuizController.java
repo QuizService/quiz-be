@@ -33,7 +33,7 @@ public class QuizController {
     public ResponseEntity<ResponseDto<?>> saveQuiz(@RequestBody @Valid QuizRequestDto quizRequest,
                                                    @AuthenticationPrincipal UserAccount user) {
         Users users = findUsers(user);
-        Long quizId = quizFacade.saveQuiz(quizRequest, users.getId());
+        Long quizId = quizFacade.saveQuiz(quizRequest, users.getEmail());
 
         return ResponseEntity.ok()
                 .body(ResponseDto.success(quizId));
@@ -45,7 +45,7 @@ public class QuizController {
                                                      @RequestBody QuizRequestDto quizRequest,
                                                      @AuthenticationPrincipal UserAccount user) {
         Users users = findUsers(user);
-        quizId = quizFacade.updateQuiz(quizRequest, quizId, users.getId());
+        quizId = quizFacade.updateQuiz(quizRequest, quizId, users.getEmail());
 
         return ResponseEntity.ok()
                 .body(ResponseDto.success(quizId));
@@ -65,7 +65,7 @@ public class QuizController {
                                                          @RequestParam("size") int size,
                                                          @AuthenticationPrincipal UserAccount user) {
         Users users = findUsers(user);
-        Page<QuizResponseDto> responsePage = quizFacade.findAllByUserId(users.getId(), page - 1, size);
+        Page<QuizResponseDto> responsePage = quizFacade.findAllByEmail(users.getEmail(), page - 1, size);
         List<QuizResponseDto> responses = responsePage.getContent();
 
         return ResponseEntity.ok(ResponseDto.success(new MultiResponseDto<>(responses, responsePage)));

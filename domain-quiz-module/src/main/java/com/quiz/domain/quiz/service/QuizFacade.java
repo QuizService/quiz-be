@@ -53,7 +53,7 @@ public class QuizFacade {
         return toDto(quiz, null);
     }
 
-    public Page<QuizResponseDto> findAllByUserId(String email, int page, int size) {
+    public Page<QuizResponseDto> findAllByEmail(String email, int page, int size) {
         Long userId = getUserId(email);
 
         Page<Quiz> quizzes = quizService.findAllByUserId(userId, page, size);

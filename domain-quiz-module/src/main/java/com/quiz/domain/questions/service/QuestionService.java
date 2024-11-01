@@ -9,7 +9,7 @@ import com.quiz.domain.questions.entity.QuestionType;
 import com.quiz.domain.questions.entity.Questions;
 import com.quiz.domain.questions.repository.mongo.QuestionsMongoTemplate;
 import com.quiz.domain.questions.repository.mongo.QuestionsRepository;
-import com.quiz.global.exception.questions.QuestionException;
+import com.quiz.exception.QuestionException;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.data.domain.Page;
@@ -21,7 +21,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.stream.Collectors;
 
-import static com.quiz.global.exception.questions.code.QuestionErrorCode.QUESTION_NOT_FOUND;
+import static com.quiz.exception.code.QuestionErrorCode.QUESTION_NOT_FOUND;
 
 @Slf4j
 @RequiredArgsConstructor

@@ -34,7 +34,7 @@ public class QuestionsController {
                                                         @AuthenticationPrincipal UserAccount user) {
         Users users = usersService.findByEmail(user.getUsername());
 
-        questionFacade.saveQuestions(request.getQuestionRequestDtos(), quizId, users.getId());
+        questionFacade.saveQuestions(request.getQuestionRequestDtos(), quizId, users.getEmail());
 
         return ResponseEntity.ok(ResponseDto.success());
     }
@@ -45,7 +45,7 @@ public class QuestionsController {
                                                           @RequestBody QuestionsUpdateDto request,
                                                           @AuthenticationPrincipal UserAccount user) {
         Users users = usersService.findByEmail(user.getUsername());
-        questionFacade.updateQuestions(request, quizId, users.getId());
+        questionFacade.updateQuestions(request, quizId, users.getEmail());
 
         return ResponseEntity.ok(ResponseDto.success());
     }
@@ -55,7 +55,7 @@ public class QuestionsController {
     public ResponseEntity<ResponseDto<?>> getQuestionsByQuizId(@PathVariable("quiz-id") Long quizId,
                                                                @AuthenticationPrincipal UserAccount user) {
         Users users = usersService.findByEmail(user.getUsername());
-        List<QuestionsResponseAdminDto> questions = questionFacade.findAllByQuizId(quizId, users.getId());
+        List<QuestionsResponseAdminDto> questions = questionFacade.findAllByQuizId(quizId, users.getEmail());
         log.info("questions={}", questions);
         return ResponseEntity.ok(ResponseDto.success(questions));
     }
