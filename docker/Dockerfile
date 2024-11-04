@@ -4,6 +4,8 @@ WORKDIR /sources
 
 COPY . .
 
+RUN chmod +x gradlew
+
 RUN ./gradlew :api-module:build
 
 FROM gcr.io/distroless/java21-debian12
