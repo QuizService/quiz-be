@@ -11,7 +11,7 @@ on:
 env:
   DOCKER_HUB_USERNAME: ${{ secrets.DOCKER_HUB_USERNAME }}
   DOCKER_HUB_ACCESS_TOKEN: ${{ secrets.DOCKER_HUB_ACCESS_TOKEN }}
-  DOCKER_IMAGE_NAME: ${{ secrets.EC2_SSH }}
+  DOCKER_IMAGE_NAME: ${{ secrets.DOCKER_IMAGE_NAME }}
   EC2_HOST: ${{ secrets.EC2_HOST }}
   EC2_SSH_USER: ${{ secrets.EC2_SSH_USER }}
   PRIVATE_KEY: ${{ secrets.EC2_SSH }}
@@ -56,7 +56,7 @@ jobs:
         with:
           file: ./docker/Dockerfile
           push: true
-          tags: ${{ env.DOCKER_IMAGE_NAME }}/quiz:latest
+          tags: ${{env.DOCKER_HUB_USERNAME}}/${{ env.DOCKER_IMAGE_NAME }}:latest
 
   CD:
     needs: [CI]
