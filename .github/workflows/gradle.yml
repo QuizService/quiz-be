@@ -83,8 +83,9 @@ jobs:
           host: ${{ env.EC2_HOST }}
           username: ${{ env.EC2_SSH_USER }}
           key: ${{ env.PRIVATE_KEY }}
-          source: "./deploy/deploy.sh"
-          target: "/home/ec2-user"
+          source: "deploy/deploy.sh"
+          target: "/home/ec2-user/deploy"
+          rm: true
 
 
       - name: Docker Image Pull and Container run
