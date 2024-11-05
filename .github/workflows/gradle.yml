@@ -87,7 +87,8 @@ jobs:
           username: ${{ env.EC2_SSH_USER }}
           key: ${{ env.PRIVATE_KEY }}
           source: "deploy/deploy.sh"
-          target: "/home/ec2-user/deploy"
+          target: "/home/ec2-user"
+          strip_components: 1
           rm: true
 
 
