@@ -9,9 +9,9 @@ spring:
       authentication-database: ${MONGODB_AUTHENTICATION_DATABASE}
     # redis
     redis:
-      host1: ${REDIS_HOST}
+      host1: ${REDIS1_HOST}
       port1: ${REDIS1_PORT}
-      host2: ${REDIS_HOST}
+      host2: ${REDIS2_HOST}
       port2: ${REDIS2_PORT}
   # mysql
   datasource:
