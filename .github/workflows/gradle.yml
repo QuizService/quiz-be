@@ -98,7 +98,7 @@ jobs:
           host: ${{ env.EC2_HOST }}
           username: ${{ env.EC2_SSH_USER }}
           key: ${{ env.PRIVATE_KEY }}
-          scripts: |
+          script: |
             ./deploy.sh
 
       - name: Remove Github Action IP from SG
