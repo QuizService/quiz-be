@@ -8,7 +8,7 @@ RUN chmod +x gradlew
 
 RUN ./gradlew :api-module:build
 
-FROM gcr.io/distroless/java21-debian12
+FROM optimoz/openjre-21.0.3:0.4
 
 WORKDIR /app
 
