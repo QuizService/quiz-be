@@ -89,7 +89,7 @@ jobs:
           source: "deploy/deploy.sh"
           target: "/home/ec2-user"
           strip_components: 1
-          rm: true
+          overwrite: true
 
 
       - name: Docker Image Pull and Container run
