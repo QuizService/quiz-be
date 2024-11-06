@@ -99,6 +99,7 @@ jobs:
           username: ${{ env.EC2_SSH_USER }}
           key: ${{ env.PRIVATE_KEY }}
           script: |
+            chmod +x deploy.sh
             ./deploy.sh
 
       - name: Remove Github Action IP from SG
