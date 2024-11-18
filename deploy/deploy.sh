@@ -18,5 +18,5 @@ echo "> 기존 실행 중인 컨테이너 제거"
 echo "> docker rm -f ${server_name}"
 sudo docker rm -f ${server_name}
 
-echo "> docker run -d --name ${server_name} --env-file application-secret.properties -p 8080:8080 --network mongoCluster ${docker_repo}/${docker_image}"
-docker run -d --name ${server_name} --env-file application-secret.properties -p 8080:8080 --network mongoCluster ${docker_repo}/${docker_image}
+echo "> docker run -d --name ${server_name} --env-file .env -p 8080:8080 --network mongoCluster ${docker_repo}/${docker_image}"
+docker run -d --name ${server_name} --env-file .env -p 8080:8080 --network mongoCluster ${docker_repo}/${docker_image}
