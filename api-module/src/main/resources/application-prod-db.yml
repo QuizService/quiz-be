@@ -11,7 +11,7 @@ spring:
     redis:
       host1: ${REDIS_HOST}
       port1: ${REDIS1_PORT}
-      host2: ${REDIS_HOST}
+      host2: ${REDIS2_HOST}
       port2: ${REDIS2_PORT}
   # mysql
   datasource:
