@@ -29,7 +29,7 @@ import java.util.Collections;
 import java.util.List;
 
 @Slf4j
-@Transactional
+@Transactional(value = "mysqlTx")
 @Service
 public class AuthService {
     private final GoogleIdTokenVerifier verifier;
@@ -79,6 +79,19 @@ public class AuthService {
             log.error("error : ", e);
             throw new AuthException(AuthErrorCode.LOGIN_FAILED);
         }
+    }
+
+    public TokenDto signUpOrLogin(UsersRequestDto user) {
+        Users users = usersService.findOrCreateUsers(user);
+
+        String accessToken = "Bearer " + jwtTokenizer.createAccessToken(user.getEmail());
+        String refreshToken = "Bearer " + jwtTokenizer.createRefreshTokenWhenLogin(users.getId());
+        saveAuthentication(users);
+
+        return TokenDto.builder()
+                .accessToken(accessToken)
+                .refreshToken(refreshToken)
+                .build();
     }
 
     public void saveAuthentication(Users users) {

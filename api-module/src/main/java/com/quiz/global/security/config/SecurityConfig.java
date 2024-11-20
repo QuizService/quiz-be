@@ -34,7 +34,7 @@ public class SecurityConfig {
                 .authorizeHttpRequests(auth -> auth
                         .requestMatchers(new AntPathRequestMatcher("/h2/**")).permitAll()
                         .requestMatchers(new AntPathRequestMatcher("/css/**"), new AntPathRequestMatcher("/images/**"), new AntPathRequestMatcher("/js/**"), new AntPathRequestMatcher("/favicon.ico")).permitAll()
-                        .requestMatchers(new AntPathRequestMatcher("/"), new AntPathRequestMatcher("/login"), new AntPathRequestMatcher("/api/googleLogin"), new AntPathRequestMatcher("/error"), new AntPathRequestMatcher("/index.html")).permitAll()
+                        .requestMatchers(new AntPathRequestMatcher("/"), new AntPathRequestMatcher("/api/test-login"), new AntPathRequestMatcher("/api/googleLogin"), new AntPathRequestMatcher("/error"), new AntPathRequestMatcher("/index.html")).permitAll()
                         .requestMatchers(new AntPathRequestMatcher("/swagger-ui/**"), new AntPathRequestMatcher("/v3/**"), new AntPathRequestMatcher("/swagger-ui.html")).permitAll()
                         .requestMatchers(new AntPathRequestMatcher("/health-check/**")).permitAll()
                         .requestMatchers(new AntPathRequestMatcher("/app/**"), new AntPathRequestMatcher("/topic/**"), new AntPathRequestMatcher("/web-socket-connection/**")).permitAll()

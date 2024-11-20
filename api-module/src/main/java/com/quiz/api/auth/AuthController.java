@@ -1,6 +1,7 @@
 package com.quiz.api.auth;
 
 
+import com.quiz.domain.users.dto.UsersRequestDto;
 import com.quiz.global.security.dto.IdToken;
 import com.quiz.global.security.dto.TokenDto;
 import com.quiz.global.security.service.AuthService;
@@ -27,5 +28,12 @@ public class AuthController {
         response.addHeader("Refresh", tokenDto.refreshToken());
 
         return ResponseEntity.ok().build();
+    }
+
+    @PostMapping("/api/test-login")
+    public ResponseEntity<?> testLogin(@RequestBody UsersRequestDto request) {
+        TokenDto response = authService.signUpOrLogin(request);
+
+        return ResponseEntity.ok().body(response);
     }
 }

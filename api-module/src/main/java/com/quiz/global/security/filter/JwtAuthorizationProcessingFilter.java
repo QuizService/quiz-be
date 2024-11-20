@@ -36,15 +36,13 @@ import static com.quiz.global.security.exception.code.AuthErrorCode.REFRESH_TOKE
 @Component
 @RequiredArgsConstructor
 public class JwtAuthorizationProcessingFilter extends OncePerRequestFilter {
-    private static final String[] AUTHORIZATION_NOT_REQUIRED = new String[]{"/login", "/favicon.ico", "/h2", "/favicon.ico", "/index.html", "/web-socket-connection", "/swagger-ui", "/v3/api-docs", "/topic/participant", "/api/login", "/api/googleLogin", "/health-check"};
+    private static final String[] AUTHORIZATION_NOT_REQUIRED = new String[]{"/login", "/favicon.ico", "/h2", "/favicon.ico", "/index.html", "/web-socket-connection", "/swagger-ui", "/v3/api-docs", "/topic/participant", "/api/login", "/api/googleLogin", "/api/test-login","/health-check"};
     private final JwtTokenizer jwtTokenizer;
     private final UsersRepository usersRepository;
     private final Redis2Utils redisUtils;
 
     @Override
     protected void doFilterInternal(HttpServletRequest request, HttpServletResponse response, FilterChain filterChain) throws ServletException, IOException {
-        log.info("JwtAuthorizationProcessingFilter start");
-        log.info("request.getRequestURI() = {}", request.getRequestURI());
         if (StringUtils.startsWithAny(request.getRequestURI(), AUTHORIZATION_NOT_REQUIRED)) {
             filterChain.doFilter(request, response);
             log.info("AUTHORIZATION_NOT_REQUIRED");
@@ -54,14 +52,11 @@ public class JwtAuthorizationProcessingFilter extends OncePerRequestFilter {
         Optional<String> accessToken = jwtTokenizer.extractAccessToken(request);
         if (accessToken.isPresent()) {
             // 만약 accessToken 존재시 return;
-            log.info("accessToken exist");
             boolean isAccessTokenValid = jwtTokenizer.isTokenValid(accessToken.get());
             if (isAccessTokenValid) {
-                log.info("accessToken valid");
                 setAuthentication(accessToken.get());
             }
         } else {
-            log.info("accessToken not valid");
             Optional<String> refreshToken = jwtTokenizer.extractRefreshToken(request);
             //refresh token 존재시 accessToken reissue 후 return;
             if (refreshToken.isPresent()) {
@@ -88,8 +83,6 @@ public class JwtAuthorizationProcessingFilter extends OncePerRequestFilter {
     }
 
     private void reIssueToken(Users users, HttpServletResponse response, String refreshToken) {
-        log.info("checkRefreshTokenAndReIssueAccessToken start");
-
         String token = jwtTokenizer.createRefreshToken(users.getId(), refreshToken);
         String accessToken = jwtTokenizer.createAccessToken(users.getEmail());
 
@@ -98,7 +91,6 @@ public class JwtAuthorizationProcessingFilter extends OncePerRequestFilter {
         //response에 저장
         jwtTokenizer.sendAccessToken(response, accessToken);
         jwtTokenizer.sendRefreshToken(response, token);
-        log.info("checkRefreshTokenAndReIssueAccessToken end");
     }
 
     private void setAuthentication(String accessToken) {
@@ -126,10 +118,6 @@ public class JwtAuthorizationProcessingFilter extends OncePerRequestFilter {
 
     @Override
     protected boolean shouldNotFilter(HttpServletRequest request) throws ServletException {
-        log.info("should not filter = {}", request.getRequestURI());
-        boolean result = StringUtils.startsWithAny(request.getRequestURI(), AUTHORIZATION_NOT_REQUIRED);
-        log.info("should not filter = {}", result);
-
-        return result;
+        return StringUtils.startsWithAny(request.getRequestURI(), AUTHORIZATION_NOT_REQUIRED);
     }
 }
