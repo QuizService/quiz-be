@@ -14,7 +14,7 @@ import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 
 
-@OpenAPIDefinition(servers = @Server(url = "http://localhost:8080"))
+@OpenAPIDefinition(servers = {@Server(url = "http://localhost:8080"), @Server(url = "https://firstcomequiz.com")})
 @Configuration
 public class SwaggerConfig {
     @Bean

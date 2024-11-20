@@ -3,15 +3,14 @@
 ## Overview
 사용자가 직접 퀴즈를 만들고 참여코드를 통해 선착순으로 퀴즈에 참여할 수 있는 서비스입니다. 
 
-### Project Architecture
+### Skill
 
-* OpenJDK 21
-* SpringBoot 3.2.6 (Servlet MVC), Spring Data JPA
+* Java 21
+* SpringBoot, JPA
 * MySQL, MongoDB
 * Redis for Redisson(Distributed Lock)
-* WebSocket and Redis Sorted Set for Waiting Queue
-* Stateless Session Management with JWT + Spring Security + Google OAuth2
-* Module Architecture with Gradle Multi-Project
+* Spring Security + Google OAuth2 + JWT
+* Github Action, AWS, Docker, Nginx
 
 ### Module
 ```
@@ -21,7 +20,7 @@
 ```
 
 ### Github Actions CI/CD
-
+<img src="/image/architecture.png" width="600"/>
 
 
 ### Project Outline
@@ -34,4 +33,5 @@
  * [분산락(Redisson)을 활용하여 퀴즈 선착순 참여시 발생할 수 있는 동시성 이슈 해결](https://velog.io/@penrose_15/Redisson을-활용한-분산락으로-동시성-이슈-해결하기)
  * [Google OAuth2 적용](https://velog.io/@penrose_15/SpringBoot-React-환경에서-Google-Oauth2-적용기)
  * Refresh Token Rotation기법으로 Refresh Token 로 토큰 탈취 대응
- * Github actions기반 CI/CD 배포 구현
+ * Github Actions기반 CI/CD 배포 구현
+   * Github OIDC Privider를 활용한 안전한 AWS 배포 관리

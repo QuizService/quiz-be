@@ -12,10 +12,10 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
+import java.util.Optional;
 import java.util.concurrent.atomic.AtomicInteger;
 
-import static com.quiz.exception.code.ParticipantInfoErrorCode.FIRST_COME_FIRST_SERVED_END;
-import static com.quiz.exception.code.ParticipantInfoErrorCode.PARTICIPANT_NOT_FOUND;
+import static com.quiz.exception.code.ParticipantInfoErrorCode.*;
 
 @Slf4j
 @RequiredArgsConstructor
@@ -28,10 +28,11 @@ public class ParticipantInfoService {
 
     @DistributedLock(key = "'saveFcfs : quizId - ' + #quizId")
     public String saveFcfs(Long quizId, Long userId, int capacity) {
-//        Optional<ParticipantInfo> participantInfoOptional = participantInfoMongoTemplate.findByQuizIdAndUserId(quizId, userId);
-//        if(participantInfoOptional.isPresent()) {
-//            throw new ParticipantInfoException(ALREADY_PARTICIPATED);
-//        }
+        Optional<ParticipantInfo> participantInfoOptional = participantInfoMongoTemplate.findByQuizIdAndUserId(quizId, userId);
+        if(participantInfoOptional.isPresent()) {
+            throw new ParticipantInfoException(ALREADY_PARTICIPATED);
+        }
+
         int participatedCnt = participantInfoMongoTemplate.countParticipantsByQuizIdAndSubmitResponses(quizId);
         if (participatedCnt >= capacity) {
             log.info("failed count = {}", cnt.incrementAndGet());
@@ -57,13 +58,10 @@ public class ParticipantInfoService {
         ParticipantInfo participantInfo = findByQuizIdAndUserId(quizId, userId);
 
         int participatedCnt = participantInfoMongoTemplate.countParticipantsByQuizIdAndSubmitResponses(quizId);
-        log.info("participantCnt = {}", participatedCnt);
         if (participatedCnt + 1 > capacity) {
             throw new ParticipantInfoException(FIRST_COME_FIRST_SERVED_END);
         }
         participantInfoMongoTemplate.update(quizId, userId, participatedCnt + 1);
-        // 수용 가능 인원 - 참여 인원 - 1 저장
-        log.info("capacity = {}", capacity - participatedCnt - 1);
         participantInfoQueueRepository.setParticipantNumber(quizId, capacity - participatedCnt - 1);
 
         return participantInfo.getId();
