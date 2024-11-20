@@ -48,7 +48,7 @@ public class SecurityConfig {
     @Bean
     public CorsConfigurationSource corsConfigurationSource() {
         CorsConfiguration configuration = new CorsConfiguration();
-        configuration.setAllowedOrigins(List.of("http://localhost:8080", "http://localhost:3000", "https://accounts.google.com"));
+        configuration.setAllowedOrigins(List.of("http://localhost:8080", "http://localhost:3000","http://firstcomequiz.com", "https://accounts.google.com"));
         configuration.setAllowedMethods(List.of("*"));
         configuration.setAllowedHeaders(List.of("Authorization", "Refresh", "Content-type", "Origin", "Accept", "Access-Control-Allow-Origin", "Access-Control-Allow-Headers", "Access-Control-Allow-Methods"));
         configuration.setExposedHeaders(List.of("Authorization", "Refresh"));
