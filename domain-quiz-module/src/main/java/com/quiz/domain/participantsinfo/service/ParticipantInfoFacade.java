@@ -15,11 +15,13 @@ import org.springframework.context.ApplicationEventPublisher;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Map;
 import java.util.stream.Collectors;
 
 import static com.quiz.exception.code.ParticipantInfoErrorCode.PARTICIPANT_IS_NOT_IN_QUIZ;
+import static com.quiz.exception.code.ParticipantInfoErrorCode.START_DATE_IS_NOT_NOW;
 
 @Slf4j
 @Transactional(value = "mongoTx")
@@ -34,9 +36,9 @@ public class ParticipantInfoFacade {
 
     public void saveParticipants(Long quizId, Long userId) {
         Quiz quiz = quizService.findById(quizId);
-//        if(quiz.getStartDate().isBefore(LocalDateTime.now())) {
-//            throw new ParticipantInfoException(START_DATE_IS_NOT_NOW);
-//        }
+        if(quiz.getStartDate().isBefore(LocalDateTime.now())) {
+            throw new ParticipantInfoException(START_DATE_IS_NOT_NOW);
+        }
         int capacity = quiz.getCapacity();
         if (capacity > 0) {
             participantInfoService.saveFcfs(quizId, userId, capacity);
