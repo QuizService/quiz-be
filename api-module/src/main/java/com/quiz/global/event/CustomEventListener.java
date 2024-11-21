@@ -21,7 +21,7 @@ public class CustomEventListener {
     private final ParticipantInfoFacade participantInfoFacade;
     private final SimpMessagingTemplate messagingTemplate;
 
-    @Transactional(propagation = Propagation.REQUIRES_NEW)
+    @Transactional(value = "mongoTx", propagation = Propagation.REQUIRES_NEW)
     @TransactionalEventListener(phase = TransactionPhase.AFTER_COMMIT)
     public void saveResponses(ResponsesSaveDto dto) {
         try {

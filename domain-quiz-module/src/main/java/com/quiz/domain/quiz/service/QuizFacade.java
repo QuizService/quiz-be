@@ -1,6 +1,5 @@
 package com.quiz.domain.quiz.service;
 
-import com.quiz.domain.participantsinfo.service.ParticipantInfoQueueService;
 import com.quiz.domain.questions.entity.Questions;
 import com.quiz.domain.questions.service.QuestionService;
 import com.quiz.domain.quiz.dto.QuizRequestDto;
@@ -25,16 +24,12 @@ public class QuizFacade {
 
     private final QuizService quizService;
     private final QuestionService questionService;
-    private final ParticipantInfoQueueService participantInfoQueueService;
     private final UsersService usersService;
 
     public Long saveQuiz(QuizRequestDto quizDto, String email) {
         Long userId = getUserId(email);
 
-        Long quizId = quizService.saveQuiz(quizDto, userId);
-        // 생성 시 대기열 생성
-        participantInfoQueueService.createQuizQueue(quizId, quizDto.getCapacity());
-        return quizId;
+        return quizService.saveQuiz(quizDto, userId);
     }
 
     public Long updateQuiz(QuizRequestDto quizDto, Long quizId, String email) {

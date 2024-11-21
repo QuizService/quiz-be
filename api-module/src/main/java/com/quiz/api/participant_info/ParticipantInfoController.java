@@ -30,6 +30,8 @@ public class ParticipantInfoController {
                                                           @AuthenticationPrincipal UserAccount user) {
         Users users = usersService.findByEmail(user.getUsername());
         Long quizId = participantInfoFacade.getQuizIdByEndpoint(endpoint);
+        participantInfoFacade.saveParticipants(quizId, users.getId());
+
         return ResponseEntity.ok(ResponseDto.success(new ParticipantEnterResponseDto(quizId, users.getId())));
     }
 

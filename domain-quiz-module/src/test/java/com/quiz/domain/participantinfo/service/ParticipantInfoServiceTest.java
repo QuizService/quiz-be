@@ -1,10 +1,8 @@
 package com.quiz.domain.participantinfo.service;
 
 import com.quiz.TestConfiguration;
-import com.quiz.domain.participantsinfo.service.ParticipantInfoQueueService;
 import com.quiz.domain.participantsinfo.service.ParticipantInfoService;
 import org.junit.jupiter.api.AfterEach;
-import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
@@ -47,8 +45,6 @@ public class ParticipantInfoServiceTest {
 
     @Autowired
     ParticipantInfoService participantInfoService;
-    @Autowired
-    ParticipantInfoQueueService participantInfoQueueService;
     Long quizId = 1L;
     int capacity = 90;
 
@@ -61,10 +57,8 @@ public class ParticipantInfoServiceTest {
         registry.add("spring.data.mongodb.password", () -> "password");
         registry.add("spring.data.mongodb.database", () -> "quiz");
 
-        registry.add("spring.data.redis.host1", redisContainer::getHost);
-        registry.add("spring.data.redis.port1", redisContainer::getFirstMappedPort);
-        registry.add("spring.data.redis.host2", redisContainer::getHost);
-        registry.add("spring.data.redis.port2", redisContainer::getFirstMappedPort);
+        registry.add("spring.data.redis.host", redisContainer::getHost);
+        registry.add("spring.data.redis.port", redisContainer::getFirstMappedPort);
 
         registry.add("spring.datasource.url", mysqlContainer::getJdbcUrl);
         registry.add("spring.datasource.username", mysqlContainer::getUsername);
@@ -72,11 +66,6 @@ public class ParticipantInfoServiceTest {
         registry.add("spring.datasource.driver-class-name", mysqlContainer::getDriverClassName);
         registry.add("spring.jpa.database-platform", () -> "org.hibernate.dialect.MySQLDialect");
         registry.add("spring.jpa.hibernate.ddl-auto", () -> "create");
-    }
-
-    @BeforeEach
-    void setUp() {
-        participantInfoQueueService.createQuizQueue(1L, capacity);
     }
 
     @AfterEach
@@ -111,6 +100,4 @@ public class ParticipantInfoServiceTest {
                 .isEqualTo(10);
 
     }
-
-
 }

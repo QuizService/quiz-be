@@ -68,7 +68,6 @@ public class AuthService {
 
             String accessToken = "Bearer " + jwtTokenizer.createAccessToken(email);
             String refreshToken = "Bearer " + jwtTokenizer.createRefreshTokenWhenLogin(users.getId());
-//            log.info("access token = {}", accessToken);
             saveAuthentication(users);
 
             return TokenDto.builder()
