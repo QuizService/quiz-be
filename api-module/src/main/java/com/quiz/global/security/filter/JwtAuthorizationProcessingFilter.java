@@ -4,7 +4,7 @@ import com.quiz.domain.users.entity.Users;
 import com.quiz.domain.users.repository.UsersRepository;
 import com.quiz.exception.AuthException;
 import com.quiz.exception.UserException;
-import com.quiz.global.db.redis.Redis2Utils;
+import com.quiz.global.db.redis.RedisUtils;
 import com.quiz.global.security.jwt.JwtTokenizer;
 import com.quiz.global.security.userdetails.UserAccount;
 import jakarta.servlet.FilterChain;
@@ -39,7 +39,7 @@ public class JwtAuthorizationProcessingFilter extends OncePerRequestFilter {
     private static final String[] AUTHORIZATION_NOT_REQUIRED = new String[]{"/login", "/favicon.ico", "/h2", "/favicon.ico", "/index.html", "/web-socket-connection", "/swagger-ui", "/v3/api-docs", "/topic/participant", "/api/login", "/api/googleLogin", "/api/test-login","/health-check"};
     private final JwtTokenizer jwtTokenizer;
     private final UsersRepository usersRepository;
-    private final Redis2Utils redisUtils;
+    private final RedisUtils redisUtils;
 
     @Override
     protected void doFilterInternal(HttpServletRequest request, HttpServletResponse response, FilterChain filterChain) throws ServletException, IOException {
