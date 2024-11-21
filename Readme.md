@@ -32,6 +32,7 @@
    * [MongoDB Replication을 활용한 트랜잭션이 적용되지 않는 이슈 해결](https://velog.io/@penrose_15/Docker-MongoDB-replicaSet-설정)
  * [분산락(Redisson)을 활용하여 퀴즈 선착순 참여시 발생할 수 있는 동시성 이슈 해결](https://velog.io/@penrose_15/Redisson을-활용한-분산락으로-동시성-이슈-해결하기)
  * [Google OAuth2 적용](https://velog.io/@penrose_15/SpringBoot-React-환경에서-Google-Oauth2-적용기)
+ * [Redis Sorted Set + WebSocket를 활용한 대기열 구현으로 선착순 순서 보장 및 대기열 실시간 조회 구현](https://velog.io/@penrose_15/Redis-Websocket-활용한-대기열-서비스-구현Spring-Boot)
  * Refresh Token Rotation기법으로 Refresh Token 로 토큰 탈취 대응
  * Github Actions기반 CI/CD 배포 구현
    * Github OIDC Privider를 활용한 안전한 AWS 배포 관리
