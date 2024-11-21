@@ -36,7 +36,7 @@ public class ParticipantInfoFacade {
 
     public void saveParticipants(Long quizId, Long userId) {
         Quiz quiz = quizService.findById(quizId);
-        if(quiz.getStartDate().isBefore(LocalDateTime.now())) {
+        if(quiz.getStartDate().isAfter(LocalDateTime.now())) {
             throw new ParticipantInfoException(START_DATE_IS_NOT_NOW);
         }
         int capacity = quiz.getCapacity();
@@ -65,9 +65,6 @@ public class ParticipantInfoFacade {
                 .responses(responses)
                 .quizId(quizId)
                 .build();
-
-        log.info("save response start");
-        //event 로 저장과정 분리
         applicationEventPublisher.publishEvent(responsesSaveDto);
     }
 
