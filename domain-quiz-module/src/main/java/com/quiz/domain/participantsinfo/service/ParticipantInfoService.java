@@ -3,7 +3,6 @@ package com.quiz.domain.participantsinfo.service;
 import com.quiz.domain.participantsinfo.entity.ParticipantInfo;
 import com.quiz.domain.participantsinfo.repository.mongo.ParticipantInfoMongoTemplate;
 import com.quiz.domain.participantsinfo.repository.mongo.ParticipantInfoRepository;
-import com.quiz.domain.participantsinfo.repository.redis.ParticipantInfoQueueRepository;
 import com.quiz.exception.ParticipantInfoException;
 import com.quiz.global.lock.DistributedLock;
 import lombok.RequiredArgsConstructor;
@@ -23,7 +22,6 @@ import static com.quiz.exception.code.ParticipantInfoErrorCode.*;
 public class ParticipantInfoService {
     private final ParticipantInfoMongoTemplate participantInfoMongoTemplate;
     private final ParticipantInfoRepository participantInfoRepository;
-    private final ParticipantInfoQueueRepository participantInfoQueueRepository;
     AtomicInteger cnt = new AtomicInteger();
 
     @DistributedLock(key = "'saveFcfs : quizId - ' + #quizId")
@@ -62,7 +60,6 @@ public class ParticipantInfoService {
             throw new ParticipantInfoException(FIRST_COME_FIRST_SERVED_END);
         }
         participantInfoMongoTemplate.update(quizId, userId, participatedCnt + 1);
-        participantInfoQueueRepository.setParticipantNumber(quizId, capacity - participatedCnt - 1);
 
         return participantInfo.getId();
     }
@@ -71,7 +68,7 @@ public class ParticipantInfoService {
         return participantInfoMongoTemplate.countParticipantsByQuizId(quizId);
     }
 
-
+    @Transactional(value = "mongoTx")
     public String save(Long quizId, Long userId) {
         ParticipantInfo participantInfo = ParticipantInfo.builder()
                 .quizId(quizId)
