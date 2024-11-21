@@ -70,10 +70,8 @@ public class ResponseFacadeTest {
         registry.add("spring.data.mongodb.password", () -> "password");
         registry.add("spring.data.mongodb.database", () -> "quiz");
 
-        registry.add("spring.data.redis.host1", redisContainer::getHost);
-        registry.add("spring.data.redis.port1", redisContainer::getFirstMappedPort);
-        registry.add("spring.data.redis.host2", redisContainer::getHost);
-        registry.add("spring.data.redis.port2", redisContainer::getFirstMappedPort);
+        registry.add("spring.data.redis.host", redisContainer::getHost);
+        registry.add("spring.data.redis.port", redisContainer::getFirstMappedPort);
 
         registry.add("spring.datasource.url", mysqlContainer::getJdbcUrl);
         registry.add("spring.datasource.username", mysqlContainer::getUsername);
