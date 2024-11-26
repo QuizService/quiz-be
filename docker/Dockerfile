@@ -4,9 +4,10 @@ WORKDIR /sources
 
 COPY . .
 
-RUN chmod +x gradlew
-
-RUN ./gradlew :api-module:build
+RUN chmod u+w ./api-module/src/main/resources && \
+    chmod +x gradlew &&  \
+    ./gradlew clean &&  \
+    ./gradlew :api-module:build
 
 FROM optimoz/openjre-21.0.3:0.4
 
